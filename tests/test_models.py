@@ -2,7 +2,7 @@ import pytest
 
 from pydantic import BaseModel
 
-from stac_pydantic import Collection, Item, ItemCollection, BaseProperties
+from stac_pydantic import Collection, Item, ItemCollection, ItemProperties
 from stac_pydantic.extensions import Extensions
 from stac_pydantic.extensions.single_file_stac import SingleFileStac
 
@@ -105,7 +105,7 @@ def test_explicit_extension_validation(request_test_data, test_equivalency):
     # This item implements the eo and view extensions
     assert test_item["stac_extensions"][:-1] == ["eo", "view"]
 
-    class ExtensionProperties(Extensions.eo, Extensions.view, BaseProperties):
+    class ExtensionProperties(Extensions.eo, Extensions.view, ItemProperties):
         ...
 
     class CustomValidator(Item):

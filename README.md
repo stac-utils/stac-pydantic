@@ -58,9 +58,9 @@ item = Item(**stac_item)
 #### Explicit
 You can control which extensions are validated against by explicitly including them in the model.
 ```python
-from stac_pydantic import Item, BaseProperties, Extensions
+from stac_pydantic import Item, ItemProperties, Extensions
 
-class CustomProperties(Extensions.view, BaseProperties):
+class CustomProperties(Extensions.view, ItemProperties):
     ...
 
 class CustomItem(Item):
@@ -137,9 +137,5 @@ item_dict = item.to_dict()
 assert item_dict['properties']['landsat:row'] == item.properties.row == 250
 ```
 
-
-#### Extension Namespacing
-Most STAC extensions are namespaced with a colon (ex. `eo:gsd`) to keep them distinct from other extensions.  Because
-Python doesn't support the use of colons in variable names, we use [Pydantic aliasing](https://pydantic-docs.helpmanual.io/usage/model_config/#alias-generator)
-to add the namespace upon model export.  This requires [exporting](https://pydantic-docs.helpmanual.io/usage/exporting_models/)
-the model with the `by_alias = True` parameter.
+## Testing
+```python setup.py test```

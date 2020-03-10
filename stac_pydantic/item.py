@@ -8,7 +8,7 @@ from .shared import Asset, ExtensionTypes, Link
 from .extensions import Extensions
 
 
-class BaseProperties(BaseModel):
+class ItemProperties(BaseModel):
     """
     https://github.com/radiantearth/stac-spec/blob/v0.9.0/item-spec/item-spec.md#properties-object
     """
@@ -21,7 +21,7 @@ class BaseProperties(BaseModel):
 
 class Item(Feature):
     id: str
-    properties: BaseProperties
+    properties: ItemProperties
     assets: Dict[str, Asset]
     links: List[Link]
     stac_version: Optional[str]
