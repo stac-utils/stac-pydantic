@@ -7,12 +7,16 @@ from .extensions import Extensions
 
 
 class Catalog(BaseModel):
+    """
+    https://github.com/radiantearth/stac-spec/blob/v0.9.0/catalog-spec/catalog-spec.md
+    """
+
     id: str
     description: str
     stac_version: str
+    links: List[Link]
     stac_extensions: Optional[List[ExtensionTypes]]
     title: Optional[str]
-    links: List[Link]
 
     class Config:
         use_enum_values = True
@@ -33,13 +37,3 @@ class Catalog(BaseModel):
 
     def to_json(self, **kwargs):
         return self.json(by_alias=True, exclude_unset=True, **kwargs)
-
-
-stac_catalog = {
-    "id": "test-catalog",
-    "description": "test",
-    "stac_version": "0.0.9",
-    "links": {
-
-    }
-}

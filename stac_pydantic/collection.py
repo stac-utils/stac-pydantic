@@ -1,10 +1,9 @@
 from typing import Any, Dict, List, Optional, Union
 
-from pydantic import BaseModel, root_validator
+from pydantic import BaseModel
 
 from .catalog import Catalog
 from .shared import ExtensionTypes, Link, NumType
-from .extensions import Extensions
 
 
 class Provider(BaseModel):
@@ -57,13 +56,8 @@ class Collection(Catalog):
     https://github.com/radiantearth/stac-spec/blob/v0.9.0/collection-spec/collection-spec.md
     """
 
-    id: str
-    description: str
-    stac_version: str
     license: str
     extent: Extent
-    links: List[Link]
-    stac_extensions: Optional[List[ExtensionTypes]]
     title: Optional[str]
     keywords: Optional[List[str]]
     providers: Optional[List[Provider]]
