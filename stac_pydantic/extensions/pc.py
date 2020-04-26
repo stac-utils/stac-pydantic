@@ -8,6 +8,10 @@ from ..utils import AutoValueEnum
 
 
 class ChannelTypes(str, AutoValueEnum):
+    """
+    https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/pointcloud#schema-object
+    """
+
     floating = auto()
     unsigned = auto()
     signed = auto()
@@ -15,7 +19,7 @@ class ChannelTypes(str, AutoValueEnum):
 
 class SchemaObject(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.0.9/extensions/label#label-overview-object
+    https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/pointcloud#schema-object
     """
 
     name: str
@@ -25,7 +29,7 @@ class SchemaObject(BaseModel):
 
 class StatsObject(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.0.9/extensions/label#label-overview-object
+    https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/pointcloud#stats-object
     """
 
     average: Optional[NumType]
@@ -40,7 +44,7 @@ class StatsObject(BaseModel):
 
 class PointCloudExtension(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.0.9/extensions/label#label-overview-object
+    https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/pointcloud#point-cloud-extension-specification
     """
 
     count: int
@@ -48,7 +52,7 @@ class PointCloudExtension(BaseModel):
     encoding: str
     schemas: List[SchemaObject]
     density: Optional[int]
-    statistics: List[StatsObject]
+    statistics: Optional[List[StatsObject]]
 
     class Config:
         use_enum_values = True
