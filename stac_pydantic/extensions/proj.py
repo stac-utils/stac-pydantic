@@ -8,7 +8,7 @@ from ..shared import BBox, NumType
 
 class CentroidObject(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.0.9/extensions/label#label-overview-object
+    https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/projection#centroid-object
     """
 
     lat: NumType
@@ -17,10 +17,10 @@ class CentroidObject(BaseModel):
 
 class ProjectionExtension(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.0.9/extensions/label#label-overview-object
+    https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/projection#projection-extension-specification
     """
 
-    epsg: Union[int, None]
+    epsg: Optional[Union[int]] = ...
     proj4: Optional[Union[str]]
     wk2: Optional[Union[str, None]]
     projjson: Optional[Union[Dict[Any, Any], None]]
