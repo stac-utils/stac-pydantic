@@ -42,26 +42,6 @@ class _GeometryBase(BaseModel):
         return self.dict()
 
 
-class Point(_GeometryBase):
-    type: str = Field("Point", const=True)
-    coordinates: Coordinate
-
-
-class MultiPoint(_GeometryBase):
-    type: str = Field("MultiPoint", const=True)
-    coordinates: List[Coordinate]
-
-
-class LineString(_GeometryBase):
-    type: str = Field("LineString", const=True)
-    coordinates: List[Coordinate]
-
-
-class MultiLineString(_GeometryBase):
-    type: str = Field("MultiLineString", const=True)
-    coordinates: List[List[Coordinate]]
-
-
 class Polygon(_GeometryBase):
     type: str = Field("Polygon", const=True)
     coordinates: List[List[Coordinate]]
@@ -74,9 +54,7 @@ class MultiPolygon(_GeometryBase):
 
 class Feature(BaseModel):
     type: str = Field("Feature", const=True)
-    geometry: Union[
-        Point, MultiPoint, LineString, MultiLineString, Polygon, MultiPolygon
-    ]
+    geometry: Union[Polygon, MultiPolygon]
     properties: Optional[Dict[Any, Any]]
     id: Optional[str]
     bbox: Optional[BBox]
