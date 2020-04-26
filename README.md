@@ -51,8 +51,8 @@ stac_item = {
 item = Item(**stac_item)
 
 >>> pydantic.error_wrappers.ValidationError: 1 validation error for Item
-    __root__ -> eo:bands
-        field required (type=value_error.missing)
+    __root__ -> properties -> eo:bands
+        field required (eo) (type=value_error.missing)
 ```
 
 #### Explicit
