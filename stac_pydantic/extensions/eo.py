@@ -9,7 +9,7 @@ from ..utils import AutoValueEnum
 
 class CommonBandNames(str, AutoValueEnum):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.0.9/extensions/eo#common-band-names
+    https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/eo#common-band-names
     """
 
     coastal = auto()
@@ -32,7 +32,7 @@ class CommonBandNames(str, AutoValueEnum):
 
 class BandObject(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.0.9/extensions/eo#band-object
+    https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/eo#band-object
     """
 
     name: Optional[str]
@@ -44,7 +44,7 @@ class BandObject(BaseModel):
 
 class ElectroOpticalExtension(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.0.9/extensions/eo#electro-optical-extension-specification
+    https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/eo#electro-optical-extension-specification
     """
 
     gsd: NumType
