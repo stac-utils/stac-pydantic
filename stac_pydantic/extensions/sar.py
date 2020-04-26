@@ -16,7 +16,7 @@ class Polarizations(str, AutoValueEnum):
 
 class FrequencyBands(str, AutoValueEnum):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.0.9/extensions/label#label-overview-object
+    https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/sar#common-frequency-band-names
     """
 
     P = auto()
@@ -29,9 +29,16 @@ class FrequencyBands(str, AutoValueEnum):
     Ka = auto()
 
 
+class ObservationDirections(str, AutoValueEnum):
+    """
+    https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/sar#item-fields
+    """
+    left = auto()
+    right = auto()
+
 class SARExtension(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.0.9/extensions/label#label-overview-object
+    https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/sar#sar-extension-specification
     """
 
     instrument_mode: str
@@ -44,8 +51,9 @@ class SARExtension(BaseModel):
     pixel_spacing_range: Optional[int]
     pixel_spacing_azimuth: Optional[int]
     looks_range: Optional[int]
+    looks_azimuth: Optional[NumType]
     looks_equivalent_number: Optional[int]
-    observation_direction: Optional[str]
+    observation_direction: Optional[ObservationDirections]
 
     class Config:
         use_enum_values = True
