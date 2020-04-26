@@ -7,6 +7,10 @@ from ..utils import AutoValueEnum
 
 
 class OrbitStates(str, AutoValueEnum):
+    """
+    https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/sat#item-fields
+    """
+
     ascending = auto()
     descending = auto()
     geostationary = auto()
@@ -14,17 +18,16 @@ class OrbitStates(str, AutoValueEnum):
 
 class SatelliteExtension(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.0.9/extensions/label#label-overview-object
+    https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/sat#satellite-extension-specification
     """
 
-    orbit_state: Optional[OrbitStates]
-    relative_orbit: Optional[str]
-    platform: Optional[str] = Field(None, alias="platform")
-    instruments: Optional[List[str]] = Field(None, alias="instruments")
-    constellation: Optional[str] = Field(None, alias="constellation")
-    mission: Optional[str] = Field(None, alias="mission")
+    orbit_state: Optional[OrbitStates] = Field(None, alias="sat:orbite_state")
+    relative_orbit: Optional[int] = Field(None, alias="sat:relative_orbit")
+    platform: Optional[str]
+    instruments: Optional[List[str]]
+    constellation: Optional[str]
+    mission: Optional[str]
 
     class Config:
         use_enum_values = True
         allow_population_by_fieldname = True
-        alias_generator = lambda field_name: f"sat:{field_name}"
