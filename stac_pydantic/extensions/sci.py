@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 class PublicationObject(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.0.9/extensions/scientific#publication-object
+    https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/scientific#publication-object
     """
 
     doi: Optional[str]
@@ -14,7 +14,7 @@ class PublicationObject(BaseModel):
 
 class ScientificExtension(PublicationObject):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.0.9/extensions/scientific#scientific-extension-specification
+    https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/scientific#item-and-collection-fields
     """
 
     doi: Optional[str]
