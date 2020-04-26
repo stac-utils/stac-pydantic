@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 class VersionExtension(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.0.9/extensions/version#versioning-indicators-extension-specification
+    https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/version#item-properties-and-collection-fields
     """
 
     version: str
