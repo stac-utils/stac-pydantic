@@ -101,6 +101,7 @@ def test_label_extension(request_test_data, test_equivalency):
     test_equivalency(test_item, valid_item)
 
 
+
 def test_commons_extension_collection(request_test_data, test_equivalency):
     test_coll = request_test_data(
         "https://raw.githubusercontent.com/radiantearth/stac-spec/v0.9.0/extensions/commons/examples/landsat-collection.json"
@@ -164,3 +165,27 @@ def test_item_collection(request_test_data, test_equivalency):
     valid_item_coll = ItemCollection(**test_item_coll).to_dict()
     for idx, feat in enumerate(test_item_coll["features"]):
         test_equivalency(feat, valid_item_coll["features"][idx])
+
+
+def test_single_file_stac(request_test_data, test_equivalency):
+    test_sfs = request_test_data(
+        "https://raw.githubusercontent.com/radiantearth/stac-spec/v0.9.0/extensions/single-file-stac/examples/example-search.json"
+    )
+    # item collection is missing stac version
+    test_sfs['stac_version'] = '0.9.0'
+
+    # items are missing stac version
+    for item in test_sfs['features']:
+        item['stac_version'] = '0.9.0'
+
+    # collection extents are from an older stac version
+    for coll in test_sfs['collections']:
+        coll['extent']['spatial'] = {'bbox': [coll['extent']['spatial']]}
+        coll['extent']['temporal'] = {'interval': [coll['extent']['temporal']]}
+    valid_sfs = SingleFileStac(**test_sfs).to_dict()
+
+    for idx, feat in enumerate(test_sfs['features']):
+        test_equivalency(feat, valid_sfs['features'][idx])
+
+    for idx, feat in enumerate(test_sfs['collections']):
+        test_equivalency(feat, valid_sfs['collections'][idx])
