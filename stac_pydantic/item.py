@@ -6,6 +6,7 @@ from pydantic import Field, BaseModel, root_validator
 from .geojson import Feature, FeatureCollection
 from .shared import Asset, BBox, ExtensionTypes, Link
 from .extensions import Extensions
+from .version import STAC_VERSION
 
 
 class ItemProperties(BaseModel):
@@ -24,7 +25,7 @@ class Item(Feature):
     https://github.com/radiantearth/stac-spec/blob/v0.9.0/item-spec/item-spec.md
     """
     id: str
-    stac_version: str
+    stac_version: str = Field(STAC_VERSION, const=True)
     properties: ItemProperties
     assets: Dict[str, Asset]
     links: List[Link]
@@ -54,7 +55,7 @@ class ItemCollection(FeatureCollection):
     https://github.com/radiantearth/stac-spec/blob/v0.9.0/item-spec/itemcollection-spec.md
     """
 
-    stac_version: str
+    stac_version: str = Field(STAC_VERSION, const=True)
     features: List[Item]
     stac_extensions: Optional[List[ExtensionTypes]]
     links: Optional[List[Link]]
