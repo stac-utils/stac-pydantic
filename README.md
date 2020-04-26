@@ -56,7 +56,8 @@ item = Item(**stac_item)
 ```
 
 #### Explicit
-You can control which extensions are validated against by explicitly including them in the model.
+You can control which extensions are validated against by explicitly including them in the model.  Implicit extensions
+are validated on top of explicit ones.
 ```python
 from stac_pydantic import Item, ItemProperties, Extensions
 
@@ -123,7 +124,12 @@ item = Item(**stac_item)
 assert item.properties.row == 230
 assert item.properties.column == 178
 ```
-You can also validate vendor extensions explicitly as shown above.
+Vendor extensions are often defined in `stac_extensions` as a [remote reference](https://github.com/radiantearth/stac-spec/blob/v0.9.0/item-spec/examples/landsat8-sample.json#L6) to a JSON schema.  When registering extensions, you may use the `alias` kwarg to 
+indicate that the model belongs represents a specific remote reference:
+
+```python
+Extensions.register("landsat", LandsatExtension, alias="https://example.com/stac/landsat-extension/1.0/schema.json")
+```
 
 ### Exporting Models
 Most STAC extensions are namespaced with a colon (ex `eo:gsd`) to keep them distinct from other extensions.  Because

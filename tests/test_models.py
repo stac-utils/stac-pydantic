@@ -1,11 +1,22 @@
 import pytest
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from stac_pydantic import Collection, Item, ItemCollection, ItemProperties
 from stac_pydantic.extensions import Extensions
 from stac_pydantic.extensions.single_file_stac import SingleFileStac
 
+
+class LandsatExtension(BaseModel):
+    path: int
+    row: int
+
+    class Config:
+        allow_population_by_fieldname = True
+        alias_generator = lambda field_name: f"landsat:{field_name}"
+
+landsat_alias = "https://example.com/stac/landsat-extension/1.0/schema.json"
+Extensions.register("landsat", LandsatExtension, alias=landsat_alias)
 
 @pytest.mark.parametrize(
     "infile",
@@ -140,18 +151,7 @@ def test_vendor_extension_validation(request_test_data, test_equivalency):
     )
 
     # Currently doesn't support remote extensions
-    extension_id = "landsat"
-    test_item["stac_extensions"][-1] = extension_id
-
-    class LandsatExtension(BaseModel):
-        path: int
-        row: int
-
-        class Config:
-            allow_population_by_fieldname = True
-            alias_generator = lambda field_name: f"landsat:{field_name}"
-
-    Extensions.register(extension_id, LandsatExtension)
+    test_item["stac_extensions"][-1] = landsat_alias
 
     valid_item = Item(**test_item).to_dict()
     test_equivalency(test_item, valid_item)

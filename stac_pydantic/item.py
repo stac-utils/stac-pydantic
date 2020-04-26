@@ -39,8 +39,8 @@ class Item(Feature):
         errors = []
         if "stac_extensions" in values:
             for ext in values["stac_extensions"]:
-                if "http" not in ext and ext != "checksum":
-                    ext_model = getattr(Extensions, ext)
+                if ext != "checksum":
+                    ext_model = Extensions.get(ext)
                     try:
                         ext_model(**values["properties"])
                     except ValidationError as e:

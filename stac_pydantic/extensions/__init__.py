@@ -26,6 +26,21 @@ class Extensions:
     version = VersionExtension
     view = ViewExtension
 
+    aliases={}
+
     @classmethod
-    def register(cls, k, v):
+    def register(cls, k, v, alias=None):
         setattr(cls, k, v)
+
+        if alias:
+            cls.aliases[alias] = k
+
+    @classmethod
+    def get(cls, k):
+        try:
+            return getattr(cls, k)
+        except AttributeError:
+            try:
+                return getattr(cls, cls.aliases[k])
+            except KeyError:
+                raise AttributeError(f"Invalid extension name or alias: {k}")

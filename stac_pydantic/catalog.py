@@ -28,9 +28,8 @@ class Catalog(BaseModel):
         if "stac_extensions" in values:
             if values["stac_extensions"]:
                 for ext in values["stac_extensions"]:
-                    if "http" not in ext:
-                        ext_model = getattr(Extensions, ext)
-                        ext_model(**values)
+                    ext_model = Extensions.get(ext)
+                    ext_model(**values)
         return values
 
     def to_dict(self, **kwargs):
