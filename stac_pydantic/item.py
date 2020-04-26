@@ -1,7 +1,7 @@
 from datetime import datetime as dt
 from typing import Dict, List, Optional, Union
 
-from pydantic import Field, BaseModel, root_validator
+from pydantic import Field, BaseModel, root_validator, ValidationError
 
 from .geojson import Feature, FeatureCollection
 from .shared import Asset, BBox, ExtensionTypes, Link
@@ -33,14 +33,29 @@ class Item(Feature):
     stac_extensions: Optional[List[Union[str, ExtensionTypes]]]
     collection: Optional[str]
 
+
     @root_validator(pre=True)
     def validate_extensions(cls, values):
+        errors = []
         if "stac_extensions" in values:
-            if values["stac_extensions"]:
-                for ext in values["stac_extensions"]:
-                    if "http" not in ext and ext != "checksum":
-                        ext_model = getattr(Extensions, ext)
+            for ext in values["stac_extensions"]:
+                if "http" not in ext and ext != "checksum":
+                    ext_model = getattr(Extensions, ext)
+                    try:
                         ext_model(**values["properties"])
+                    except ValidationError as e:
+                        raw_errors = e.raw_errors
+                        for error in raw_errors:
+                            error._loc = f'properties -> {error._loc}'
+                            error.exc = type(
+                                error.exc.__class__.__name__,
+                                (Exception, ),
+                                {"msg_template": f"{error.exc.msg_template} ({ext})"}
+                            )()
+                        errors+=e.raw_errors
+        if errors:
+            raise ValidationError(errors=errors, model=Item)
+
         return values
 
     def to_dict(self, **kwargs):
