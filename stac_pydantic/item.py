@@ -4,7 +4,7 @@ from typing import Dict, List, Optional, Union
 from pydantic import Field, BaseModel, root_validator
 
 from .geojson import Feature, FeatureCollection
-from .shared import Asset, ExtensionTypes, Link
+from .shared import Asset, BBox, ExtensionTypes, Link
 from .extensions import Extensions
 
 
@@ -20,11 +20,15 @@ class ItemProperties(BaseModel):
 
 
 class Item(Feature):
+    """
+    https://github.com/radiantearth/stac-spec/blob/v0.9.0/item-spec/item-spec.md
+    """
     id: str
+    stac_version: str
     properties: ItemProperties
     assets: Dict[str, Asset]
     links: List[Link]
-    stac_version: Optional[str]
+    bbox: BBox
     stac_extensions: Optional[List[Union[str, ExtensionTypes]]]
     collection: Optional[str]
 
@@ -51,9 +55,9 @@ class ItemCollection(FeatureCollection):
     """
 
     stac_version: str
-    stac_extensions: Optional[List[ExtensionTypes]]
     features: List[Item]
-    links: List[Link]
+    stac_extensions: Optional[List[ExtensionTypes]]
+    links: Optional[List[Link]]
 
     def to_dict(self, **kwargs):
         return self.dict(by_alias=True, exclude_unset=True, **kwargs)
