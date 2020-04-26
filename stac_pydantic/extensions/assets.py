@@ -10,8 +10,8 @@ class CollectionAsset(BaseModel):
     https://github.com/radiantearth/stac-spec/blob/v0.0.9/extensions/asset#asset-object
     """
 
-    type: str
-    title: str
+    type: Optional[str]
+    title: Optional[str]
     description: Optional[str]
     roles: Optional[List[AssetRoles]]
 

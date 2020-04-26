@@ -73,6 +73,18 @@ def test_version_extension_collection(request_test_data, test_equivalency):
     valid_coll = Collection(**test_coll).to_dict()
     test_equivalency(test_coll, valid_coll)
 
+def test_collection_assets(request_test_data, test_equivalency):
+    test_coll = request_test_data(
+        "https://raw.githubusercontent.com/radiantearth/stac-spec/v0.9.0/extensions/asset/examples/example-landsat8.json"
+    )
+    # The example is missing links
+    test_coll['links'] = [{
+            "href": "mocked",
+            "rel": "items"
+        }
+    ]
+    valid_coll = Collection(**test_coll).to_dict()
+    assert test_coll['assets'] == valid_coll['assets']
 
 def test_label_extension(request_test_data, test_equivalency):
     test_item = request_test_data(
