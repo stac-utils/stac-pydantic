@@ -125,7 +125,7 @@ assert item.properties.row == 230
 assert item.properties.column == 178
 ```
 Vendor extensions are often defined in `stac_extensions` as a [remote reference](https://github.com/radiantearth/stac-spec/blob/v0.9.0/item-spec/examples/landsat8-sample.json#L6) to a JSON schema.  When registering extensions, you may use the `alias` kwarg to 
-indicate that the model belongs represents a specific remote reference:
+indicate that the model represents a specific remote reference:
 
 ```python
 Extensions.register("landsat", LandsatExtension, alias="https://example.com/stac/landsat-extension/1.0/schema.json")
