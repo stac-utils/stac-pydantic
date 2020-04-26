@@ -14,7 +14,7 @@ class HorizontalAxis(str, AutoValueEnum):
 
 class DimensionObject(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/tree/master/extensions/datacube#additional-dimension-object
+    https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/datacube#additional-dimension-object
     """
 
     type: str
@@ -28,7 +28,7 @@ class DimensionObject(BaseModel):
 
 class HorizontalSpatialDimension(DimensionObject):
     """
-    https://github.com/radiantearth/stac-spec/tree/master/extensions/datacube#horizontal-spatial-dimension-object
+    https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/datacube#horizontal-spatial-dimension-object
     """
 
     type: str = Field("spatial", const=True)
@@ -38,7 +38,7 @@ class HorizontalSpatialDimension(DimensionObject):
 
 class VerticalSpatialDimension(HorizontalSpatialDimension):
     """
-    https://github.com/radiantearth/stac-spec/tree/master/extensions/datacube#vertical-spatial-dimension-object
+    https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/datacube#vertical-spatial-dimension-object
     """
 
     axis: str = Field("z", const=True)
@@ -46,7 +46,7 @@ class VerticalSpatialDimension(HorizontalSpatialDimension):
 
 class TemporalDimension(DimensionObject):
     """
-    https://github.com/radiantearth/stac-spec/tree/master/extensions/datacube#temporal-dimension-object
+    https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/datacube#temporal-dimension-object
     """
 
     type: str = Field("temporal", const=True)
@@ -55,7 +55,7 @@ class TemporalDimension(DimensionObject):
 
 class DatacubeExtension(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/tree/master/extensions/datacube#data-cube-extension-specification
+    https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/datacube#data-cube-extension-specification
     """
 
     dimensions: Dict[
@@ -66,9 +66,8 @@ class DatacubeExtension(BaseModel):
             VerticalSpatialDimension,
             TemporalDimension,
         ],
-    ]
+    ] = Field(..., alias="cube:dimensions")
 
     class Config:
         use_enum_values = True
         allow_population_by_fieldname = True
-        alias_generator = lambda field_name: f"cube:{field_name}"
