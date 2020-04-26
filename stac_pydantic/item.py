@@ -51,7 +51,7 @@ class Item(Feature):
 
 class ItemCollection(FeatureCollection):
     """
-    https://github.com/radiantearth/stac-spec/blob/v.0.9,0/item-spec/itemcollection-spec.md
+    https://github.com/radiantearth/stac-spec/blob/v0.9.0/item-spec/itemcollection-spec.md
     """
 
     stac_version: str
