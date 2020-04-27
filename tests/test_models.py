@@ -17,6 +17,7 @@ class LandsatExtension(BaseModel):
         allow_population_by_fieldname = True
         alias_generator = lambda field_name: f"landsat:{field_name}"
 
+
 landsat_alias = "https://example.com/stac/landsat-extension/1.0/schema.json"
 Extensions.register("landsat", LandsatExtension, alias=landsat_alias)
 
@@ -38,6 +39,7 @@ VERSION_EXTENSION_ITEM = "https://raw.githubusercontent.com/radiantearth/stac-sp
 VERSION_EXTENSION_COLLECTION = "https://raw.githubusercontent.com/radiantearth/stac-spec/v0.9.0/extensions/version/examples/collection.json"
 VIEW_EXTENSION = "https://raw.githubusercontent.com/radiantearth/stac-spec/v0.9.0/extensions/view/examples/example-landsat8.json"
 
+
 @pytest.mark.parametrize(
     "infile",
     [
@@ -56,9 +58,7 @@ def test_item_extensions(infile, request_test_data, test_equivalency):
 
 
 def test_sar_extensions(request_test_data, test_equivalency):
-    test_item = request_test_data(
-        SAR_EXTENSION
-    )
+    test_item = request_test_data(SAR_EXTENSION)
 
     # This example uses eo:bands instead of sar:polarizations for the measurement asset
     assert "sar:bands" in test_item["assets"]["measurement"]
@@ -71,9 +71,7 @@ def test_sar_extensions(request_test_data, test_equivalency):
 
 
 def test_proj_extension(request_test_data, test_equivalency):
-    test_item = request_test_data(
-        PROJ_EXTENSION
-    )
+    test_item = request_test_data(PROJ_EXTENSION)
 
     # This example uses EO extension but doesn't include eo:gsd (required field)
     assert "eo" in test_item["stac_extensions"]
@@ -85,9 +83,7 @@ def test_proj_extension(request_test_data, test_equivalency):
 
 
 def test_version_extension_item(request_test_data, test_equivalency):
-    test_item = request_test_data(
-        VERSION_EXTENSION_ITEM
-    )
+    test_item = request_test_data(VERSION_EXTENSION_ITEM)
 
     # This example adds version fields to top level of the feature instead of inside properties
     assert "version" in test_item
@@ -98,29 +94,21 @@ def test_version_extension_item(request_test_data, test_equivalency):
 
 
 def test_version_extension_collection(request_test_data, test_equivalency):
-    test_coll = request_test_data(
-        VERSION_EXTENSION_COLLECTION
-    )
+    test_coll = request_test_data(VERSION_EXTENSION_COLLECTION)
     valid_coll = Collection(**test_coll).to_dict()
     test_equivalency(test_coll, valid_coll)
 
+
 def test_collection_assets(request_test_data):
-    test_coll = request_test_data(
-        ASSET_EXTENSION
-    )
+    test_coll = request_test_data(ASSET_EXTENSION)
     # The example is missing links
-    test_coll['links'] = [{
-            "href": "mocked",
-            "rel": "items"
-        }
-    ]
+    test_coll["links"] = [{"href": "mocked", "rel": "items"}]
     valid_coll = Collection(**test_coll).to_dict()
-    assert test_coll['assets'] == valid_coll['assets']
+    assert test_coll["assets"] == valid_coll["assets"]
+
 
 def test_label_extension(request_test_data, test_equivalency):
-    test_item = request_test_data(
-        LABEL_EXTENSION
-    )
+    test_item = request_test_data(LABEL_EXTENSION)
 
     # This example contains an invalid geometry (linear ring does not close)
     coords = test_item["geometry"]["coordinates"]
@@ -132,19 +120,14 @@ def test_label_extension(request_test_data, test_equivalency):
     test_equivalency(test_item, valid_item)
 
 
-
 def test_commons_extension_collection(request_test_data, test_equivalency):
-    test_coll = request_test_data(
-        COMMONS_EXTENSION
-    )
+    test_coll = request_test_data(COMMONS_EXTENSION)
     valid_coll = Collection(**test_coll).to_dict()
     test_equivalency(test_coll, valid_coll)
 
 
 def test_explicit_extension_validation(request_test_data, test_equivalency):
-    test_item = request_test_data(
-        EO_EXTENSION
-    )
+    test_item = request_test_data(EO_EXTENSION)
 
     # This item implements the eo and view extensions
     assert test_item["stac_extensions"][:-1] == ["eo", "view"]
@@ -160,9 +143,7 @@ def test_explicit_extension_validation(request_test_data, test_equivalency):
 
 
 def test_vendor_extension_validation(request_test_data, test_equivalency):
-    test_item = request_test_data(
-        EO_EXTENSION
-    )
+    test_item = request_test_data(EO_EXTENSION)
 
     # This item implements a vendor extension
     assert (
@@ -178,20 +159,16 @@ def test_vendor_extension_validation(request_test_data, test_equivalency):
 
 def test_vendor_extension_invalid_alias(request_test_data):
     url = "https://invalid-url"
-    test_item = request_test_data(
-        EO_EXTENSION
-    )
-    test_item['stac_extensions'][-1] = url
+    test_item = request_test_data(EO_EXTENSION)
+    test_item["stac_extensions"][-1] = url
 
     with pytest.raises(AttributeError) as e:
         Item(**test_item)
-    assert str(e.value) == f'Invalid extension name or alias: {url}'
+    assert str(e.value) == f"Invalid extension name or alias: {url}"
 
 
 def test_item_collection(request_test_data, test_equivalency):
-    test_item_coll = request_test_data(
-        ITEM_COLLECTION
-    )
+    test_item_coll = request_test_data(ITEM_COLLECTION)
 
     valid_item_coll = ItemCollection(**test_item_coll).to_dict()
     for idx, feat in enumerate(test_item_coll["features"]):
@@ -199,36 +176,30 @@ def test_item_collection(request_test_data, test_equivalency):
 
 
 def test_single_file_stac(request_test_data, test_equivalency):
-    test_sfs = request_test_data(
-        SINGLE_FILE_STAC
-    )
+    test_sfs = request_test_data(SINGLE_FILE_STAC)
     # item collection is missing stac version
-    test_sfs['stac_version'] = '0.9.0'
+    test_sfs["stac_version"] = "0.9.0"
 
     # items are missing stac version
-    for item in test_sfs['features']:
-        item['stac_version'] = '0.9.0'
+    for item in test_sfs["features"]:
+        item["stac_version"] = "0.9.0"
 
     # collection extents are from an older stac version
-    for coll in test_sfs['collections']:
-        coll['extent']['spatial'] = {'bbox': [coll['extent']['spatial']]}
-        coll['extent']['temporal'] = {'interval': [coll['extent']['temporal']]}
+    for coll in test_sfs["collections"]:
+        coll["extent"]["spatial"] = {"bbox": [coll["extent"]["spatial"]]}
+        coll["extent"]["temporal"] = {"interval": [coll["extent"]["temporal"]]}
     valid_sfs = SingleFileStac(**test_sfs).to_dict()
 
-    for idx, feat in enumerate(test_sfs['features']):
-        test_equivalency(feat, valid_sfs['features'][idx])
+    for idx, feat in enumerate(test_sfs["features"]):
+        test_equivalency(feat, valid_sfs["features"][idx])
 
-    for idx, feat in enumerate(test_sfs['collections']):
-        test_equivalency(feat, valid_sfs['collections'][idx])
+    for idx, feat in enumerate(test_sfs["collections"]):
+        test_equivalency(feat, valid_sfs["collections"][idx])
 
 
 @pytest.mark.parametrize(
     "infile,model",
-    [
-        (EO_EXTENSION, Item),
-        (ITEM_COLLECTION, ItemCollection),
-        (COLLECTION, Collection)
-    ],
+    [(EO_EXTENSION, Item), (ITEM_COLLECTION, ItemCollection), (COLLECTION, Collection)],
 )
 def test_to_json(infile, model, request_test_data):
     test_item = request_test_data(infile)
@@ -244,7 +215,7 @@ def test_item_to_json(request_test_data):
 
 def test_assets_extension_validation_error(request_test_data):
     test_collection = request_test_data(ASSET_EXTENSION)
-    del test_collection['assets']
+    del test_collection["assets"]
 
     with pytest.raises(ValidationError):
         Collection(**test_collection)
@@ -252,7 +223,7 @@ def test_assets_extension_validation_error(request_test_data):
 
 def test_commons_extension_validation_error(request_test_data):
     test_collection = request_test_data(COMMONS_EXTENSION)
-    del test_collection['properties']
+    del test_collection["properties"]
 
     with pytest.raises(ValidationError):
         Collection(**test_collection)
@@ -260,21 +231,22 @@ def test_commons_extension_validation_error(request_test_data):
 
 def test_datacube_extension_validation_error(request_test_data):
     test_item = request_test_data(DATACUBE_EXTENSION)
-    test_item['properties']['cube:dimensions']['x']['extent'] = ''
+    test_item["properties"]["cube:dimensions"]["x"]["extent"] = ""
 
     with pytest.raises(ValidationError):
         item = Item(**test_item)
 
+
 def test_eo_extension_validation_error(request_test_data):
     test_item = request_test_data(EO_EXTENSION)
-    del test_item['properties']['eo:bands']
+    del test_item["properties"]["eo:bands"]
     with pytest.raises(ValidationError):
         Item(**test_item)
 
 
 def test_label_extension_validation_error(request_test_data):
     test_item = request_test_data(LABEL_EXTENSION)
-    test_item['properties']['label:type'] = 'invalid-label-type'
+    test_item["properties"]["label:type"] = "invalid-label-type"
 
     with pytest.raises(ValidationError):
         Item(**test_item)
@@ -282,7 +254,7 @@ def test_label_extension_validation_error(request_test_data):
 
 def test_point_cloud_extension_validation_error(request_test_data):
     test_item = request_test_data(POINTCLOUD_EXTENSION)
-    test_item['properties']['pc:count'] = ['not-an-int']
+    test_item["properties"]["pc:count"] = ["not-an-int"]
 
     with pytest.raises(ValidationError):
         item = Item(**test_item)
@@ -290,7 +262,7 @@ def test_point_cloud_extension_validation_error(request_test_data):
 
 def test_proj_extension_validation_error(request_test_data):
     test_item = request_test_data(PROJ_EXTENSION)
-    del test_item['properties']['proj:epsg']
+    del test_item["properties"]["proj:epsg"]
 
     with pytest.raises(ValidationError):
         item = Item(**test_item)
@@ -298,7 +270,7 @@ def test_proj_extension_validation_error(request_test_data):
 
 def test_sar_extension_validation_error(request_test_data):
     test_item = request_test_data(SAR_EXTENSION)
-    test_item['properties']['sar:polarizations'] = ['foo', 'bar']
+    test_item["properties"]["sar:polarizations"] = ["foo", "bar"]
 
     with pytest.raises(ValidationError):
         item = Item(**test_item)
@@ -306,7 +278,7 @@ def test_sar_extension_validation_error(request_test_data):
 
 def test_sci_extension_validation_error(request_test_data):
     test_item = request_test_data(SCIENTIFIC_EXTENSION)
-    test_item['properties']['sci:doi'] = [43]
+    test_item["properties"]["sci:doi"] = [43]
 
     with pytest.raises(ValidationError):
         item = Item(**test_item)
@@ -314,7 +286,7 @@ def test_sci_extension_validation_error(request_test_data):
 
 def test_single_file_stac_validation_error(request_test_data):
     test_item = request_test_data(SINGLE_FILE_STAC)
-    del test_item['collections']
+    del test_item["collections"]
 
     with pytest.raises(ValidationError):
         item = Item(**test_item)
@@ -329,7 +301,7 @@ def test_version_extension_validation_error(request_test_data):
 
 def test_view_extension_validation_error(request_test_data):
     test_item = request_test_data(VIEW_EXTENSION)
-    test_item['properties']['view:off_nadir'] = 'foo'
+    test_item["properties"]["view:off_nadir"] = "foo"
 
     with pytest.raises(ValidationError):
         item = Item(**test_item)
@@ -339,7 +311,7 @@ def test_invalid_geometry(request_test_data):
     test_item = request_test_data(EO_EXTENSION)
 
     # Remove the last coordinate
-    test_item['geometry']['coordinates'][0].pop(-1)
+    test_item["geometry"]["coordinates"][0].pop(-1)
 
     with pytest.raises(ValidationError) as e:
         Item(**test_item)
@@ -351,5 +323,5 @@ def test_geo_interface(request_test_data):
     test_item = request_test_data(EO_EXTENSION)
     item = Item(**test_item)
     geom = shape(item.geometry)
-    test_item['geometry'] = geom
+    test_item["geometry"] = geom
     item = Item(**test_item)

@@ -33,8 +33,10 @@ class ObservationDirections(str, AutoValueEnum):
     """
     https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/sar#item-fields
     """
+
     left = auto()
     right = auto()
+
 
 class SARExtension(BaseModel):
     """

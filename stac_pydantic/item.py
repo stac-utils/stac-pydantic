@@ -32,6 +32,7 @@ class Item(Feature):
     """
     https://github.com/radiantearth/stac-spec/blob/v0.9.0/item-spec/item-spec.md
     """
+
     id: str
     stac_version: str = Field(STAC_VERSION, const=True)
     properties: ItemProperties
@@ -40,7 +41,6 @@ class Item(Feature):
     bbox: BBox
     stac_extensions: Optional[List[Union[str, ExtensionTypes]]]
     collection: Optional[str]
-
 
     @root_validator(pre=True)
     def validate_extensions(cls, values):
@@ -59,7 +59,7 @@ class Item(Feature):
                                     err._loc = _parse_loc(err._loc)
                             else:
                                 error._loc = _parse_loc(error._loc)
-                        errors+=e.raw_errors
+                        errors += e.raw_errors
         if errors:
             raise ValidationError(errors=errors, model=Item)
 

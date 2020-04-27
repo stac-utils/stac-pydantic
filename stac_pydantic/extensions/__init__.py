@@ -26,7 +26,7 @@ class Extensions:
     version = VersionExtension
     view = ViewExtension
 
-    aliases={}
+    aliases = {}
 
     @classmethod
     def register(cls, k, v, alias=None):
