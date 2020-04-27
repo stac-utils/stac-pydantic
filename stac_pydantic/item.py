@@ -9,6 +9,14 @@ from .extensions import Extensions
 from .version import STAC_VERSION
 
 
+def _parse_loc(loc):
+    if isinstance(loc, tuple):
+        path = " -> ".join(loc)
+    else:
+        path = loc
+    return f"properties -> {path}"
+
+
 class ItemProperties(BaseModel):
     """
     https://github.com/radiantearth/stac-spec/blob/v0.9.0/item-spec/item-spec.md#properties-object
@@ -46,12 +54,11 @@ class Item(Feature):
                     except ValidationError as e:
                         raw_errors = e.raw_errors
                         for error in raw_errors:
-                            error._loc = f'properties -> {error._loc}'
-                            error.exc = type(
-                                error.exc.__class__.__name__,
-                                (Exception, ),
-                                {"msg_template": f"{error.exc.msg_template} ({ext})"}
-                            )()
+                            if isinstance(error, list):
+                                for err in error[0]:
+                                    err._loc = _parse_loc(err._loc)
+                            else:
+                                error._loc = _parse_loc(error._loc)
                         errors+=e.raw_errors
         if errors:
             raise ValidationError(errors=errors, model=Item)
