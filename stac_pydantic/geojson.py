@@ -27,10 +27,7 @@ class _GeometryBase(BaseModel):
 
     @validator("coordinates")
     def check_coordinates(cls, coords):
-        try:
-            geojson_instance = getattr(geojson, cls.__name__)(coordinates=coords)
-        except AttributeError as e:
-            raise ValueError(str(e))
+        geojson_instance = getattr(geojson, cls.__name__)(coordinates=coords)
 
         if geojson_instance.is_valid:
             return coords
@@ -67,10 +64,6 @@ class Feature(BaseModel):
         if hasattr(v, "__geo_interface__"):
             return v.__geo_interface__
         return v
-
-    @property
-    def __geo_interface__(self):
-        return self.dict()
 
 
 class FeatureCollection(BaseModel):
