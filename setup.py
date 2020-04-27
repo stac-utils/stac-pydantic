@@ -25,7 +25,8 @@ setup(
     tests_require=[
         "pytest",
         "pytest-cov",
-        "requests"
+        "requests",
+        "shapely"
     ],
     setup_requires=['pytest-runner']
 )
