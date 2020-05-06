@@ -23,6 +23,14 @@ class ItemProperties(BaseModel):
     """
 
     datetime: Union[str, dt] = Field(..., alias="datetime")
+    # stac common metadata (https://github.com/radiantearth/stac-spec/blob/v0.9.0/item-spec/common-metadata.md)
+    start_datetime: Optional[Union[str, dt]] = Field(None, alias="start_datetime")
+    end_datetime: Optional[Union[str, dt]] = Field(None, alias="end_datetime")
+    platform: Optional[str] = Field(None, alias="platform")
+    instruments: Optional[List[str]] = Field(None, alias="instruments")
+    constellation: Optional[str] = Field(None, alias="constellation")
+    mission: Optional[str] = Field(None, alias="mission")
+
 
     class Config:
         extra = "allow"

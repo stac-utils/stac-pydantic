@@ -39,6 +39,7 @@ VERSION_EXTENSION_ITEM = "https://raw.githubusercontent.com/radiantearth/stac-sp
 VERSION_EXTENSION_COLLECTION = "https://raw.githubusercontent.com/radiantearth/stac-spec/v0.9.0/extensions/version/examples/collection.json"
 VIEW_EXTENSION = "https://raw.githubusercontent.com/radiantearth/stac-spec/v0.9.0/extensions/view/examples/example-landsat8.json"
 
+DATETIME_RANGE = "https://raw.githubusercontent.com/radiantearth/stac-spec/v0.9.0/item-spec/examples/datetimerange.json"
 
 @pytest.mark.parametrize(
     "infile",
@@ -49,6 +50,7 @@ VIEW_EXTENSION = "https://raw.githubusercontent.com/radiantearth/stac-spec/v0.9.
         VIEW_EXTENSION,
         SCIENTIFIC_EXTENSION,
         DATACUBE_EXTENSION,
+        DATETIME_RANGE
     ],
 )
 def test_item_extensions(infile, request_test_data, test_equivalency):
