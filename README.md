@@ -1,4 +1,4 @@
-# stac-pydantic
+# stac-pydantic ![tests](https://github.com/arturo-ai/stac-pydantic/workflows/cicd/badge.svg)
 [Pydantic](https://pydantic-docs.helpmanual.io/) models for [STAC](https://github.com/radiantearth/stac-spec) Catalogs, Collections, and Items.
 
 ## Usage
@@ -20,7 +20,7 @@ stac_catalog = {
 }
 
 catalog = Catalog(**stac_catalog)
-assert catalog.id == "sample"""
+assert catalog.id == "sample"
 assert catalog.links[0].href == "item.json"
 ```
 
