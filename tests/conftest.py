@@ -1,4 +1,6 @@
 import functools
+import json
+from json import encoder
 
 import pytest
 import requests
@@ -18,9 +20,7 @@ def request_test_data():
 @pytest.fixture
 def test_equivalency():
     def dict_match(d1: dict, d2: dict):
-        for (k, v) in d1.items():
-            # Don't validate geometry because validation transforms from list to tuple
-            if k not in ("geometry", "bbox"):
-                assert d2[k] == v
-
+        d1 = json.dumps(json.loads(json.dumps(d1, sort_keys=True), parse_int=lambda x: float(x)), sort_keys=True)
+        d2 = json.dumps(json.loads(json.dumps(d2, sort_keys=True), parse_int=lambda x: float(x)), sort_keys=True)
+        assert d1 == d2
     return dict_match
