@@ -1,10 +1,8 @@
 from setuptools import setup, find_packages
 
-from stac_pydantic.version import LIBRARY_VERSION
-
 setup(
     name="stac-pydantic",
-    version=LIBRARY_VERSION,
+    version="1.0.0",
     python_requires=">=3.6",
     classifiers=[
         'Intended Audience :: Developers',
