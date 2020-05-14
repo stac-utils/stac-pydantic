@@ -1,6 +1,11 @@
 # stac-pydantic ![tests](https://github.com/arturo-ai/stac-pydantic/workflows/cicd/badge.svg)
 [Pydantic](https://pydantic-docs.helpmanual.io/) models for [STAC](https://github.com/radiantearth/stac-spec) Catalogs, Collections, and Items.
 
+## Installation
+```python
+pip install stac-pydantic
+```
+
 ## Usage
 ### Loading Models
 Load data into models with standard pydantic:
