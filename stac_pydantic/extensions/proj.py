@@ -29,5 +29,5 @@ class ProjectionExtension(BaseModel):
     centroid: Optional[CentroidObject]
 
     class Config:
-        allow_population_by_fieldname = True
+        allow_population_by_field_name = True
         alias_generator = lambda field_name: f"proj:{field_name}"

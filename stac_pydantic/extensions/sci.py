@@ -22,5 +22,5 @@ class ScientificExtension(PublicationObject):
     citation: Optional[str]
 
     class Config:
-        allow_population_by_fieldname = True
+        allow_population_by_field_name = True
         alias_generator = lambda field_name: f"sci:{field_name}"
