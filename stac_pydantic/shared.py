@@ -1,4 +1,4 @@
-from enum import auto
+from enum import auto, Enum
 from typing import List, Optional, Tuple, Union
 
 from pydantic import BaseModel, Field, Extra
@@ -31,6 +31,30 @@ class ExtensionTypes(str, AutoValueEnum):
     sci = auto()
     version = auto()
     view = auto()
+
+
+class MimeTypes(str, Enum):
+    """
+    https://github.com/radiantearth/stac-spec/blob/v0.9.0/item-spec/item-spec.md#media-types
+    """
+    # Raster
+    geotiff = "image/tiff; application=geotiff"
+    cog = "image/geo+tiff; application=geotiff; profile=cloud-optimized"
+    jp2 = "image/jp2"
+    png = "image/png"
+    jpeg = "image/jpeg"
+    # Vector
+    geojson = "application/geo+json"
+    geopackage = "application/geopackage+sqlite3"
+    kml = "application/vnd.google-earth.kml+xml"
+    kmz = "application/vnd.google-earth.kmz"
+    # Others
+    hdf = "application/x-hdf"
+    hdf5 = "application/x-hdf5"
+    xml = "application/xml"
+    json = "application/json"
+    html = "text/html"
+    text = "text/plain"
 
 
 class AssetRoles(str, AutoValueEnum):
