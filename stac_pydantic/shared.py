@@ -1,7 +1,7 @@
 from enum import auto
 from typing import List, Optional, Tuple, Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, Extra
 
 from .utils import AutoValueEnum
 
@@ -80,3 +80,4 @@ class Asset(BaseModel):
     class Config:
         allow_population_by_fieldname = True
         use_enum_values = True
+        extra = Extra.allow

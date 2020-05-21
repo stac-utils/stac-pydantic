@@ -323,6 +323,17 @@ def test_invalid_geometry():
     assert "Each linear ring must end where it started" in str(e.value)
 
 
+def test_asset_extras():
+    test_item = request(EO_EXTENSION)
+    for asset in test_item['assets']:
+        test_item['assets'][asset]['foo'] = 'bar'
+
+    item = Item(**test_item)
+    for (asset_name, asset) in item.assets.items():
+        assert asset.foo == 'bar'
+
+
+
 def test_geo_interface():
     test_item = request(EO_EXTENSION)
     item = Item(**test_item)
