@@ -17,5 +17,5 @@ class ViewExtension(BaseModel):
     sun_elevation: Optional[NumType]
 
     class Config:
-        allow_population_by_fieldname = True
+        allow_population_by_field_name = True
         alias_generator = lambda field_name: f"view:{field_name}"

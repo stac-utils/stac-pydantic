@@ -78,6 +78,6 @@ class Asset(BaseModel):
     multihash: Optional[str] = Field(None, alias="checksum:multihash")
 
     class Config:
-        allow_population_by_fieldname = True
+        allow_population_by_field_name = True
         use_enum_values = True
         extra = Extra.allow
