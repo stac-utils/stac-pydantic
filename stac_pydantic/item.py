@@ -7,7 +7,7 @@ from pydantic import Field, BaseModel, root_validator, ValidationError
 from .shared import Asset, BBox, ExtensionTypes, Link
 from .extensions import Extensions
 from .version import STAC_VERSION
-
+from .api.extensions.paging import PaginationLink
 
 def _parse_loc(loc):
     if isinstance(loc, tuple):
@@ -90,7 +90,7 @@ class ItemCollection(FeatureCollection):
     stac_version: str = Field(STAC_VERSION, const=True)
     features: List[Item]
     stac_extensions: Optional[List[ExtensionTypes]]
-    links: Optional[List[Link]]
+    links: List[Union[Link, PaginationLink]]
 
     def to_dict(self, **kwargs):
         return self.dict(by_alias=True, exclude_unset=True, **kwargs)
