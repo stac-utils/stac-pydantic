@@ -8,8 +8,8 @@ from ..version import STAC_VERSION
 
 
 class LandingPage(BaseModel):
-    title: str
     description: str
-    stac_version: Field(STAC_VERSION, const=True)
+    title: Optional[str]
+    stac_version: str = Field(STAC_VERSION, const=True)
     stac_extensions: Optional[List[Union[str, ExtensionTypes]]]
     links: List[Link]
