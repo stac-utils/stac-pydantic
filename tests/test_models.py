@@ -181,8 +181,9 @@ def test_item_collection():
 
 def test_single_file_stac():
     test_sfs = request(SINGLE_FILE_STAC)
-    # item collection is missing stac version
+    # item collection is missing stac version and links
     test_sfs["stac_version"] = "0.9.0"
+    test_sfs["links"] = [{"type": "fake", "href": "http://mocked.com", "rel": "fake"}]
 
     # items are missing stac version
     for item in test_sfs["features"]:
