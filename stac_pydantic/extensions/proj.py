@@ -1,8 +1,8 @@
 from typing import Any, Dict, Optional, Union
 
+from geojson_pydantic.geometries import Polygon
 from pydantic import BaseModel
 
-from ..geojson import Polygon
 from ..shared import BBox, NumType
 
 

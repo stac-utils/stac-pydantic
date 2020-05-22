@@ -1,9 +1,9 @@
 from datetime import datetime as dt
 from typing import Dict, List, Optional, Union
 
+from geojson_pydantic.features import Feature, FeatureCollection
 from pydantic import Field, BaseModel, root_validator, ValidationError
 
-from .geojson import Feature, FeatureCollection
 from .shared import Asset, BBox, ExtensionTypes, Link
 from .extensions import Extensions
 from .version import STAC_VERSION
