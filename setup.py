@@ -28,8 +28,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        "pydantic",
-        "geojson"
+        "geojson-pydantic"
     ],
     tests_require=[
         "pytest",
