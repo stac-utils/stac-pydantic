@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field, root_validator
 
 from .extensions.fields import FieldsExtension
 from .extensions.query import Operator
+from .extensions.sort import SortExtension
 from ..shared import BBox
 
 
@@ -18,6 +19,7 @@ class Search(BaseModel):
     limit: int = 10
     field: Optional[FieldsExtension] = Field(None, alias="fields")
     query: Optional[Dict[str, Dict[Operator, Any]]]
+    sortby: Optional[List[SortExtension]]
 
     @root_validator
     def validate_spatial_query(cls, values):
