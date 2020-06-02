@@ -1,3 +1,8 @@
+1.0.2 (2020-05-21)
+------------------
+- Add models for the STAC API spec (#7)
+
+
 1.0.1 (2020-05-21)
 ------------------
 - Allow extra asset-level fields (#1)
