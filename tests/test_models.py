@@ -1,10 +1,17 @@
+from datetime import datetime
 import json
+import time
 
 import pytest
 from pydantic import BaseModel, ValidationError
 from shapely.geometry import shape
 
 from stac_pydantic import Collection, Item, ItemCollection, ItemProperties
+from stac_pydantic.shared import Link, DATETIME_RFC339
+from stac_pydantic.api.conformance import ConformanceClasses
+from stac_pydantic.api.landing import LandingPage
+from stac_pydantic.api.search import Search
+from stac_pydantic.api.extensions.paging import PaginationLink
 from stac_pydantic.extensions import Extensions
 from stac_pydantic.extensions.single_file_stac import SingleFileStac
 
@@ -181,8 +188,9 @@ def test_item_collection():
 
 def test_single_file_stac():
     test_sfs = request(SINGLE_FILE_STAC)
-    # item collection is missing stac version
+    # item collection is missing stac version and links
     test_sfs["stac_version"] = "0.9.0"
+    test_sfs["links"] = [{"type": "fake", "href": "http://mocked.com", "rel": "fake"}]
 
     # items are missing stac version
     for item in test_sfs["features"]:
@@ -333,10 +341,273 @@ def test_asset_extras():
         assert asset.foo == 'bar'
 
 
-
 def test_geo_interface():
     test_item = request(EO_EXTENSION)
     item = Item(**test_item)
     geom = shape(item.geometry)
     test_item["geometry"] = geom
     item = Item(**test_item)
+
+
+def test_api_conformance():
+    ConformanceClasses(conformsTo=[
+        "https://conformance-class-1",
+        "http://conformance-class-2"
+    ])
+
+
+def test_api_conformance_invalid_url():
+    with pytest.raises(ValidationError):
+        ConformanceClasses(conformsTo=[
+            "s3://conformance-class"
+        ])
+
+
+def test_api_landing_page():
+    LandingPage(
+        description="stac-api landing page",
+        stac_extensions=["eo", "proj"],
+        links=[
+            Link(
+                href="http://link",
+                rel="self",
+            )
+        ]
+    )
+
+
+def test_search():
+    Search(
+        collections=["collection1", "collection2"]
+    )
+
+
+def test_search_by_id():
+    Search(
+        collections=["collection1", "collection2"],
+        ids=["id1", "id2"]
+    )
+
+
+def test_spatial_search():
+    # Search with bbox
+    Search(
+        collections=["collection1", "collection2"],
+        bbox=[-180, -90, 180, 90]
+    )
+
+    # Search with geojson
+    Search(
+        collections=["collection1", "collection2"],
+        intersects={"type": "Point", "coordinates": [0,0]}
+    )
+
+
+def test_invalid_spatial_search():
+    # bbox and intersects are mutually exclusive
+    with pytest.raises(ValidationError):
+        Search(
+            collections=["collection1", "collection2"],
+            intersects={"type": "Point", "coordinates": [0, 0]},
+            bbox=[-180, -90, 180, 90]
+        )
+
+    # Invalid geojson
+    with pytest.raises(ValidationError):
+        Search(
+            collections=["collection1", "collection2"],
+            intersects={"type": "Polygon", "coordinates": [0]}
+        )
+
+
+def test_temporal_search():
+    # Test single tailed
+    utcnow = datetime.utcnow().strftime(DATETIME_RFC339)
+    search = Search(
+        collections=["collection1"],
+        datetime=utcnow
+    )
+    assert len(search.datetime) == 2
+    assert search.datetime == ["..", utcnow]
+
+    # Test two tailed
+    search = Search(
+        collections=["collection1"],
+        datetime=f"{utcnow}/{utcnow}"
+    )
+    assert len(search.datetime) == 2
+    assert search.datetime == [utcnow, utcnow]
+
+    search = Search(
+        collections=["collection1"],
+        datetime=f"{utcnow}/.."
+    )
+    assert len(search.datetime) == 2
+    assert search.datetime == [utcnow, ".."]
+
+    # Test open date range
+    search = Search(
+        collections=["collection1"],
+        datetime=f"../.."
+    )
+    assert len(search.datetime) == 2
+    assert search.datetime == ["..", ".."]
+
+
+def test_invalid_temporal_search():
+    # Not RFC339
+    utcnow = datetime.utcnow().strftime("%Y-%m-%d")
+    with pytest.raises(ValidationError):
+        search = Search(
+            collections=["collection1"],
+            datetime=utcnow
+        )
+
+    # End date is before start date
+    start = datetime.utcnow()
+    time.sleep(2)
+    end = datetime.utcnow()
+    with pytest.raises(ValidationError):
+        search = Search(
+            collections=["collection1"],
+            datetime=f"{end.strftime(DATETIME_RFC339)}/{start.strftime(DATETIME_RFC339)}"
+        )
+
+
+def test_api_context_extension():
+    item_collection = request(ITEM_COLLECTION)
+    item_collection.update({
+        'context': {
+            'returned': 10,
+            'limit': 10,
+            'matched': 100
+        }
+    })
+    ItemCollection(**item_collection)
+
+
+def test_api_context_extension_invalid():
+    item_collection = request(ITEM_COLLECTION)
+    item_collection.update({
+        'context': {
+            'returned': 20,
+            'limit': 10,
+            'matched': 100
+        }
+    })
+
+    with pytest.raises(ValidationError):
+        ItemCollection(**item_collection)
+
+
+def test_api_fields_extension():
+    search = Search(
+        collections=["collection1"],
+        fields={
+            "includes": {"field1", "field2"},
+            "excludes": {"field3", "field4"}
+        }
+    )
+
+
+def test_api_paging_extension():
+    item_collection = request(ITEM_COLLECTION)
+    item_collection['links'] += [
+        {
+            'rel': 'next',
+            'method': 'GET',
+            'href': 'http://next'
+        },
+        {
+            'rel': 'previous',
+            'method': 'GET',
+            'href': 'http://prev'
+        }
+    ]
+    ItemCollection(**item_collection)
+
+
+def test_api_invalid_paging_link():
+    # Invalid rel type
+    with pytest.raises(ValidationError):
+        PaginationLink(
+            rel="self",
+            method="GET",
+            href="http://next"
+        )
+
+    # Invalid method
+    with pytest.raises(ValidationError):
+        PaginationLink(
+            rel="next",
+            method="DELETE",
+            href="http://next"
+        )
+
+
+def test_api_query_extension():
+    # One field
+    Search(
+        collections=["collection1", "collection2"],
+        query={
+            'field': {
+                'lt': 100
+            }
+        }
+    )
+
+    # Many fields
+    Search(
+        collections=["collection1", "collection2"],
+        query={
+            'field': {
+                'lt': 100
+            },
+            'field1': {
+                'gt': 200
+            }
+        }
+    )
+
+
+def test_api_query_extension_invalid():
+    # Invalid operator
+    with pytest.raises(ValidationError):
+        Search(
+            collections=["collection1", "collection2"],
+            query={
+                'field': {
+                    'greater_than': 100
+                }
+            }
+        )
+
+
+def test_api_sort_extension():
+    Search(
+        collections=["collection1", "collection2"],
+        sortby=[
+            {
+                "field": "field1",
+                "direction": "asc"
+            },
+            {
+                "field": "field2",
+                "direction": "desc"
+            }
+        ]
+    )
+
+
+def test_api_sort_extension_invalid():
+    # Invalid sort direction
+    with pytest.raises(ValidationError):
+        Search(
+            collections=["collection1", "collection2"],
+            sortby=[
+                {
+                    "field": "field1",
+                    "direction": "ascending"
+                }
+            ]
+        )

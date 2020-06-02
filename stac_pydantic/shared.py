@@ -11,6 +11,8 @@ BBox = Union[
     Tuple[NumType, NumType, NumType, NumType, NumType, NumType],  # 3D bbox
 ]
 
+# https://tools.ietf.org/html/rfc3339#section-5.6
+DATETIME_RFC339 = "%Y-%m-%dT%H:%M:%SZ"
 
 class ExtensionTypes(str, AutoValueEnum):
     """
