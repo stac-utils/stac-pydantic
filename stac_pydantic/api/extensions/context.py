@@ -4,6 +4,9 @@ from pydantic import BaseModel, validator
 
 
 class ContextExtension(BaseModel):
+    """
+    https://github.com/radiantearth/stac-api-spec/tree/master/extensions/context#context-extension-specification
+    """
     returned: int
     limit: Optional[int]
     matched: Optional[int]

@@ -11,6 +11,9 @@ from ..shared import BBox, DATETIME_RFC339
 
 
 class Search(BaseModel):
+    """
+    https://github.com/radiantearth/stac-api-spec/blob/master/api-spec.md#filter-parameters-and-fields
+    """
     collections: List[str]
     ids: Optional[List[str]]
     bbox: Optional[BBox]
