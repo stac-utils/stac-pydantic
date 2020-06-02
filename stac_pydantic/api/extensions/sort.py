@@ -12,4 +12,4 @@ class SortDirections(str, AutoValueEnum):
 
 class SortExtension(BaseModel):
     field: str
-    direction: SortDirections = SortDirections.desc
+    direction: SortDirections
