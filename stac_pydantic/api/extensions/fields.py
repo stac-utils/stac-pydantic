@@ -1,8 +1,8 @@
-from typing import List, Optional
+from typing import Optional, Set
 
 from pydantic import BaseModel
 
 
 class FieldsExtension(BaseModel):
-    includes: Optional[List[str]]
-    excludes: Optional[List[str]]
+    includes: Optional[Set[str]]
+    excludes: Optional[Set[str]]
