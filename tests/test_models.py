@@ -1,10 +1,16 @@
+from datetime import datetime
 import json
+import time
 
 import pytest
 from pydantic import BaseModel, ValidationError
 from shapely.geometry import shape
 
 from stac_pydantic import Collection, Item, ItemCollection, ItemProperties
+from stac_pydantic.shared import Link, DATETIME_RFC339
+from stac_pydantic.api.conformance import ConformanceClasses
+from stac_pydantic.api.landing import LandingPage
+from stac_pydantic.api.search import Search
 from stac_pydantic.extensions import Extensions
 from stac_pydantic.extensions.single_file_stac import SingleFileStac
 
@@ -334,10 +340,134 @@ def test_asset_extras():
         assert asset.foo == 'bar'
 
 
-
 def test_geo_interface():
     test_item = request(EO_EXTENSION)
     item = Item(**test_item)
     geom = shape(item.geometry)
     test_item["geometry"] = geom
     item = Item(**test_item)
+
+
+def test_api_conformance():
+    ConformanceClasses(conformsTo=[
+        "https://conformance-class-1",
+        "http://conformance-class-2"
+    ])
+
+
+def test_api_conformance_invalid_url():
+    with pytest.raises(ValidationError):
+        ConformanceClasses(conformsTo=[
+            "s3://conformance-class"
+        ])
+
+
+def test_api_landing_page():
+    LandingPage(
+        description="stac-api landing page",
+        stac_extensions=["eo", "proj"],
+        links=[
+            Link(
+                href="http://link",
+                rel="self",
+            )
+        ]
+    )
+
+
+def test_search():
+    Search(
+        collections=["collection1", "collection2"]
+    )
+
+
+def test_search_by_id():
+    Search(
+        collections=["collection1", "collection2"],
+        ids=["id1", "id2"]
+    )
+
+
+def test_spatial_search():
+    # Search with bbox
+    Search(
+        collections=["collection1", "collection2"],
+        bbox=[-180, -90, 180, 90]
+    )
+
+    # Search with geojson
+    Search(
+        collections=["collection1", "collection2"],
+        intersects={"type": "Point", "coordinates": [0,0]}
+    )
+
+
+def test_invalid_spatial_search():
+    # bbox and intersects are mutually exclusive
+    with pytest.raises(ValidationError):
+        Search(
+            collections=["collection1", "collection2"],
+            intersects={"type": "Point", "coordinates": [0, 0]},
+            bbox=[-180, -90, 180, 90]
+        )
+
+    # Invalid geojson
+    with pytest.raises(ValidationError):
+        Search(
+            collections=["collection1", "collection2"],
+            intersects={"type": "Polygon", "coordinates": [0]}
+        )
+
+
+def test_temporal_search():
+    # Test single tailed
+    utcnow = datetime.utcnow().strftime(DATETIME_RFC339)
+    search = Search(
+        collections=["collection1"],
+        datetime=utcnow
+    )
+    assert len(search.datetime) == 2
+    assert search.datetime == ["..", utcnow]
+
+    # Test two tailed
+    search = Search(
+        collections=["collection1"],
+        datetime=f"{utcnow}/{utcnow}"
+    )
+    assert len(search.datetime) == 2
+    assert search.datetime == [utcnow, utcnow]
+
+    search = Search(
+        collections=["collection1"],
+        datetime=f"{utcnow}/.."
+    )
+    assert len(search.datetime) == 2
+    assert search.datetime == [utcnow, ".."]
+
+    # Test open date range
+    search = Search(
+        collections=["collection1"],
+        datetime=f"../.."
+    )
+    assert len(search.datetime) == 2
+    assert search.datetime == ["..", ".."]
+
+
+def test_invalid_temporal_search():
+    # Not RFC339
+    utcnow = datetime.utcnow().strftime("%Y-%m-%d")
+    with pytest.raises(ValidationError):
+        search = Search(
+            collections=["collection1"],
+            datetime=utcnow
+        )
+
+    # End date is before start date
+    start = datetime.utcnow()
+    time.sleep(2)
+    end = datetime.utcnow()
+    with pytest.raises(ValidationError):
+        search = Search(
+            collections=["collection1"],
+            datetime=f"{end.strftime(DATETIME_RFC339)}/{start.strftime(DATETIME_RFC339)}"
+        )
