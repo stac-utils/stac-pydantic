@@ -91,7 +91,7 @@ class ItemCollection(FeatureCollection):
     stac_version: str = Field(STAC_VERSION, const=True)
     features: List[Item]
     stac_extensions: Optional[List[ExtensionTypes]]
-    links: List[Union[Link, PaginationLink]]
+    links: List[Union[PaginationLink, Link]]
     context: Optional[ContextExtension]
 
     def to_dict(self, **kwargs):
