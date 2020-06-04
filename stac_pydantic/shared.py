@@ -59,6 +59,27 @@ class MimeTypes(str, Enum):
     text = "text/plain"
 
 
+class Relations(str, AutoValueEnum):
+    """
+    https://github.com/radiantearth/stac-spec/blob/v0.9.0/collection-spec/collection-spec.md#relation-types
+    """
+    self = auto()
+    root = auto()
+    parent = auto()
+    child = auto()
+    item = auto()
+    license = auto()
+    derived_from = auto()
+    collection = auto()
+    alternate = auto()
+    previous = auto()
+    next = auto()
+    conformance = auto()
+    docs = auto()
+    tiles = auto()
+    search = auto()
+
+
 class AssetRoles(str, AutoValueEnum):
     """
     https://github.com/radiantearth/stac-spec/blob/v0.9.0/extensions/asset/README.md
