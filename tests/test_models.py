@@ -397,10 +397,11 @@ def test_spatial_search():
     )
 
     # Search with geojson
-    Search(
+    search = Search(
         collections=["collection1", "collection2"],
         intersects={"type": "Point", "coordinates": [0,0]}
     )
+    shape(search.intersects)
 
 
 def test_invalid_spatial_search():
@@ -514,17 +515,33 @@ def test_api_paging_extension():
     item_collection = request(ITEM_COLLECTION)
     item_collection['links'] += [
         {
+            'title': 'next page',
             'rel': 'next',
             'method': 'GET',
             'href': 'http://next'
         },
         {
+            'title': 'previous page',
             'rel': 'previous',
-            'method': 'GET',
-            'href': 'http://prev'
+            'method': 'POST',
+            'href': 'http://prev',
+            'body': {
+                'key': 'value'
+            }
         }
     ]
-    ItemCollection(**item_collection)
+    model = ItemCollection(**item_collection)
+    links = model.to_dict()['links']
+
+    # Make sure we can mix links and pagination links
+    normal_link = Link(**links[0])
+    assert normal_link.rel == "self"
+    next_link = PaginationLink(**links[1])
+    assert next_link.rel == "next"
+    previous_link = PaginationLink(**links[2])
+    assert previous_link.rel == "previous"
+    assert previous_link.body == {'key': 'value'}
+
 
 
 def test_api_invalid_paging_link():

@@ -28,7 +28,7 @@ class Search(BaseModel):
     def validate_spatial(cls, v, values):
         if v and values['bbox']:
             raise ValueError("intersects and bbox parameters are mutually exclusive")
-        return values
+        return v
 
     @validator("datetime")
     def validate_datetime(cls, v):
