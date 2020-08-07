@@ -14,9 +14,11 @@ from stac_pydantic.api.search import Search
 from stac_pydantic.api.extensions.paging import PaginationLink
 from stac_pydantic.extensions import Extensions
 from stac_pydantic.extensions.single_file_stac import SingleFileStac
+from stac_pydantic.item import item_factory
 
 
 from .conftest import dict_match, request
+
 
 class LandsatExtension(BaseModel):
     path: int
@@ -50,6 +52,7 @@ VIEW_EXTENSION = "https://raw.githubusercontent.com/radiantearth/stac-spec/v0.9.
 
 DATETIME_RANGE = "https://raw.githubusercontent.com/radiantearth/stac-spec/v0.9.0/item-spec/examples/datetimerange.json"
 
+
 @pytest.mark.parametrize(
     "infile",
     [
@@ -59,7 +62,7 @@ DATETIME_RANGE = "https://raw.githubusercontent.com/radiantearth/stac-spec/v0.9.
         VIEW_EXTENSION,
         SCIENTIFIC_EXTENSION,
         DATACUBE_EXTENSION,
-        DATETIME_RANGE
+        DATETIME_RANGE,
     ],
 )
 def test_item_extensions(infile):
@@ -174,7 +177,7 @@ def test_vendor_extension_invalid_alias():
     test_item["stac_extensions"][-1] = url
 
     with pytest.raises(AttributeError) as e:
-        Item(**test_item)
+        model = item_factory(test_item)
     assert str(e.value) == f"Invalid extension name or alias: {url}"
 
 
@@ -245,15 +248,17 @@ def test_datacube_extension_validation_error():
     test_item = request(DATACUBE_EXTENSION)
     test_item["properties"]["cube:dimensions"]["x"]["extent"] = ""
 
+    model = item_factory(test_item)
     with pytest.raises(ValidationError):
-        item = Item(**test_item)
+        model(**test_item)
 
 
 def test_eo_extension_validation_error():
     test_item = request(EO_EXTENSION)
+    model = item_factory(test_item)
     del test_item["properties"]["eo:bands"]
     with pytest.raises(ValidationError):
-        Item(**test_item)
+        model(**test_item)
 
 
 def test_label_extension_validation_error():
@@ -267,33 +272,37 @@ def test_label_extension_validation_error():
 def test_point_cloud_extension_validation_error():
     test_item = request(POINTCLOUD_EXTENSION)
     test_item["properties"]["pc:count"] = ["not-an-int"]
+    model = item_factory(test_item)
 
     with pytest.raises(ValidationError):
-        item = Item(**test_item)
+        model(**test_item)
 
 
 def test_proj_extension_validation_error():
     test_item = request(PROJ_EXTENSION)
     del test_item["properties"]["proj:epsg"]
+    model = item_factory(test_item)
 
     with pytest.raises(ValidationError):
-        item = Item(**test_item)
+        model(**test_item)
 
 
 def test_sar_extension_validation_error():
     test_item = request(SAR_EXTENSION)
     test_item["properties"]["sar:polarizations"] = ["foo", "bar"]
+    model = item_factory(test_item)
 
     with pytest.raises(ValidationError):
-        item = Item(**test_item)
+        model(**test_item)
 
 
 def test_sci_extension_validation_error():
     test_item = request(SCIENTIFIC_EXTENSION)
     test_item["properties"]["sci:doi"] = [43]
+    model = item_factory(test_item)
 
     with pytest.raises(ValidationError):
-        item = Item(**test_item)
+        model(**test_item)
 
 
 def test_single_file_stac_validation_error():
@@ -301,22 +310,24 @@ def test_single_file_stac_validation_error():
     del test_item["collections"]
 
     with pytest.raises(ValidationError):
-        item = Item(**test_item)
+        Item(**test_item)
 
 
 def test_version_extension_validation_error():
     test_item = request(VERSION_EXTENSION_ITEM)
+    model = item_factory(test_item)
 
     with pytest.raises(ValidationError):
-        item = Item(**test_item)
+        model(**test_item)
 
 
 def test_view_extension_validation_error():
     test_item = request(VIEW_EXTENSION)
     test_item["properties"]["view:off_nadir"] = "foo"
+    model = item_factory(test_item)
 
     with pytest.raises(ValidationError):
-        item = Item(**test_item)
+        model(**test_item)
 
 
 def test_invalid_geometry():
@@ -328,17 +339,15 @@ def test_invalid_geometry():
     with pytest.raises(ValidationError) as e:
         Item(**test_item)
 
-    assert "Each linear ring must end where it started" in str(e.value)
-
 
 def test_asset_extras():
     test_item = request(EO_EXTENSION)
-    for asset in test_item['assets']:
-        test_item['assets'][asset]['foo'] = 'bar'
+    for asset in test_item["assets"]:
+        test_item["assets"][asset]["foo"] = "bar"
 
     item = Item(**test_item)
     for (asset_name, asset) in item.assets.items():
-        assert asset.foo == 'bar'
+        assert asset.foo == "bar"
 
 
 def test_geo_interface():
@@ -346,60 +355,44 @@ def test_geo_interface():
     item = Item(**test_item)
     geom = shape(item.geometry)
     test_item["geometry"] = geom
-    item = Item(**test_item)
+    Item(**test_item)
 
 
 def test_api_conformance():
-    ConformanceClasses(conformsTo=[
-        "https://conformance-class-1",
-        "http://conformance-class-2"
-    ])
+    ConformanceClasses(
+        conformsTo=["https://conformance-class-1", "http://conformance-class-2"]
+    )
 
 
 def test_api_conformance_invalid_url():
     with pytest.raises(ValidationError):
-        ConformanceClasses(conformsTo=[
-            "s3://conformance-class"
-        ])
+        ConformanceClasses(conformsTo=["s3://conformance-class"])
 
 
 def test_api_landing_page():
     LandingPage(
         description="stac-api landing page",
         stac_extensions=["eo", "proj"],
-        links=[
-            Link(
-                href="http://link",
-                rel="self",
-            )
-        ]
+        links=[Link(href="http://link", rel="self",)],
     )
 
 
 def test_search():
-    Search(
-        collections=["collection1", "collection2"]
-    )
+    Search(collections=["collection1", "collection2"])
 
 
 def test_search_by_id():
-    Search(
-        collections=["collection1", "collection2"],
-        ids=["id1", "id2"]
-    )
+    Search(collections=["collection1", "collection2"], ids=["id1", "id2"])
 
 
 def test_spatial_search():
     # Search with bbox
-    Search(
-        collections=["collection1", "collection2"],
-        bbox=[-180, -90, 180, 90]
-    )
+    Search(collections=["collection1", "collection2"], bbox=[-180, -90, 180, 90])
 
     # Search with geojson
     search = Search(
         collections=["collection1", "collection2"],
-        intersects={"type": "Point", "coordinates": [0,0]}
+        intersects={"type": "Point", "coordinates": [0, 0]},
     )
     shape(search.intersects)
 
@@ -410,47 +403,35 @@ def test_invalid_spatial_search():
         Search(
             collections=["collection1", "collection2"],
             intersects={"type": "Point", "coordinates": [0, 0]},
-            bbox=[-180, -90, 180, 90]
+            bbox=[-180, -90, 180, 90],
         )
 
     # Invalid geojson
     with pytest.raises(ValidationError):
         Search(
             collections=["collection1", "collection2"],
-            intersects={"type": "Polygon", "coordinates": [0]}
+            intersects={"type": "Polygon", "coordinates": [0]},
         )
 
 
 def test_temporal_search():
     # Test single tailed
     utcnow = datetime.utcnow().strftime(DATETIME_RFC339)
-    search = Search(
-        collections=["collection1"],
-        datetime=utcnow
-    )
+    search = Search(collections=["collection1"], datetime=utcnow)
     assert len(search.datetime) == 2
     assert search.datetime == ["..", utcnow]
 
     # Test two tailed
-    search = Search(
-        collections=["collection1"],
-        datetime=f"{utcnow}/{utcnow}"
-    )
+    search = Search(collections=["collection1"], datetime=f"{utcnow}/{utcnow}")
     assert len(search.datetime) == 2
     assert search.datetime == [utcnow, utcnow]
 
-    search = Search(
-        collections=["collection1"],
-        datetime=f"{utcnow}/.."
-    )
+    search = Search(collections=["collection1"], datetime=f"{utcnow}/..")
     assert len(search.datetime) == 2
     assert search.datetime == [utcnow, ".."]
 
     # Test open date range
-    search = Search(
-        collections=["collection1"],
-        datetime=f"../.."
-    )
+    search = Search(collections=["collection1"], datetime=f"../..")
     assert len(search.datetime) == 2
     assert search.datetime == ["..", ".."]
 
@@ -459,10 +440,7 @@ def test_invalid_temporal_search():
     # Not RFC339
     utcnow = datetime.utcnow().strftime("%Y-%m-%d")
     with pytest.raises(ValidationError):
-        search = Search(
-            collections=["collection1"],
-            datetime=utcnow
-        )
+        search = Search(collections=["collection1"], datetime=utcnow)
 
     # End date is before start date
     start = datetime.utcnow()
@@ -471,31 +449,19 @@ def test_invalid_temporal_search():
     with pytest.raises(ValidationError):
         search = Search(
             collections=["collection1"],
-            datetime=f"{end.strftime(DATETIME_RFC339)}/{start.strftime(DATETIME_RFC339)}"
+            datetime=f"{end.strftime(DATETIME_RFC339)}/{start.strftime(DATETIME_RFC339)}",
         )
 
 
 def test_api_context_extension():
     item_collection = request(ITEM_COLLECTION)
-    item_collection.update({
-        'context': {
-            'returned': 10,
-            'limit': 10,
-            'matched': 100
-        }
-    })
+    item_collection.update({"context": {"returned": 10, "limit": 10, "matched": 100}})
     ItemCollection(**item_collection)
 
 
 def test_api_context_extension_invalid():
     item_collection = request(ITEM_COLLECTION)
-    item_collection.update({
-        'context': {
-            'returned': 20,
-            'limit': 10,
-            'matched': 100
-        }
-    })
+    item_collection.update({"context": {"returned": 20, "limit": 10, "matched": 100}})
 
     with pytest.raises(ValidationError):
         ItemCollection(**item_collection)
@@ -504,34 +470,24 @@ def test_api_context_extension_invalid():
 def test_api_fields_extension():
     search = Search(
         collections=["collection1"],
-        fields={
-            "includes": {"field1", "field2"},
-            "excludes": {"field3", "field4"}
-        }
+        fields={"includes": {"field1", "field2"}, "excludes": {"field3", "field4"}},
     )
 
 
 def test_api_paging_extension():
     item_collection = request(ITEM_COLLECTION)
-    item_collection['links'] += [
+    item_collection["links"] += [
+        {"title": "next page", "rel": "next", "method": "GET", "href": "http://next"},
         {
-            'title': 'next page',
-            'rel': 'next',
-            'method': 'GET',
-            'href': 'http://next'
+            "title": "previous page",
+            "rel": "previous",
+            "method": "POST",
+            "href": "http://prev",
+            "body": {"key": "value"},
         },
-        {
-            'title': 'previous page',
-            'rel': 'previous',
-            'method': 'POST',
-            'href': 'http://prev',
-            'body': {
-                'key': 'value'
-            }
-        }
     ]
     model = ItemCollection(**item_collection)
-    links = model.to_dict()['links']
+    links = model.to_dict()["links"]
 
     # Make sure we can mix links and pagination links
     normal_link = Link(**links[0])
@@ -540,50 +496,27 @@ def test_api_paging_extension():
     assert next_link.rel == "next"
     previous_link = PaginationLink(**links[2])
     assert previous_link.rel == "previous"
-    assert previous_link.body == {'key': 'value'}
-
+    assert previous_link.body == {"key": "value"}
 
 
 def test_api_invalid_paging_link():
     # Invalid rel type
     with pytest.raises(ValidationError):
-        PaginationLink(
-            rel="self",
-            method="GET",
-            href="http://next"
-        )
+        PaginationLink(rel="self", method="GET", href="http://next")
 
     # Invalid method
     with pytest.raises(ValidationError):
-        PaginationLink(
-            rel="next",
-            method="DELETE",
-            href="http://next"
-        )
+        PaginationLink(rel="next", method="DELETE", href="http://next")
 
 
 def test_api_query_extension():
     # One field
-    Search(
-        collections=["collection1", "collection2"],
-        query={
-            'field': {
-                'lt': 100
-            }
-        }
-    )
+    Search(collections=["collection1", "collection2"], query={"field": {"lt": 100}})
 
     # Many fields
     Search(
         collections=["collection1", "collection2"],
-        query={
-            'field': {
-                'lt': 100
-            },
-            'field1': {
-                'gt': 200
-            }
-        }
+        query={"field": {"lt": 100}, "field1": {"gt": 200}},
     )
 
 
@@ -592,11 +525,7 @@ def test_api_query_extension_invalid():
     with pytest.raises(ValidationError):
         Search(
             collections=["collection1", "collection2"],
-            query={
-                'field': {
-                    'greater_than': 100
-                }
-            }
+            query={"field": {"greater_than": 100}},
         )
 
 
@@ -604,15 +533,9 @@ def test_api_sort_extension():
     Search(
         collections=["collection1", "collection2"],
         sortby=[
-            {
-                "field": "field1",
-                "direction": "asc"
-            },
-            {
-                "field": "field2",
-                "direction": "desc"
-            }
-        ]
+            {"field": "field1", "direction": "asc"},
+            {"field": "field2", "direction": "desc"},
+        ],
     )
 
 
@@ -621,10 +544,5 @@ def test_api_sort_extension_invalid():
     with pytest.raises(ValidationError):
         Search(
             collections=["collection1", "collection2"],
-            sortby=[
-                {
-                    "field": "field1",
-                    "direction": "ascending"
-                }
-            ]
+            sortby=[{"field": "field1", "direction": "ascending"}],
         )
