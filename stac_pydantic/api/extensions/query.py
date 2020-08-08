@@ -7,6 +7,7 @@ class Operator(str, AutoValueEnum):
     """
     https://github.com/radiantearth/stac-api-spec/tree/master/extensions/query#query-api-extension
     """
+
     eq = auto()
     ne = auto()
     lt = auto()

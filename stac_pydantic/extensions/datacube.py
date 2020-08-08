@@ -1,7 +1,7 @@
 from enum import auto
 from typing import Dict, List, Optional, Tuple, Union
 
-from pydantic import Field, BaseModel
+from pydantic import BaseModel, Field
 
 from ..shared import NumType
 from ..utils import AutoValueEnum
