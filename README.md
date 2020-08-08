@@ -63,7 +63,7 @@ item = model(**stac_item)
 ```
 
 #### Explicit
-Subclass any of the models provided by the library to explicitly define a model:
+Subclass any of the models provided by the library to declare a customized validator:
 
 ```python
 from stac_pydantic import Item, ItemProperties, Extensions
