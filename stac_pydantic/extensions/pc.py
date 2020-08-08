@@ -26,6 +26,9 @@ class SchemaObject(BaseModel):
     size: int
     type: ChannelTypes
 
+    class Config:
+        use_enum_values = True
+
 
 class StatsObject(BaseModel):
     """

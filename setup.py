@@ -28,6 +28,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
+        "pydantic>=1.6",
         "geojson-pydantic"
     ],
     tests_require=[

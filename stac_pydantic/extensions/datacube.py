@@ -23,7 +23,8 @@ class DimensionObject(BaseModel):
     values: Optional[List[Union[NumType, str]]]
     step: Optional[Union[NumType, str]]
     unit: Optional[str]
-    reference_system: Optional[str]
+    reference_system: Optional[int]
+    axis: Optional[str]
 
 
 class HorizontalSpatialDimension(DimensionObject):
@@ -33,7 +34,10 @@ class HorizontalSpatialDimension(DimensionObject):
 
     type: str = Field("spatial", const=True)
     axis: HorizontalAxis
-    extent: Tuple[NumType, NumType]
+    extent: List[NumType]
+
+    class Config:
+        use_enum_values = True
 
 
 class VerticalSpatialDimension(HorizontalSpatialDimension):
@@ -61,10 +65,10 @@ class DatacubeExtension(BaseModel):
     dimensions: Dict[
         str,
         Union[
-            DimensionObject,
             HorizontalSpatialDimension,
             VerticalSpatialDimension,
             TemporalDimension,
+            DimensionObject,
         ],
     ] = Field(..., alias="cube:dimensions")
 

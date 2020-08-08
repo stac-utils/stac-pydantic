@@ -34,9 +34,10 @@ STAC defines many extensions which let the user customize the data in their cata
 implicitly or explicitly:
 
 #### Implicit
-The Catalog/Collection/Item will be validated against the extensions listed in the `stac_extensions` key, if present.
+The `item_model_factory` function creates an appropriate Pydantic model based on the structure of the item by looking
+at the extensions defined by the `stac_extensions` member.
 ```python
-from stac_pydantic import Item
+from stac_pydantic import item_model_factory
 
 stac_item = {
     "type": "Feature",
@@ -53,7 +54,8 @@ stac_item = {
     "assets": ...,
 }
 
-item = Item(**stac_item)
+model = item_model_factory(stac_item)
+item = model(**stac_item)
 
 >>> pydantic.error_wrappers.ValidationError: 1 validation error for Item
     __root__ -> properties -> eo:bands
@@ -61,8 +63,8 @@ item = Item(**stac_item)
 ```
 
 #### Explicit
-You can control which extensions are validated against by explicitly including them in the model.  Implicit extensions
-are validated on top of explicit ones.
+Subclass any of the models provided by the library to declare a customized validator:
+
 ```python
 from stac_pydantic import Item, ItemProperties, Extensions
 

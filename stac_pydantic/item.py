@@ -1,21 +1,17 @@
 from datetime import datetime as dt
-from typing import Dict, List, Optional, Union
+from functools import lru_cache
+from typing import Dict, List, Optional, Tuple, Type, Union
 
 from geojson_pydantic.features import Feature, FeatureCollection
-from pydantic import Field, BaseModel, root_validator, ValidationError
+from pydantic import Field, BaseModel, create_model
+from pydantic.fields import FieldInfo
 
 from .shared import Asset, BBox, ExtensionTypes, Link
 from .extensions import Extensions
 from .version import STAC_VERSION
 from .api.extensions.context import ContextExtension
 from .api.extensions.paging import PaginationLink
-
-def _parse_loc(loc):
-    if isinstance(loc, tuple):
-        path = " -> ".join(loc)
-    else:
-        path = loc
-    return f"properties -> {path}"
+from .utils import decompose_model
 
 
 class ItemProperties(BaseModel):
@@ -34,7 +30,6 @@ class ItemProperties(BaseModel):
     constellation: Optional[str] = Field(None, alias="constellation")
     mission: Optional[str] = Field(None, alias="mission")
 
-
     class Config:
         extra = "allow"
 
@@ -52,29 +47,6 @@ class Item(Feature):
     bbox: BBox
     stac_extensions: Optional[List[Union[str, ExtensionTypes]]]
     collection: Optional[str]
-
-    @root_validator(pre=True)
-    def validate_extensions(cls, values):
-        errors = []
-        if "stac_extensions" in values:
-            for ext in values["stac_extensions"]:
-                if ext != "checksum":
-                    ext_model = Extensions.get(ext)
-                    try:
-                        ext_model(**values["properties"])
-                    except ValidationError as e:
-                        raw_errors = e.raw_errors
-                        for error in raw_errors:
-                            if isinstance(error, list):
-                                for err in error[0]:
-                                    err._loc = _parse_loc(err._loc)
-                            else:
-                                error._loc = _parse_loc(error._loc)
-                        errors += e.raw_errors
-        if errors:
-            raise ValidationError(errors=errors, model=Item)
-
-        return values
 
     def to_dict(self, **kwargs):
         return self.dict(by_alias=True, exclude_unset=True, **kwargs)
@@ -99,3 +71,36 @@ class ItemCollection(FeatureCollection):
 
     def to_json(self, **kwargs):
         return self.json(by_alias=True, exclude_unset=True, **kwargs)
+
+
+@lru_cache
+def _extension_model_factory(
+    stac_extensions: Tuple[str], base_class: Type[Item]
+) -> Tuple[Type[BaseModel], FieldInfo]:
+    """
+    Create a stac item properties model for a set of stac extensions
+    """
+    fields = decompose_model(base_class.__fields__["properties"].type_)
+    for ext in stac_extensions:
+        if ext == "checksum":
+            continue
+        fields.update(decompose_model(Extensions.get(ext)))
+    return (
+        create_model("CustomItemProperties", __base__=ItemProperties, **fields),
+        FieldInfo(...),
+    )
+
+
+def item_model_factory(item: Dict, base_class: Type[Item] = Item) -> Type[BaseModel]:
+    """
+    Create a pydantic model based on the extensions used by the item
+    """
+    item_fields = decompose_model(base_class)
+    stac_extensions = item.get("stac_extensions")
+
+    if stac_extensions:
+        item_fields["properties"] = _extension_model_factory(
+            tuple(stac_extensions), base_class
+        )
+
+    return create_model("CustomStacItem", **item_fields, __base__=base_class)
