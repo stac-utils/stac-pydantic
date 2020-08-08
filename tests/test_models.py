@@ -3,7 +3,7 @@ import json
 import time
 
 import pytest
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel, Field, ValidationError
 from shapely.geometry import shape
 
 from stac_pydantic import Collection, Item, ItemCollection, ItemProperties
@@ -558,7 +558,7 @@ def test_declared_model():
             alias_generator = lambda field_name: f"test:{field_name}"
 
     class TestItem(Item):
-        properties = TestProperties
+        properties: TestProperties
 
     test_item = request(EO_EXTENSION)
     del test_item["stac_extensions"]
@@ -572,6 +572,19 @@ def test_declared_model():
 
     assert "test:foo" in valid_item["properties"]
     assert "test:bar" in valid_item["properties"]
+
+
+def test_item_factory_custom_base():
+    class TestProperties(ItemProperties):
+        foo: str = Field("bar", const=True)
+
+    class TestItem(Item):
+        properties: TestProperties
+
+    test_item = request(EO_EXTENSION)
+
+    model = item_factory(test_item, base_class=TestItem)(**test_item)
+    assert model.properties.foo == "bar"
 
 
 def test_serialize_namespace():

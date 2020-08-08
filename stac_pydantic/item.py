@@ -74,11 +74,11 @@ class ItemCollection(FeatureCollection):
 
 
 @lru_cache
-def _extension_model_factory(stac_extensions: Tuple[str]):
+def _extension_model_factory(stac_extensions: Tuple[str], base_class: Type[Item]):
     """
     Create a stac item properties model for a set of stac extensions
     """
-    fields = {}
+    fields = decompose_model(base_class.__fields__["properties"].type_)
     for ext in stac_extensions:
         if ext == "checksum":
             continue
@@ -89,11 +89,13 @@ def _extension_model_factory(stac_extensions: Tuple[str]):
     )
 
 
-def item_factory(item: Dict) -> Type[BaseModel]:
-    item_fields = decompose_model(Item)
+def item_factory(item: Dict, base_class: Type[Item] = Item) -> Type[BaseModel]:
+    item_fields = decompose_model(base_class)
     stac_extensions = item.get("stac_extensions")
 
     if stac_extensions:
-        item_fields["properties"] = _extension_model_factory(tuple(stac_extensions))
+        item_fields["properties"] = _extension_model_factory(
+            tuple(stac_extensions), base_class
+        )
 
-    return create_model("CustomStacItem", **item_fields, __base__=Item)
+    return create_model("CustomStacItem", **item_fields, __base__=base_class)
