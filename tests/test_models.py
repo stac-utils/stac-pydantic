@@ -67,7 +67,7 @@ DATETIME_RANGE = "https://raw.githubusercontent.com/radiantearth/stac-spec/v0.9.
 )
 def test_item_extensions(infile):
     test_item = request(infile)
-    valid_item = Item(**test_item).to_dict()
+    valid_item = item_factory(test_item)(**test_item).to_dict()
     dict_match(test_item, valid_item)
 
 
@@ -80,7 +80,7 @@ def test_sar_extensions():
         "measurement"
     ].pop("sar:bands")
 
-    valid_item = Item(**test_item).to_dict()
+    valid_item = item_factory(test_item)(**test_item).to_dict()
     dict_match(test_item, valid_item)
 
 
@@ -92,7 +92,7 @@ def test_proj_extension():
     assert "eo:gsd" not in test_item["properties"]
     test_item["properties"]["eo:gsd"] = 10
 
-    valid_item = Item(**test_item).to_dict()
+    valid_item = item_factory(test_item)(**test_item).to_dict()
     dict_match(test_item, valid_item)
 
 
@@ -103,7 +103,7 @@ def test_version_extension_item():
     assert "version" in test_item
     test_item["properties"]["version"] = test_item.pop("version")
 
-    valid_item = Item(**test_item).to_dict()
+    valid_item = item_factory(test_item)(**test_item).to_dict()
     dict_match(test_item, valid_item)
 
 
@@ -130,7 +130,7 @@ def test_label_extension():
     coords[0].append(coords[0][0])
     test_item["geometry"]["coordinates"] = coords
 
-    valid_item = Item(**test_item).to_dict()
+    valid_item = item_factory(test_item)(**test_item).to_dict()
     dict_match(test_item, valid_item)
 
 
@@ -167,7 +167,7 @@ def test_vendor_extension_validation():
 
     test_item["stac_extensions"][-1] = landsat_alias
 
-    valid_item = Item(**test_item).to_dict()
+    valid_item = item_factory(test_item)(**test_item).to_dict()
     dict_match(test_item, valid_item)
 
 
@@ -546,3 +546,59 @@ def test_api_sort_extension_invalid():
             collections=["collection1", "collection2"],
             sortby=[{"field": "field1", "direction": "ascending"}],
         )
+
+
+def test_declared_model():
+    class TestProperties(ItemProperties):
+        foo: str
+        bar: int
+
+        class Config:
+            allow_population_by_fieldname = True
+            alias_generator = lambda field_name: f"test:{field_name}"
+
+    class TestItem(Item):
+        properties = TestProperties
+
+    test_item = request(EO_EXTENSION)
+    del test_item["stac_extensions"]
+    test_item["properties"] = {
+        "datetime": test_item["properties"]["datetime"],
+        "test:foo": "mocked",
+        "test:bar": 1,
+    }
+
+    valid_item = TestItem(**test_item).to_dict()
+
+    assert "test:foo" in valid_item["properties"]
+    assert "test:bar" in valid_item["properties"]
+
+
+def test_serialize_namespace():
+    test_item = request(SAR_EXTENSION)
+    valid_item = item_factory(test_item)(**test_item)
+    assert "sar:instrument_mode" in valid_item.dict(by_alias=True)["properties"]
+    assert "instrument_mode" in valid_item.dict(by_alias=False)["properties"]
+
+
+def test_excludes():
+    test_item = request(EO_EXTENSION)
+    valid_item = item_factory(test_item)(**test_item).dict(
+        by_alias=True, exclude_unset=True, exclude={"properties": {"bands"}}
+    )
+    assert "eo:bands" not in valid_item["properties"]
+
+
+def test_register_extension():
+    class TestExtension(BaseModel):
+        foo: str
+        bar: int
+
+    Extensions.register("test", TestExtension, alias="test-extension")
+
+    assert Extensions.get("test") == Extensions.get("test-extension") == TestExtension
+
+
+def test_get_missing_extension():
+    with pytest.raises(AttributeError):
+        Extensions.get("not-an-extension")
