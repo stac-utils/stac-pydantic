@@ -2,8 +2,8 @@ from typing import List, Optional
 
 from pydantic import BaseModel, Field, root_validator
 
-from .shared import ExtensionTypes, Link
 from .extensions import Extensions
+from .shared import ExtensionTypes, Link
 from .version import STAC_VERSION
 
 

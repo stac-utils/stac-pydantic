@@ -3,15 +3,15 @@ from functools import lru_cache
 from typing import Dict, List, Optional, Tuple, Type, Union
 
 from geojson_pydantic.features import Feature, FeatureCollection
-from pydantic import Field, BaseModel, create_model
+from pydantic import BaseModel, Field, create_model
 from pydantic.fields import FieldInfo
 
-from .shared import Asset, BBox, ExtensionTypes, Link
-from .extensions import Extensions
-from .version import STAC_VERSION
 from .api.extensions.context import ContextExtension
 from .api.extensions.paging import PaginationLink
+from .extensions import Extensions
+from .shared import Asset, BBox, ExtensionTypes, Link
 from .utils import decompose_model
+from .version import STAC_VERSION
 
 
 class ItemProperties(BaseModel):

@@ -1,7 +1,7 @@
-from enum import auto, Enum
+from enum import Enum, auto
 from typing import List, Optional, Tuple, Union
 
-from pydantic import BaseModel, Field, Extra
+from pydantic import BaseModel, Extra, Field
 
 from .utils import AutoValueEnum
 
@@ -13,6 +13,7 @@ BBox = Union[
 
 # https://tools.ietf.org/html/rfc3339#section-5.6
 DATETIME_RFC339 = "%Y-%m-%dT%H:%M:%SZ"
+
 
 class ExtensionTypes(str, AutoValueEnum):
     """
@@ -39,6 +40,7 @@ class MimeTypes(str, Enum):
     """
     https://github.com/radiantearth/stac-spec/blob/v0.9.0/item-spec/item-spec.md#media-types
     """
+
     # Raster
     geotiff = "image/tiff; application=geotiff"
     cog = "image/geo+tiff; application=geotiff; profile=cloud-optimized"
@@ -63,6 +65,7 @@ class Relations(str, AutoValueEnum):
     """
     https://github.com/radiantearth/stac-spec/blob/v0.9.0/collection-spec/collection-spec.md#relation-types
     """
+
     self = auto()
     root = auto()
     parent = auto()

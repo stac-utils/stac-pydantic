@@ -1,21 +1,20 @@
-from datetime import datetime
 import json
 import time
+from datetime import datetime
 
 import pytest
 from pydantic import BaseModel, Field, ValidationError
 from shapely.geometry import shape
 
 from stac_pydantic import Collection, Item, ItemCollection, ItemProperties
-from stac_pydantic.shared import Link, DATETIME_RFC339
 from stac_pydantic.api.conformance import ConformanceClasses
+from stac_pydantic.api.extensions.paging import PaginationLink
 from stac_pydantic.api.landing import LandingPage
 from stac_pydantic.api.search import Search
-from stac_pydantic.api.extensions.paging import PaginationLink
 from stac_pydantic.extensions import Extensions
 from stac_pydantic.extensions.single_file_stac import SingleFileStac
 from stac_pydantic.item import item_model_factory
-
+from stac_pydantic.shared import DATETIME_RFC339, Link
 
 from .conftest import dict_match, request
 
