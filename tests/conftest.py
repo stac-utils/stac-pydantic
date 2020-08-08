@@ -1,6 +1,8 @@
 import json
 
+import pytest
 import requests
+from click.testing import CliRunner
 
 
 def request(url: str):
@@ -19,3 +21,8 @@ def dict_match(d1: dict, d2: dict):
         sort_keys=True,
     )
     assert d1 == d2
+
+
+@pytest.fixture
+def cli_runner():
+    return CliRunner()
