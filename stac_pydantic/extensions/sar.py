@@ -7,11 +7,21 @@ from ..shared import NumType
 from ..utils import AutoValueEnum
 
 
-class Polarizations(str, AutoValueEnum):
+class PolarizationEnum(str, AutoValueEnum):
     HH = auto()
     VV = auto()
     HV = auto()
     VH = auto()
+
+
+class Polarizations(BaseModel):
+    __root__: List[PolarizationEnum]
+
+    def __getitem__(self, item):
+        return self.__root__[item].value
+
+    class Config:
+        use_enum_values = True
 
 
 class FrequencyBands(str, AutoValueEnum):
@@ -44,9 +54,8 @@ class SARExtension(BaseModel):
     """
 
     instrument_mode: str
-    frequency_band: FrequencyBands
     center_frequency: Optional[NumType]
-    polarizations: List[Polarizations]
+    polarizations: Polarizations
     product_type: str
     resolution_range: Optional[int]
     resolution_azimuth: Optional[int]
@@ -54,10 +63,11 @@ class SARExtension(BaseModel):
     pixel_spacing_azimuth: Optional[int]
     looks_range: Optional[int]
     looks_azimuth: Optional[NumType]
-    looks_equivalent_number: Optional[int]
+    looks_equivalent_number: Optional[NumType]
     observation_direction: Optional[ObservationDirections]
+    frequency_band: FrequencyBands
 
     class Config:
-        use_enum_values = True
         allow_population_by_field_name = True
         alias_generator = lambda field_name: f"sar:{field_name}"
+        use_enum_values = True

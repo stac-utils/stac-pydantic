@@ -18,7 +18,7 @@ class ClassObject(BaseModel):
     """
 
     name: Optional[Union[str]]
-    classes: Optional[List[Union[str, NumType]]]
+    classes: Optional[List[Union[str, int]]]
 
 
 class CountObject(BaseModel):
