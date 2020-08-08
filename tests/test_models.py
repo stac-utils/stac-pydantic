@@ -14,7 +14,7 @@ from stac_pydantic.api.search import Search
 from stac_pydantic.api.extensions.paging import PaginationLink
 from stac_pydantic.extensions import Extensions
 from stac_pydantic.extensions.single_file_stac import SingleFileStac
-from stac_pydantic.item import item_factory
+from stac_pydantic.item import item_model_factory
 
 
 from .conftest import dict_match, request
@@ -67,7 +67,7 @@ DATETIME_RANGE = "https://raw.githubusercontent.com/radiantearth/stac-spec/v0.9.
 )
 def test_item_extensions(infile):
     test_item = request(infile)
-    valid_item = item_factory(test_item)(**test_item).to_dict()
+    valid_item = item_model_factory(test_item)(**test_item).to_dict()
     dict_match(test_item, valid_item)
 
 
@@ -80,7 +80,7 @@ def test_sar_extensions():
         "measurement"
     ].pop("sar:bands")
 
-    valid_item = item_factory(test_item)(**test_item).to_dict()
+    valid_item = item_model_factory(test_item)(**test_item).to_dict()
     dict_match(test_item, valid_item)
 
 
@@ -92,7 +92,7 @@ def test_proj_extension():
     assert "eo:gsd" not in test_item["properties"]
     test_item["properties"]["eo:gsd"] = 10
 
-    valid_item = item_factory(test_item)(**test_item).to_dict()
+    valid_item = item_model_factory(test_item)(**test_item).to_dict()
     dict_match(test_item, valid_item)
 
 
@@ -103,7 +103,7 @@ def test_version_extension_item():
     assert "version" in test_item
     test_item["properties"]["version"] = test_item.pop("version")
 
-    valid_item = item_factory(test_item)(**test_item).to_dict()
+    valid_item = item_model_factory(test_item)(**test_item).to_dict()
     dict_match(test_item, valid_item)
 
 
@@ -130,7 +130,7 @@ def test_label_extension():
     coords[0].append(coords[0][0])
     test_item["geometry"]["coordinates"] = coords
 
-    valid_item = item_factory(test_item)(**test_item).to_dict()
+    valid_item = item_model_factory(test_item)(**test_item).to_dict()
     dict_match(test_item, valid_item)
 
 
@@ -167,7 +167,7 @@ def test_vendor_extension_validation():
 
     test_item["stac_extensions"][-1] = landsat_alias
 
-    valid_item = item_factory(test_item)(**test_item).to_dict()
+    valid_item = item_model_factory(test_item)(**test_item).to_dict()
     dict_match(test_item, valid_item)
 
 
@@ -177,7 +177,7 @@ def test_vendor_extension_invalid_alias():
     test_item["stac_extensions"][-1] = url
 
     with pytest.raises(AttributeError) as e:
-        model = item_factory(test_item)
+        model = item_model_factory(test_item)
     assert str(e.value) == f"Invalid extension name or alias: {url}"
 
 
@@ -248,14 +248,14 @@ def test_datacube_extension_validation_error():
     test_item = request(DATACUBE_EXTENSION)
     test_item["properties"]["cube:dimensions"]["x"]["extent"] = ""
 
-    model = item_factory(test_item)
+    model = item_model_factory(test_item)
     with pytest.raises(ValidationError):
         model(**test_item)
 
 
 def test_eo_extension_validation_error():
     test_item = request(EO_EXTENSION)
-    model = item_factory(test_item)
+    model = item_model_factory(test_item)
     del test_item["properties"]["eo:bands"]
     with pytest.raises(ValidationError):
         model(**test_item)
@@ -272,7 +272,7 @@ def test_label_extension_validation_error():
 def test_point_cloud_extension_validation_error():
     test_item = request(POINTCLOUD_EXTENSION)
     test_item["properties"]["pc:count"] = ["not-an-int"]
-    model = item_factory(test_item)
+    model = item_model_factory(test_item)
 
     with pytest.raises(ValidationError):
         model(**test_item)
@@ -281,7 +281,7 @@ def test_point_cloud_extension_validation_error():
 def test_proj_extension_validation_error():
     test_item = request(PROJ_EXTENSION)
     del test_item["properties"]["proj:epsg"]
-    model = item_factory(test_item)
+    model = item_model_factory(test_item)
 
     with pytest.raises(ValidationError):
         model(**test_item)
@@ -290,7 +290,7 @@ def test_proj_extension_validation_error():
 def test_sar_extension_validation_error():
     test_item = request(SAR_EXTENSION)
     test_item["properties"]["sar:polarizations"] = ["foo", "bar"]
-    model = item_factory(test_item)
+    model = item_model_factory(test_item)
 
     with pytest.raises(ValidationError):
         model(**test_item)
@@ -299,7 +299,7 @@ def test_sar_extension_validation_error():
 def test_sci_extension_validation_error():
     test_item = request(SCIENTIFIC_EXTENSION)
     test_item["properties"]["sci:doi"] = [43]
-    model = item_factory(test_item)
+    model = item_model_factory(test_item)
 
     with pytest.raises(ValidationError):
         model(**test_item)
@@ -315,7 +315,7 @@ def test_single_file_stac_validation_error():
 
 def test_version_extension_validation_error():
     test_item = request(VERSION_EXTENSION_ITEM)
-    model = item_factory(test_item)
+    model = item_model_factory(test_item)
 
     with pytest.raises(ValidationError):
         model(**test_item)
@@ -324,7 +324,7 @@ def test_version_extension_validation_error():
 def test_view_extension_validation_error():
     test_item = request(VIEW_EXTENSION)
     test_item["properties"]["view:off_nadir"] = "foo"
-    model = item_factory(test_item)
+    model = item_model_factory(test_item)
 
     with pytest.raises(ValidationError):
         model(**test_item)
@@ -583,20 +583,20 @@ def test_item_factory_custom_base():
 
     test_item = request(EO_EXTENSION)
 
-    model = item_factory(test_item, base_class=TestItem)(**test_item)
+    model = item_model_factory(test_item, base_class=TestItem)(**test_item)
     assert model.properties.foo == "bar"
 
 
 def test_serialize_namespace():
     test_item = request(SAR_EXTENSION)
-    valid_item = item_factory(test_item)(**test_item)
+    valid_item = item_model_factory(test_item)(**test_item)
     assert "sar:instrument_mode" in valid_item.dict(by_alias=True)["properties"]
     assert "instrument_mode" in valid_item.dict(by_alias=False)["properties"]
 
 
 def test_excludes():
     test_item = request(EO_EXTENSION)
-    valid_item = item_factory(test_item)(**test_item).dict(
+    valid_item = item_model_factory(test_item)(**test_item).dict(
         by_alias=True, exclude_unset=True, exclude={"properties": {"bands"}}
     )
     assert "eo:bands" not in valid_item["properties"]

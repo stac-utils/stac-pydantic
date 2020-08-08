@@ -74,7 +74,9 @@ class ItemCollection(FeatureCollection):
 
 
 @lru_cache
-def _extension_model_factory(stac_extensions: Tuple[str], base_class: Type[Item]):
+def _extension_model_factory(
+    stac_extensions: Tuple[str], base_class: Type[Item]
+) -> Tuple[Type[BaseModel], FieldInfo]:
     """
     Create a stac item properties model for a set of stac extensions
     """
@@ -89,7 +91,10 @@ def _extension_model_factory(stac_extensions: Tuple[str], base_class: Type[Item]
     )
 
 
-def item_factory(item: Dict, base_class: Type[Item] = Item) -> Type[BaseModel]:
+def item_model_factory(item: Dict, base_class: Type[Item] = Item) -> Type[BaseModel]:
+    """
+    Create a pydantic model based on the extensions used by the item
+    """
     item_fields = decompose_model(base_class)
     stac_extensions = item.get("stac_extensions")
 
