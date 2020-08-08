@@ -20,9 +20,6 @@ class Polarizations(BaseModel):
     def __getitem__(self, item):
         return self.__root__[item].value
 
-    class Config:
-        use_enum_values = True
-
 
 class FrequencyBands(str, AutoValueEnum):
     """
