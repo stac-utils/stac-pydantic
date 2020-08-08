@@ -150,5 +150,18 @@ item_dict = item.to_dict()
 assert item_dict['properties']['landsat:row'] == item.properties.row == 250
 ```
 
+### CLI
+```
+Usage: stac-pydantic [OPTIONS] COMMAND [ARGS]...
+
+  stac-pydantic cli group
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  validate-item  Validate STAC Item
+```
+
 ## Testing
 ```python setup.py test```
