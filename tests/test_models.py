@@ -614,3 +614,15 @@ def test_register_extension():
 def test_get_missing_extension():
     with pytest.raises(AttributeError):
         Extensions.get("not-an-extension")
+
+
+def test_skip_remote_extension():
+    test_item = request(EO_EXTENSION)
+    test_item["stac_extensions"].append("http://some-remote-extension.json.schema")
+
+    # This should fail
+    with pytest.raises(AttributeError):
+        item_model_factory(test_item, skip_remote_refs=False)(**test_item)
+
+    # This should work
+    item_model_factory(test_item, skip_remote_refs=True)(**test_item)

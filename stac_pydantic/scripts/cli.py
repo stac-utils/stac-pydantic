@@ -19,7 +19,7 @@ def validate_item(infile):
     r.raise_for_status()
     stac_item = r.json()
     try:
-        item_model_factory(stac_item)(**stac_item)
+        item_model_factory(stac_item, skip_remote_refs=True)(**stac_item)
     except ValidationError as e:
         click.echo(str(e))
         return
