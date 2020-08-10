@@ -35,7 +35,9 @@ implicitly or explicitly:
 
 #### Implicit
 The `item_model_factory` function creates an appropriate Pydantic model based on the structure of the item by looking
-at the extensions defined by the `stac_extensions` member.
+at the extensions defined by the `stac_extensions` member.  The model can be created once and reused for the life of
+the interpreter.
+
 ```python
 from stac_pydantic import item_model_factory
 
@@ -60,6 +62,14 @@ item = model(**stac_item)
 >>> pydantic.error_wrappers.ValidationError: 1 validation error for Item
     __root__ -> properties -> eo:bands
         field required (eo) (type=value_error.missing)
+```
+
+The `stac_pydantic.validate_item` function provides a convenience wrapper over `item_model_factory` for one-off validation:
+
+```python
+from stac_pydantic import validate_item
+
+assert validate_item(stac_item)
 ```
 
 #### Explicit

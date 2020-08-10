@@ -108,3 +108,16 @@ def item_model_factory(
         )
 
     return create_model("CustomStacItem", **item_fields, __base__=base_class)
+
+
+def validate_item(item: Dict, reraise_exception: bool = False, **kwargs) -> bool:
+    """
+    Wrapper around ``item_model_factory`` for stac item validation
+    """
+    try:
+        item_model_factory(item, **kwargs)(**item)
+    except Exception:
+        if reraise_exception:
+            raise
+        return False
+    return True

@@ -2,7 +2,7 @@ import click
 import requests
 from pydantic import ValidationError
 
-from stac_pydantic import item_model_factory
+from stac_pydantic import validate_item as validate
 
 
 @click.group(short_help="Validate STAC")
@@ -19,7 +19,7 @@ def validate_item(infile):
     r.raise_for_status()
     stac_item = r.json()
     try:
-        item_model_factory(stac_item, skip_remote_refs=True)(**stac_item)
+        validate(stac_item, skip_remote_refs=True, reraise_exception=True)
     except ValidationError as e:
         click.echo(str(e))
         return

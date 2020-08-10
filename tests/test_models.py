@@ -13,7 +13,7 @@ from stac_pydantic.api.landing import LandingPage
 from stac_pydantic.api.search import Search
 from stac_pydantic.extensions import Extensions
 from stac_pydantic.extensions.single_file_stac import SingleFileStac
-from stac_pydantic.item import item_model_factory
+from stac_pydantic.item import item_model_factory, validate_item
 from stac_pydantic.shared import DATETIME_RFC339, Link
 
 from .conftest import dict_match, request
@@ -626,3 +626,16 @@ def test_skip_remote_extension():
 
     # This should work
     item_model_factory(test_item, skip_remote_refs=True)(**test_item)
+
+
+def test_validate_item():
+    test_item = request(EO_EXTENSION)
+    assert validate_item(test_item)
+
+
+def test_validate_item_reraise_exception():
+    test_item = request(EO_EXTENSION)
+    del test_item["properties"]["eo:bands"]
+
+    with pytest.raises(ValidationError):
+        validate_item(test_item, reraise_exception=True)
