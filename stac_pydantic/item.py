@@ -75,13 +75,15 @@ class ItemCollection(FeatureCollection):
 
 @lru_cache
 def _extension_model_factory(
-    stac_extensions: Tuple[str], base_class: Type[Item]
+    stac_extensions: Tuple[str], base_class: Type[Item], skip_remote_refs: bool = False
 ) -> Tuple[Type[BaseModel], FieldInfo]:
     """
     Create a stac item properties model for a set of stac extensions
     """
     fields = decompose_model(base_class.__fields__["properties"].type_)
     for ext in stac_extensions:
+        if skip_remote_refs and ext.startswith("http"):
+            continue
         if ext == "checksum":
             continue
         fields.update(decompose_model(Extensions.get(ext)))
@@ -91,7 +93,9 @@ def _extension_model_factory(
     )
 
 
-def item_model_factory(item: Dict, base_class: Type[Item] = Item) -> Type[BaseModel]:
+def item_model_factory(
+    item: Dict, skip_remote_refs: bool = False, base_class: Type[Item] = Item
+) -> Type[BaseModel]:
     """
     Create a pydantic model based on the extensions used by the item
     """
@@ -100,7 +104,7 @@ def item_model_factory(item: Dict, base_class: Type[Item] = Item) -> Type[BaseMo
 
     if stac_extensions:
         item_fields["properties"] = _extension_model_factory(
-            tuple(stac_extensions), base_class
+            tuple(stac_extensions), base_class, skip_remote_refs
         )
 
     return create_model("CustomStacItem", **item_fields, __base__=base_class)
