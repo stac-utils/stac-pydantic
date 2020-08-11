@@ -1,3 +1,12 @@
+1.1.3 (2020-08-10)
+------------------
+- Add item model factory (#13)
+- Add pre-commit hooks (#14)
+- Add CLI for validating items (#15)
+- Add option to skip validation of remote extensions (#16)
+- Add helper function for item validation (#17)
+
+
 1.0.3 (2020-06-03)
 ------------------
 - Bugfixes (#10)
