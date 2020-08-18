@@ -1,3 +1,8 @@
+1.1.4 (2020-08-18)
+------------------
+- Fix multiple inheritance of stac extensions (#20)
+- Properly instantiate lru_cache (found by @francbartoli, #21)
+
 1.1.3 (2020-08-10)
 ------------------
 - Add item model factory (#13)
