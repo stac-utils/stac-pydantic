@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from ..shared import NumType
 
@@ -10,12 +10,11 @@ class ViewExtension(BaseModel):
     https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/view#item-fields
     """
 
-    off_nadir: Optional[NumType]
-    incidence_angle: Optional[NumType]
-    azimuth: Optional[NumType]
-    sun_azimuth: Optional[NumType]
-    sun_elevation: Optional[NumType]
+    off_nadir: Optional[NumType] = Field(None, alias="view:off_nadir")
+    incidence_angle: Optional[NumType] = Field(None, alias="view:incidence_angle")
+    azimuth: Optional[NumType] = Field(None, alias="view:azimuth")
+    sun_azimuth: Optional[NumType] = Field(None, alias="view:sun_azimuth")
+    sun_elevation: Optional[NumType] = Field(None, alias="view:sun_elevation")
 
     class Config:
         allow_population_by_field_name = True
-        alias_generator = lambda field_name: f"view:{field_name}"
