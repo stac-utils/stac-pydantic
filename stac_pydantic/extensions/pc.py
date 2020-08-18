@@ -1,7 +1,7 @@
 from enum import auto
 from typing import List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from ..shared import NumType
 from ..utils import AutoValueEnum
@@ -50,14 +50,13 @@ class PointCloudExtension(BaseModel):
     https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/pointcloud#point-cloud-extension-specification
     """
 
-    count: int
-    type: str
-    encoding: str
-    schemas: List[SchemaObject]
-    density: Optional[int]
-    statistics: Optional[List[StatsObject]]
+    count: int = Field(..., alias="pc:count")
+    type: str = Field(..., alias="pc:type")
+    encoding: str = Field(..., alias="pc:encoding")
+    schemas: List[SchemaObject] = Field(..., alias="pc:schemas")
+    density: Optional[int] = Field(None, alias="pc:density")
+    statistics: Optional[List[StatsObject]] = Field(None, alias="pc:statistics")
 
     class Config:
         use_enum_values = True
         allow_population_by_field_name = True
-        alias_generator = lambda field_name: f"pc:{field_name}"

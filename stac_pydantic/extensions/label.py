@@ -1,7 +1,7 @@
 from enum import auto
 from typing import List, Optional, Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from ..shared import NumType
 from ..utils import AutoValueEnum
@@ -54,15 +54,14 @@ class LabelExtension(BaseModel):
     https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/label#label-extension-specification
     """
 
-    properties: List[Union[str, None]]
-    classes: List[ClassObject]
-    description: str
-    type: LabelTypes
-    tasks: Optional[List[str]]
-    methods: Optional[List[str]]
-    overviews: Optional[List[OverviewObject]]
+    properties: List[Union[str, None]] = Field(..., alias="label:properties")
+    classes: List[ClassObject] = Field(..., alias="label:classes")
+    description: str = Field(..., alias="label:description")
+    type: LabelTypes = Field(..., alias="label:type")
+    tasks: Optional[List[str]] = Field(None, alias="label:tasks")
+    methods: Optional[List[str]] = Field(None, alias="label:methods")
+    overviews: Optional[List[OverviewObject]] = Field(None, alias="label:overviews")
 
     class Config:
         use_enum_values = True
         allow_population_by_field_name = True
-        alias_generator = lambda field_name: f"label:{field_name}"

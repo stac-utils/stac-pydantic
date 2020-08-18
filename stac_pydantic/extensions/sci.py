@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class PublicationObject(BaseModel):
@@ -17,10 +17,11 @@ class ScientificExtension(PublicationObject):
     https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/scientific#item-and-collection-fields
     """
 
-    doi: Optional[str]
-    publications: Optional[List[PublicationObject]]
-    citation: Optional[str]
+    doi: Optional[str] = Field(None, alias="sci:doi")
+    publications: Optional[List[PublicationObject]] = Field(
+        None, alias="sci:publications"
+    )
+    citation: Optional[str] = Field(None, alias="sci:citation")
 
     class Config:
         allow_population_by_field_name = True
-        alias_generator = lambda field_name: f"sci:{field_name}"

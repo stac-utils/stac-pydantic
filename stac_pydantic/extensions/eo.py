@@ -1,7 +1,7 @@
 from enum import auto
 from typing import List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from ..shared import NumType
 from ..utils import AutoValueEnum
@@ -47,11 +47,10 @@ class ElectroOpticalExtension(BaseModel):
     https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/eo#electro-optical-extension-specification
     """
 
-    gsd: NumType
-    bands: List[BandObject]
-    cloud_cover: Optional[NumType]
+    gsd: NumType = Field(..., alias="eo:gsd")
+    bands: List[BandObject] = Field(..., alias="eo:bands")
+    cloud_cover: Optional[NumType] = Field(None, alias="eo:cloud_cover")
 
     class Config:
         use_enum_values = True
         allow_population_by_field_name = True
-        alias_generator = lambda field_name: f"eo:{field_name}"

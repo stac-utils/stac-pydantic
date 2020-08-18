@@ -20,12 +20,11 @@ from .conftest import dict_match, request
 
 
 class LandsatExtension(BaseModel):
-    path: int
-    row: int
+    path: int = Field(..., alias="landsat:path")
+    row: int = Field(..., alias="landsat:row")
 
     class Config:
         allow_population_by_fieldname = True
-        alias_generator = lambda field_name: f"landsat:{field_name}"
 
 
 landsat_alias = "https://example.com/stac/landsat-extension/1.0/schema.json"
@@ -639,3 +638,18 @@ def test_validate_item_reraise_exception():
 
     with pytest.raises(ValidationError):
         validate_item(test_item, reraise_exception=True)
+
+
+def test_multi_inheritance():
+    test_item = request(EO_EXTENSION)
+
+    class TestProperties(
+        LandsatExtension, Extensions.eo, Extensions.view, ItemProperties
+    ):
+        ...
+
+    properties = TestProperties(**test_item["properties"]).dict(by_alias=True)
+    assert "datetime" in properties
+    assert "eo:gsd" in properties
+    assert "view:off_nadir" in properties
+    assert "landsat:path" in properties

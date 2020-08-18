@@ -1,7 +1,7 @@
 from enum import auto
 from typing import List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from ..shared import NumType
 from ..utils import AutoValueEnum
@@ -50,21 +50,26 @@ class SARExtension(BaseModel):
     https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/sar#sar-extension-specification
     """
 
-    instrument_mode: str
-    center_frequency: Optional[NumType]
-    polarizations: Polarizations
-    product_type: str
-    resolution_range: Optional[int]
-    resolution_azimuth: Optional[int]
-    pixel_spacing_range: Optional[int]
-    pixel_spacing_azimuth: Optional[int]
-    looks_range: Optional[int]
-    looks_azimuth: Optional[NumType]
-    looks_equivalent_number: Optional[NumType]
-    observation_direction: Optional[ObservationDirections]
-    frequency_band: FrequencyBands
+    instrument_mode: str = Field(..., alias="sar:instrument_mode")
+    center_frequency: Optional[NumType] = Field(None, alias="sar:center_frequency")
+    polarizations: Polarizations = Field(..., alias="sar:polarizations")
+    product_type: str = Field(..., alias="sar:product_type")
+    resolution_range: Optional[int] = Field(None, alias="sar:resolution_range")
+    resolution_azimuth: Optional[int] = Field(None, alias="sar:resolution_azimuth")
+    pixel_spacing_range: Optional[int] = Field(None, alias="sar:pixel_spacing_range")
+    pixel_spacing_azimuth: Optional[int] = Field(
+        None, alias="sar:pixel_spacing_azimuth"
+    )
+    looks_range: Optional[int] = Field(None, alias="sar:look_range")
+    looks_azimuth: Optional[NumType] = Field(None, alias="sar:looks_azimuth")
+    looks_equivalent_number: Optional[NumType] = Field(
+        None, alias="sar:looks_equivalent_number"
+    )
+    observation_direction: Optional[ObservationDirections] = Field(
+        None, alias="sar:observation_direction"
+    )
+    frequency_band: FrequencyBands = Field(..., alias="sar:frequency_band")
 
     class Config:
         allow_population_by_field_name = True
-        alias_generator = lambda field_name: f"sar:{field_name}"
         use_enum_values = True
