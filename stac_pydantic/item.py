@@ -73,7 +73,7 @@ class ItemCollection(FeatureCollection):
         return self.json(by_alias=True, exclude_unset=True, **kwargs)
 
 
-@lru_cache
+@lru_cache()
 def _extension_model_factory(
     stac_extensions: Tuple[str], base_class: Type[Item], skip_remote_refs: bool = False
 ) -> Tuple[Type[BaseModel], FieldInfo]:
