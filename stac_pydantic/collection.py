@@ -3,18 +3,7 @@ from typing import Any, Dict, List, Optional, Union
 from pydantic import BaseModel
 
 from .catalog import Catalog
-from .shared import NumType
-
-
-class Provider(BaseModel):
-    """
-    https://github.com/radiantearth/stac-spec/blob/v0.9.0/collection-spec/collection-spec.md#provider-object
-    """
-
-    name: str
-    description: Optional[str]
-    roles: Optional[List[str]]
-    url: Optional[str]
+from .shared import NumType, Provider
 
 
 class SpatialExtent(BaseModel):

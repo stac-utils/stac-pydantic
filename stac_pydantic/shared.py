@@ -1,3 +1,4 @@
+from datetime import datetime
 from enum import Enum, auto
 from typing import List, Optional, Tuple, Union
 
@@ -93,6 +94,13 @@ class AssetRoles(str, AutoValueEnum):
     metadata = auto()
 
 
+class ProviderRoles(str, AutoValueEnum):
+    licensor = auto()
+    producer = auto()
+    processor = auto()
+    host = auto()
+
+
 class Link(BaseModel):
     """
     https://github.com/radiantearth/stac-spec/blob/v0.9.0/collection-spec/collection-spec.md#link-object
@@ -109,7 +117,34 @@ class Link(BaseModel):
         use_enum_values = True
 
 
-class Asset(BaseModel):
+class Provider(BaseModel):
+    """
+    https://github.com/radiantearth/stac-spec/blob/v0.9.0/collection-spec/collection-spec.md#provider-object
+    """
+
+    name: str
+    description: Optional[str]
+    roles: Optional[List[str]]
+    url: Optional[str]
+
+
+class StacCommonMetadata(BaseModel):
+    """
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/item-spec/common-metadata.md#date-and-time-range
+    """
+
+    title: Optional[str] = Field(None, alias="title")
+    description: Optional[str] = Field(None, alias="description")
+    start_datetime: Optional[Union[str, datetime]] = Field(None, alias="start_datetime")
+    end_datetime: Optional[Union[str, datetime]] = Field(None, alias="end_datetime")
+    platform: Optional[str] = Field(None, alias="platform")
+    instruments: Optional[List[str]] = Field(None, alias="instruments")
+    constellation: Optional[str] = Field(None, alias="constellation")
+    mission: Optional[str] = Field(None, alias="mission")
+    providers: Optional[List[Provider]] = Field(None, alias="providers")
+
+
+class Asset(StacCommonMetadata):
     """
     https://github.com/radiantearth/stac-spec/blob/v0.9.0/item-spec/item-spec.md#asset-object
     """
