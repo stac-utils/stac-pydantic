@@ -9,7 +9,7 @@ from .version import STAC_VERSION
 
 class Catalog(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.9.0/catalog-spec/catalog-spec.md
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta1/catalog-spec/catalog-spec.md
     """
 
     id: str

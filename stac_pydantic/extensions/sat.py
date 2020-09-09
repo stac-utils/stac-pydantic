@@ -8,7 +8,7 @@ from ..utils import AutoValueEnum
 
 class OrbitStates(str, AutoValueEnum):
     """
-    https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/sat#item-fields
+    https://github.com/radiantearth/stac-spec/tree/v1.0.0-beta1/extensions/sat#item-fields
     """
 
     ascending = auto()
@@ -18,7 +18,7 @@ class OrbitStates(str, AutoValueEnum):
 
 class SatelliteExtension(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/sat#satellite-extension-specification
+    https://github.com/radiantearth/stac-spec/tree/v1.0.0-beta1/extensions/sat#satellite-extension-specification
     """
 
     orbit_state: Optional[OrbitStates] = Field(None, alias="sat:orbit_state")

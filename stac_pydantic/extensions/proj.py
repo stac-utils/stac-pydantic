@@ -8,7 +8,7 @@ from ..shared import BBox, NumType
 
 class CentroidObject(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/projection#centroid-object
+    https://github.com/radiantearth/stac-spec/tree/v1.0.0-beta1/extensions/projection#centroid-object
     """
 
     lat: NumType
@@ -17,7 +17,7 @@ class CentroidObject(BaseModel):
 
 class ProjectionExtension(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/projection#projection-extension-specification
+    https://github.com/radiantearth/stac-spec/tree/v1.0.0-beta1/extensions/projection#projection-extension-specification
     """
 
     epsg: Optional[Union[int]] = Field(..., alias="proj:epsg")

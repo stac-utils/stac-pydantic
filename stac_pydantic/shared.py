@@ -19,7 +19,7 @@ DATETIME_RFC339 = "%Y-%m-%dT%H:%M:%SZ"
 
 class ExtensionTypes(str, AutoValueEnum):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.9.0/extensions/README.md#list-of-content-extensions
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta1/extensions/README.md#list-of-content-extensions
     """
 
     asset = auto()
@@ -42,7 +42,7 @@ class ExtensionTypes(str, AutoValueEnum):
 
 class MimeTypes(str, Enum):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.9.0/item-spec/item-spec.md#media-types
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta1/item-spec/item-spec.md#media-types
     """
 
     # Raster
@@ -67,7 +67,7 @@ class MimeTypes(str, Enum):
 
 class Relations(str, AutoValueEnum):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.9.0/collection-spec/collection-spec.md#relation-types
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta1/collection-spec/collection-spec.md#relation-types
     """
 
     self = auto()
@@ -89,7 +89,7 @@ class Relations(str, AutoValueEnum):
 
 class AssetRoles(str, AutoValueEnum):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.9.0/extensions/asset/README.md
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta1/extensions/asset/README.md
     """
 
     thumbnail = auto()
@@ -107,7 +107,7 @@ class ProviderRoles(str, AutoValueEnum):
 
 class Link(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.9.0/collection-spec/collection-spec.md#link-object
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta1/collection-spec/collection-spec.md#link-object
     """
 
     href: str
@@ -123,7 +123,7 @@ class Link(BaseModel):
 
 class Provider(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.9.0/collection-spec/collection-spec.md#provider-object
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta1/collection-spec/collection-spec.md#provider-object
     """
 
     name: str
@@ -151,7 +151,7 @@ class StacCommonMetadata(BaseModel):
 
 class Asset(StacCommonMetadata):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.9.0/item-spec/item-spec.md#asset-object
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta1/item-spec/item-spec.md#asset-object
     """
 
     href: str

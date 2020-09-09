@@ -16,7 +16,7 @@ from .version import STAC_VERSION
 
 class ItemProperties(StacCommonMetadata):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.9.0/item-spec/item-spec.md#properties-object
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta1/item-spec/item-spec.md#properties-object
     """
 
     datetime: Union[str, dt] = Field(..., alias="datetime")
@@ -38,7 +38,7 @@ class ItemProperties(StacCommonMetadata):
 
 class Item(Feature):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.9.0/item-spec/item-spec.md
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta1/item-spec/item-spec.md
     """
 
     id: str
@@ -59,7 +59,7 @@ class Item(Feature):
 
 class ItemCollection(FeatureCollection):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.9.0/item-spec/itemcollection-spec.md
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta1/item-spec/itemcollection-spec.md
     """
 
     stac_version: str = Field(STAC_VERSION, const=True)

@@ -23,7 +23,7 @@ class Polarizations(BaseModel):
 
 class FrequencyBands(str, AutoValueEnum):
     """
-    https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/sar#common-frequency-band-names
+    https://github.com/radiantearth/stac-spec/tree/v1.0.0-beta1/extensions/sar#common-frequency-band-names
     """
 
     P = auto()
@@ -38,7 +38,7 @@ class FrequencyBands(str, AutoValueEnum):
 
 class ObservationDirections(str, AutoValueEnum):
     """
-    https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/sar#item-fields
+    https://github.com/radiantearth/stac-spec/tree/v1.0.0-beta1/extensions/sar#item-fields
     """
 
     left = auto()
@@ -47,7 +47,7 @@ class ObservationDirections(str, AutoValueEnum):
 
 class SARExtension(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/sar#sar-extension-specification
+    https://github.com/radiantearth/stac-spec/tree/v1.0.0-beta1/extensions/sar#sar-extension-specification
     """
 
     instrument_mode: str = Field(..., alias="sar:instrument_mode")
