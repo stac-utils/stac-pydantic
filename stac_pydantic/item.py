@@ -20,8 +20,6 @@ class ItemProperties(StacCommonMetadata):
     """
 
     datetime: Union[str, dt] = Field(..., alias="datetime")
-    created: Optional[Union[str, dt]] = Field(None, alias="datetime")
-    updated: Optional[Union[str, dt]] = Field(None, alias="datetime")
 
     @validator("datetime")
     def validate_datetime(cls, v, values):
