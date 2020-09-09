@@ -1,6 +1,7 @@
-from .assets import AssetExtension
+from .collection_assets import CollectionAssetExtension
 from .datacube import DatacubeExtension
 from .eo import ElectroOpticalExtension
+from .item_assets import ItemAssetExtension
 from .label import LabelExtension
 from .pc import PointCloudExtension
 from .proj import ProjectionExtension
@@ -13,9 +14,10 @@ from .view import ViewExtension
 
 
 class Extensions:
-    asset = AssetExtension
+    collection_assets = CollectionAssetExtension
     datacube = DatacubeExtension
     eo = ElectroOpticalExtension
+    item_assets = ItemAssetExtension
     label = LabelExtension
     pointcloud = PointCloudExtension
     proj = ProjectionExtension
@@ -37,6 +39,7 @@ class Extensions:
 
     @classmethod
     def get(cls, k):
+        k = k.replace("-", "_")
         try:
             return getattr(cls, k)
         except AttributeError:
