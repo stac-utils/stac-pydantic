@@ -8,7 +8,7 @@ setup(
     description="Pydantic data models for the STAC spec",
     long_description=desc,
     long_description_content_type="text/markdown",
-    version="1.2.4",
+    version="1.3.4",
     python_requires=">=3.6",
     classifiers=[
         "Intended Audience :: Developers",
