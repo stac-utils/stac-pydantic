@@ -72,13 +72,6 @@ def test_item_extensions(infile):
 
 def test_sar_extensions():
     test_item = request(SAR_EXTENSION)
-
-    # This example uses eo:bands instead of sar:polarizations for the measurement asset
-    assert "sar:bands" in test_item["assets"]["measurement"]
-    test_item["assets"]["measurement"]["sar:polarizations"] = test_item["assets"][
-        "measurement"
-    ].pop("sar:bands")
-
     valid_item = item_model_factory(test_item)(**test_item).to_dict()
     dict_match(test_item, valid_item)
 
@@ -86,6 +79,7 @@ def test_sar_extensions():
 def test_proj_extension():
     # The example item uses an invalid band name
     test_item = request(PROJ_EXTENSION)
+    test_item["stac_extensions"][1] = "proj"
     test_item["assets"]["B8"]["eo:bands"][0]["common_name"] = "pan"
 
     valid_item = item_model_factory(test_item)(**test_item).to_dict()
@@ -94,11 +88,6 @@ def test_proj_extension():
 
 def test_version_extension_item():
     test_item = request(VERSION_EXTENSION_ITEM)
-
-    # This example adds version fields to top level of the feature instead of inside properties
-    assert "version" in test_item
-    test_item["properties"]["version"] = test_item.pop("version")
-
     valid_item = item_model_factory(test_item)(**test_item).to_dict()
     dict_match(test_item, valid_item)
 
@@ -181,8 +170,6 @@ def test_single_file_stac():
 
     # collection extents are from an older stac version
     for coll in test_sfs["collections"]:
-        coll["extent"]["spatial"] = {"bbox": [coll["extent"]["spatial"]]}
-        coll["extent"]["temporal"] = {"interval": [coll["extent"]["temporal"]]}
         coll["stac_extensions"][0] = "proj"
 
     for feat in test_sfs["features"]:
@@ -255,6 +242,7 @@ def test_point_cloud_extension_validation_error():
 
 def test_proj_extension_validation_error():
     test_item = request(PROJ_EXTENSION)
+    test_item["stac_extensions"][1] = "proj"
     del test_item["properties"]["proj:epsg"]
     model = item_model_factory(test_item)
 
@@ -290,6 +278,7 @@ def test_single_file_stac_validation_error():
 
 def test_version_extension_validation_error():
     test_item = request(VERSION_EXTENSION_ITEM)
+    del test_item["properties"]["version"]
     model = item_model_factory(test_item)
 
     with pytest.raises(ValidationError):
