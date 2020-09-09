@@ -8,3 +8,5 @@ from .item import (
     item_model_factory,
     validate_item,
 )
+
+STAC_VERSION = "1.0.0-beta.1"
