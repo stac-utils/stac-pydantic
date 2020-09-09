@@ -32,12 +32,14 @@ landsat_alias = "https://example.com/stac/landsat-extension/1.0/schema.json"
 Extensions.register("landsat", LandsatExtension, alias=landsat_alias)
 
 COLLECTION = f"https://raw.githubusercontent.com/radiantearth/stac-spec/v{STAC_VERSION}/collection-spec/examples/landsat-collection.json"
-ITEM_COLLECTION = f"https://raw.githubusercontent.com/radiantearth/stac-spec/v{STAC_VERSION}/item-spec/examples/itemcollection-sample-full.json"
+ITEM_COLLECTION = f"https://raw.githubusercontent.com/radiantearth/stac-spec/v0.9.0/item-spec/examples/itemcollection-sample-full.json"
 SINGLE_FILE_STAC = f"https://raw.githubusercontent.com/radiantearth/stac-spec/v{STAC_VERSION}/extensions/single-file-stac/examples/example-search.json"
 
-ASSET_EXTENSION = f"https://raw.githubusercontent.com/radiantearth/stac-spec/v{STAC_VERSION}/extensions/asset/examples/example-landsat8.json"
+# ASSET_EXTENSION = f"https://raw.githubusercontent.com/radiantearth/stac-spec/v{STAC_VERSION}/extensions/asset/examples/example-landsat8.json"
+# COLLECTION_ASSET_EXTENSION = f"https://raw.githubusercontent.com/radiantearth/stac-spec/v{STAC_VERSION}/extensions/collection-assets/examples/example-esm.json"
 DATACUBE_EXTENSION = f"https://raw.githubusercontent.com/radiantearth/stac-spec/v{STAC_VERSION}/extensions/datacube/examples/example-item.json"
 EO_EXTENSION = f"https://raw.githubusercontent.com/radiantearth/stac-spec/v{STAC_VERSION}/extensions/eo/examples/example-landsat8.json"
+ITEM_ASSET_EXTENSION = f"https://github.com/radiantearth/stac-spec/blob/v{STAC_VERSION}/extensions/item-assets/examples/example-landsat8.json"
 LABEL_EXTENSION = f"https://raw.githubusercontent.com/radiantearth/stac-spec/v{STAC_VERSION}/extensions/label/examples/spacenet-roads/roads_item.json"
 POINTCLOUD_EXTENSION = f"https://raw.githubusercontent.com/radiantearth/stac-spec/v{STAC_VERSION}/extensions/pointcloud/examples/example-autzen.json"
 PROJ_EXTENSION = f"https://raw.githubusercontent.com/radiantearth/stac-spec/v{STAC_VERSION}/extensions/projection/examples/example-landsat8.json"
@@ -82,12 +84,9 @@ def test_sar_extensions():
 
 
 def test_proj_extension():
+    # The example item uses an invalid band name
     test_item = request(PROJ_EXTENSION)
-
-    # This example uses EO extension but doesn't include eo:gsd (required field)
-    assert "eo" in test_item["stac_extensions"]
-    assert "eo:gsd" not in test_item["properties"]
-    test_item["properties"]["eo:gsd"] = 10
+    test_item["assets"]["B8"]["eo:bands"][0]["common_name"] = "pan"
 
     valid_item = item_model_factory(test_item)(**test_item).to_dict()
     dict_match(test_item, valid_item)
@@ -110,14 +109,6 @@ def test_version_extension_collection():
     dict_match(test_coll, valid_coll)
 
 
-def test_collection_assets():
-    test_coll = request(ASSET_EXTENSION)
-    # The example is missing links
-    test_coll["links"] = [{"href": "mocked", "rel": "items"}]
-    valid_coll = Collection(**test_coll).to_dict()
-    assert test_coll["assets"] == valid_coll["assets"]
-
-
 def test_label_extension():
     test_item = request(LABEL_EXTENSION)
 
@@ -129,6 +120,7 @@ def test_label_extension():
 
     valid_item = item_model_factory(test_item)(**test_item).to_dict()
     dict_match(test_item, valid_item)
+
 
 def test_explicit_extension_validation():
     test_item = request(EO_EXTENSION)
@@ -173,6 +165,9 @@ def test_vendor_extension_invalid_alias():
 
 def test_item_collection():
     test_item_coll = request(ITEM_COLLECTION)
+    test_item_coll["stac_version"] = STAC_VERSION
+    for feat in test_item_coll["features"]:
+        feat["stac_version"] = STAC_VERSION
 
     valid_item_coll = ItemCollection(**test_item_coll).to_dict()
     for idx, feat in enumerate(test_item_coll["features"]):
@@ -208,6 +203,12 @@ def test_single_file_stac():
 )
 def test_to_json(infile, model):
     test_item = request(infile)
+
+    if issubclass(model, ItemCollection):
+        test_item["stac_version"] = STAC_VERSION
+        for feat in test_item["features"]:
+            feat["stac_version"] = STAC_VERSION
+
     validated = model(**test_item)
     assert validated.to_json() == json.dumps(validated.to_dict())
 
@@ -216,14 +217,6 @@ def test_item_to_json():
     test_item = request(EO_EXTENSION)
     item = Item(**test_item)
     assert item.to_json() == json.dumps(item.to_dict())
-
-
-def test_assets_extension_validation_error():
-    test_collection = request(ASSET_EXTENSION)
-    del test_collection["assets"]
-
-    with pytest.raises(ValidationError):
-        Collection(**test_collection)
 
 
 def test_datacube_extension_validation_error():
@@ -237,8 +230,8 @@ def test_datacube_extension_validation_error():
 
 def test_eo_extension_validation_error():
     test_item = request(EO_EXTENSION)
+    test_item["properties"]["eo:cloud_cover"] = "foo"
     model = item_model_factory(test_item)
-    del test_item["properties"]["eo:bands"]
     with pytest.raises(ValidationError):
         model(**test_item)
 
@@ -437,12 +430,20 @@ def test_invalid_temporal_search():
 
 def test_api_context_extension():
     item_collection = request(ITEM_COLLECTION)
+    item_collection["stac_version"] = STAC_VERSION
+    for feat in item_collection["features"]:
+        feat["stac_version"] = STAC_VERSION
+
     item_collection.update({"context": {"returned": 10, "limit": 10, "matched": 100}})
     ItemCollection(**item_collection)
 
 
 def test_api_context_extension_invalid():
     item_collection = request(ITEM_COLLECTION)
+    item_collection["stac_version"] = STAC_VERSION
+    for feat in item_collection["features"]:
+        feat["stac_version"] = STAC_VERSION
+
     item_collection.update({"context": {"returned": 20, "limit": 10, "matched": 100}})
 
     with pytest.raises(ValidationError):
@@ -450,7 +451,7 @@ def test_api_context_extension_invalid():
 
 
 def test_api_fields_extension():
-    search = Search(
+    Search(
         collections=["collection1"],
         fields={"includes": {"field1", "field2"}, "excludes": {"field3", "field4"}},
     )
@@ -458,6 +459,9 @@ def test_api_fields_extension():
 
 def test_api_paging_extension():
     item_collection = request(ITEM_COLLECTION)
+    item_collection["stac_version"] = STAC_VERSION
+    for feat in item_collection["features"]:
+        feat["stac_version"] = STAC_VERSION
     item_collection["links"] += [
         {"title": "next page", "rel": "next", "method": "GET", "href": "http://next"},
         {
@@ -589,7 +593,7 @@ def test_register_extension():
         foo: str
         bar: int
 
-    Extensions.register("test", TestExtension, alias="test-extension")
+    Extensions.register("test", TestExtension, alias="test_extension")
 
     assert Extensions.get("test") == Extensions.get("test-extension") == TestExtension
 
@@ -618,7 +622,7 @@ def test_validate_item():
 
 def test_validate_item_reraise_exception():
     test_item = request(EO_EXTENSION)
-    del test_item["properties"]["eo:bands"]
+    del test_item["properties"]["datetime"]
 
     with pytest.raises(ValidationError):
         validate_item(test_item, reraise_exception=True)
@@ -634,6 +638,6 @@ def test_multi_inheritance():
 
     properties = TestProperties(**test_item["properties"]).dict(by_alias=True)
     assert "datetime" in properties
-    assert "eo:gsd" in properties
+    assert "gsd" in properties
     assert "view:off_nadir" in properties
     assert "landsat:path" in properties

@@ -24,9 +24,11 @@ class ExtensionTypes(str, AutoValueEnum):
 
     asset = auto()
     checksum = auto()
+    collection_assets = "collection-assets"
     context = auto()
     cube = auto()
     eo = auto()
+    item_assets = "item-assets"
     label = auto()
     pc = auto()
     proj = auto()
