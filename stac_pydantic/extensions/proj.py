@@ -21,7 +21,6 @@ class ProjectionExtension(BaseModel):
     """
 
     epsg: Optional[Union[int]] = Field(..., alias="proj:epsg")
-    proj4: Optional[Union[str]] = Field(None, alias="proj:proj4")
     wk2: Optional[Union[str, None]] = Field(None, alias="proj:wk2")
     projjson: Optional[Union[Dict[Any, Any], None]] = Field(None, alias="proj:projjson")
     geometry: Optional[Polygon] = Field(None, alias="proj:geometry")
