@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 from geojson_pydantic.geometries import Polygon
 from pydantic import BaseModel, Field
@@ -27,6 +27,8 @@ class ProjectionExtension(BaseModel):
     geometry: Optional[Polygon] = Field(None, alias="proj:geometry")
     bbox: Optional[BBox] = Field(None, alias="proj:bbox")
     centroid: Optional[CentroidObject] = Field(None, alias="proj:centroid")
+    shape: Optional[List[int]] = Field(None, alias="proj:shape")
+    transform: Optional[List[float]] = Field(None, alias="proj:transform")
 
     class Config:
         allow_population_by_field_name = True
