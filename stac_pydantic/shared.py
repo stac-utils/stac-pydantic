@@ -141,6 +141,8 @@ class StacCommonMetadata(BaseModel):
     description: Optional[str] = Field(None, alias="description")
     start_datetime: Optional[Union[str, datetime]] = Field(None, alias="start_datetime")
     end_datetime: Optional[Union[str, datetime]] = Field(None, alias="end_datetime")
+    created: Optional[Union[str, datetime]] = Field(None, alias="created")
+    updated: Optional[Union[str, datetime]] = Field(None, alias="updated")
     platform: Optional[str] = Field(None, alias="platform")
     instruments: Optional[List[str]] = Field(None, alias="instruments")
     constellation: Optional[str] = Field(None, alias="constellation")
