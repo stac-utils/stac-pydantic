@@ -6,6 +6,12 @@
 pip install stac-pydantic
 ```
 
+| stac-pydantic | stac     |
+|-------------------|--------------|
+| 1.1.x             | 0.9.0        |
+| 1.2.x             | 1.0.0-beta.1 |
+
+
 ## Usage
 ### Loading Models
 Load data into models with standard pydantic:
