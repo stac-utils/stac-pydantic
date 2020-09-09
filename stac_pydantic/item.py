@@ -3,7 +3,7 @@ from functools import lru_cache
 from typing import Dict, List, Optional, Tuple, Type, Union
 
 from geojson_pydantic.features import Feature, FeatureCollection
-from pydantic import BaseModel, Field, create_model
+from pydantic import BaseModel, Field, create_model, validator
 from pydantic.fields import FieldInfo
 
 from .api.extensions.context import ContextExtension
@@ -22,6 +22,15 @@ class ItemProperties(StacCommonMetadata):
     datetime: Union[str, dt] = Field(..., alias="datetime")
     created: Optional[Union[str, dt]] = Field(None, alias="datetime")
     updated: Optional[Union[str, dt]] = Field(None, alias="datetime")
+
+    @validator("datetime")
+    def validate_datetime(cls, v, values):
+        if v == "null":
+            if not values["start_datetime"] and not values["end_datetime"]:
+                raise ValueError(
+                    "start_datetime and end_datetime must be specified when datetime is null"
+                )
+        return v
 
     class Config:
         extra = "allow"
