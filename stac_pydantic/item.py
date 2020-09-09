@@ -3,32 +3,34 @@ from functools import lru_cache
 from typing import Dict, List, Optional, Tuple, Type, Union
 
 from geojson_pydantic.features import Feature, FeatureCollection
-from pydantic import BaseModel, Field, create_model
+from pydantic import BaseModel, Field, create_model, validator
 from pydantic.fields import FieldInfo
 
 from .api.extensions.context import ContextExtension
 from .api.extensions.paging import PaginationLink
 from .extensions import Extensions
-from .shared import Asset, BBox, ExtensionTypes, Link
+from .shared import Asset, BBox, ExtensionTypes, Link, StacCommonMetadata
 from .utils import decompose_model
 from .version import STAC_VERSION
 
 
-class ItemProperties(BaseModel):
+class ItemProperties(StacCommonMetadata):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.9.0/item-spec/item-spec.md#properties-object
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/item-spec/item-spec.md#properties-object
     """
 
     datetime: Union[str, dt] = Field(..., alias="datetime")
-    # stac common metadata (https://github.com/radiantearth/stac-spec/blob/v0.9.0/item-spec/common-metadata.md)
-    title: Optional[str] = Field(None, alias="title")
-    description: Optional[str] = Field(None, alias="description")
-    start_datetime: Optional[Union[str, dt]] = Field(None, alias="start_datetime")
-    end_datetime: Optional[Union[str, dt]] = Field(None, alias="end_datetime")
-    platform: Optional[str] = Field(None, alias="platform")
-    instruments: Optional[List[str]] = Field(None, alias="instruments")
-    constellation: Optional[str] = Field(None, alias="constellation")
-    mission: Optional[str] = Field(None, alias="mission")
+    created: Optional[Union[str, dt]] = Field(None, alias="datetime")
+    updated: Optional[Union[str, dt]] = Field(None, alias="datetime")
+
+    @validator("datetime")
+    def validate_datetime(cls, v, values):
+        if v == "null":
+            if not values["start_datetime"] and not values["end_datetime"]:
+                raise ValueError(
+                    "start_datetime and end_datetime must be specified when datetime is null"
+                )
+        return v
 
     class Config:
         extra = "allow"
@@ -36,7 +38,7 @@ class ItemProperties(BaseModel):
 
 class Item(Feature):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.9.0/item-spec/item-spec.md
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/item-spec/item-spec.md
     """
 
     id: str
@@ -57,7 +59,7 @@ class Item(Feature):
 
 class ItemCollection(FeatureCollection):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.9.0/item-spec/itemcollection-spec.md
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/item-spec/itemcollection-spec.md
     """
 
     stac_version: str = Field(STAC_VERSION, const=True)

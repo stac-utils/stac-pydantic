@@ -9,7 +9,7 @@ from .version import STAC_VERSION
 
 class Catalog(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.9.0/catalog-spec/catalog-spec.md
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/catalog-spec/catalog-spec.md
     """
 
     id: str
@@ -27,7 +27,7 @@ class Catalog(BaseModel):
     def validate_extensions(cls, values):
         if "stac_extensions" in values:
             for ext in values["stac_extensions"]:
-                if ext in ("assets", "commons", "version"):
+                if ext in ("collection-assets", "item-assets", "version"):
                     ext_model = Extensions.get(ext)
                     ext_model(**values)
         return values

@@ -3,13 +3,12 @@ from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
-from ..shared import NumType
 from ..utils import AutoValueEnum
 
 
 class CommonBandNames(str, AutoValueEnum):
     """
-    https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/eo#common-band-names
+    https://github.com/radiantearth/stac-spec/tree/v1.0.0-beta.1/extensions/eo#common-band-names
     """
 
     coastal = auto()
@@ -32,24 +31,23 @@ class CommonBandNames(str, AutoValueEnum):
 
 class BandObject(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/eo#band-object
+    https://github.com/radiantearth/stac-spec/tree/v1.0.0-beta.1/extensions/eo#band-object
     """
 
     name: Optional[str]
     common_name: Optional[CommonBandNames]
-    center_wavelength: Optional[NumType]
-    full_width_half_max: Optional[NumType]
+    center_wavelength: Optional[float]
+    full_width_half_max: Optional[float]
     description: Optional[str]
 
 
 class ElectroOpticalExtension(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/eo#electro-optical-extension-specification
+    https://github.com/radiantearth/stac-spec/tree/v1.0.0-beta.1/extensions/eo#electro-optical-extension-specification
     """
 
-    gsd: NumType = Field(..., alias="eo:gsd")
-    bands: List[BandObject] = Field(..., alias="eo:bands")
-    cloud_cover: Optional[NumType] = Field(None, alias="eo:cloud_cover")
+    bands: Optional[List[BandObject]] = Field(None, alias="eo:bands")
+    cloud_cover: Optional[float] = Field(None, alias="eo:cloud_cover")
 
     class Config:
         use_enum_values = True

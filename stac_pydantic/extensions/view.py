@@ -7,7 +7,7 @@ from ..shared import NumType
 
 class ViewExtension(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/view#item-fields
+    https://github.com/radiantearth/stac-spec/tree/v1.0.0-beta.1/extensions/view#item-fields
     """
 
     off_nadir: Optional[NumType] = Field(None, alias="view:off_nadir")

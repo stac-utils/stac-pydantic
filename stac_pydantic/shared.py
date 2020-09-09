@@ -1,8 +1,10 @@
+from datetime import datetime
 from enum import Enum, auto
 from typing import List, Optional, Tuple, Union
 
 from pydantic import BaseModel, Extra, Field
 
+from .extensions.eo import BandObject
 from .utils import AutoValueEnum
 
 NumType = Union[float, int]
@@ -17,28 +19,30 @@ DATETIME_RFC339 = "%Y-%m-%dT%H:%M:%SZ"
 
 class ExtensionTypes(str, AutoValueEnum):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.9.0/extensions/README.md#list-of-content-extensions
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/extensions/README.md#list-of-content-extensions
     """
 
     asset = auto()
     checksum = auto()
-    commons = auto()
+    collection_assets = "collection-assets"
     context = auto()
     cube = auto()
     eo = auto()
+    item_assets = "item-assets"
     label = auto()
     pc = auto()
     proj = auto()
     sar = auto()
     sat = auto()
     sci = auto()
+    single_file_stac = "single-file-stac"
     version = auto()
     view = auto()
 
 
 class MimeTypes(str, Enum):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.9.0/item-spec/item-spec.md#media-types
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/item-spec/item-spec.md#media-types
     """
 
     # Raster
@@ -63,7 +67,7 @@ class MimeTypes(str, Enum):
 
 class Relations(str, AutoValueEnum):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.9.0/collection-spec/collection-spec.md#relation-types
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/collection-spec/collection-spec.md#relation-types
     """
 
     self = auto()
@@ -85,7 +89,7 @@ class Relations(str, AutoValueEnum):
 
 class AssetRoles(str, AutoValueEnum):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.9.0/extensions/asset/README.md
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/extensions/asset/README.md
     """
 
     thumbnail = auto()
@@ -94,9 +98,16 @@ class AssetRoles(str, AutoValueEnum):
     metadata = auto()
 
 
+class ProviderRoles(str, AutoValueEnum):
+    licensor = auto()
+    producer = auto()
+    processor = auto()
+    host = auto()
+
+
 class Link(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.9.0/collection-spec/collection-spec.md#link-object
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/collection-spec/collection-spec.md#link-object
     """
 
     href: str
@@ -110,9 +121,37 @@ class Link(BaseModel):
         use_enum_values = True
 
 
-class Asset(BaseModel):
+class Provider(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.9.0/item-spec/item-spec.md#asset-object
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/collection-spec/collection-spec.md#provider-object
+    """
+
+    name: str
+    description: Optional[str]
+    roles: Optional[List[str]]
+    url: Optional[str]
+
+
+class StacCommonMetadata(BaseModel):
+    """
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/item-spec/common-metadata.md#date-and-time-range
+    """
+
+    title: Optional[str] = Field(None, alias="title")
+    description: Optional[str] = Field(None, alias="description")
+    start_datetime: Optional[Union[str, datetime]] = Field(None, alias="start_datetime")
+    end_datetime: Optional[Union[str, datetime]] = Field(None, alias="end_datetime")
+    platform: Optional[str] = Field(None, alias="platform")
+    instruments: Optional[List[str]] = Field(None, alias="instruments")
+    constellation: Optional[str] = Field(None, alias="constellation")
+    mission: Optional[str] = Field(None, alias="mission")
+    providers: Optional[List[Provider]] = Field(None, alias="providers")
+    gsd: Optional[NumType] = Field(None, alias="gsd")
+
+
+class Asset(StacCommonMetadata):
+    """
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/item-spec/item-spec.md#asset-object
     """
 
     href: str
@@ -121,7 +160,7 @@ class Asset(BaseModel):
     description: Optional[str]
     roles: Optional[List[AssetRoles]]
     # EO extension
-    bands: Optional[List[int]] = Field(None, alias="eo:bands")
+    bands: Optional[List[BandObject]] = Field(None, alias="eo:bands")
     # SAR extension
     polarizations: Optional[List[str]] = Field(None, alias="sar:polarizations")
     # Checksum extension

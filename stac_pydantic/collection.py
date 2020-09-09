@@ -3,23 +3,12 @@ from typing import Any, Dict, List, Optional, Union
 from pydantic import BaseModel
 
 from .catalog import Catalog
-from .shared import ExtensionTypes, Link, NumType
-
-
-class Provider(BaseModel):
-    """
-    https://github.com/radiantearth/stac-spec/blob/v0.9.0/collection-spec/collection-spec.md#provider-object
-    """
-
-    name: str
-    description: Optional[str]
-    roles: Optional[List[str]]
-    url: Optional[str]
+from .shared import NumType, Provider
 
 
 class SpatialExtent(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.9.0/collection-spec/collection-spec.md#spatial-extent-object
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/collection-spec/collection-spec.md#spatial-extent-object
     """
 
     bbox: List[List[NumType]]
@@ -27,7 +16,7 @@ class SpatialExtent(BaseModel):
 
 class TimeInterval(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.9.0/collection-spec/collection-spec.md#temporal-extent-object
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/collection-spec/collection-spec.md#temporal-extent-object
     """
 
     interval: List[List[Union[str, None]]]
@@ -35,7 +24,7 @@ class TimeInterval(BaseModel):
 
 class Extent(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.9.0/collection-spec/collection-spec.md#extent-object
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/collection-spec/collection-spec.md#extent-object
     """
 
     spatial: SpatialExtent
@@ -44,7 +33,7 @@ class Extent(BaseModel):
 
 class Stats(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.9.0/collection-spec/collection-spec.md#stats-object
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/collection-spec/collection-spec.md#stats-object
     """
 
     min: Union[NumType, str]
@@ -53,7 +42,7 @@ class Stats(BaseModel):
 
 class Collection(Catalog):
     """
-    https://github.com/radiantearth/stac-spec/blob/v0.9.0/collection-spec/collection-spec.md
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/collection-spec/collection-spec.md
     """
 
     license: str

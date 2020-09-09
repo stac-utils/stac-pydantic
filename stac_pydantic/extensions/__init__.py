@@ -1,28 +1,32 @@
-from .assets import AssetExtension
-from .commons import CommonsExtension
+from urllib.parse import urlparse
+
+from .collection_assets import CollectionAssetExtension
 from .datacube import DatacubeExtension
 from .eo import ElectroOpticalExtension
+from .item_assets import ItemAssetExtension
 from .label import LabelExtension
 from .pc import PointCloudExtension
 from .proj import ProjectionExtension
 from .sar import SARExtension
 from .sat import SatelliteExtension
 from .sci import ScientificExtension
+from .timestamps import TimestampsExtension
 from .version import VersionExtension
 from .view import ViewExtension
 
 
 class Extensions:
-    asset = AssetExtension
-    commons = CommonsExtension
+    collection_assets = CollectionAssetExtension
     datacube = DatacubeExtension
     eo = ElectroOpticalExtension
+    item_assets = ItemAssetExtension
     label = LabelExtension
     pointcloud = PointCloudExtension
     proj = ProjectionExtension
     sar = SARExtension
     sat = SatelliteExtension
     scientific = ScientificExtension
+    timestamps = TimestampsExtension
     version = VersionExtension
     view = ViewExtension
 
@@ -37,6 +41,8 @@ class Extensions:
 
     @classmethod
     def get(cls, k):
+        if not urlparse(k).scheme:
+            k = k.replace("-", "_")
         try:
             return getattr(cls, k)
         except AttributeError:
