@@ -177,17 +177,17 @@ def test_item_collection():
 def test_single_file_stac():
     test_sfs = request(SINGLE_FILE_STAC)
     # item collection is missing stac version and links
-    test_sfs["stac_version"] = "0.9.0"
     test_sfs["links"] = [{"type": "fake", "href": "http://mocked.com", "rel": "fake"}]
-
-    # items are missing stac version
-    for item in test_sfs["features"]:
-        item["stac_version"] = "0.9.0"
 
     # collection extents are from an older stac version
     for coll in test_sfs["collections"]:
         coll["extent"]["spatial"] = {"bbox": [coll["extent"]["spatial"]]}
         coll["extent"]["temporal"] = {"interval": [coll["extent"]["temporal"]]}
+        coll["stac_extensions"][0] = "proj"
+
+    for feat in test_sfs["features"]:
+        feat["stac_extensions"][0] = "proj"
+
     valid_sfs = SingleFileStac(**test_sfs).to_dict()
 
     for idx, feat in enumerate(test_sfs["features"]):

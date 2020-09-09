@@ -35,6 +35,7 @@ class ExtensionTypes(str, AutoValueEnum):
     sar = auto()
     sat = auto()
     sci = auto()
+    single_file_stac = "single-file-stac"
     version = auto()
     view = auto()
 
