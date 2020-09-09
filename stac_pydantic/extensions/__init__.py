@@ -1,3 +1,5 @@
+from urllib.parse import urlparse
+
 from .collection_assets import CollectionAssetExtension
 from .datacube import DatacubeExtension
 from .eo import ElectroOpticalExtension
@@ -39,7 +41,8 @@ class Extensions:
 
     @classmethod
     def get(cls, k):
-        k = k.replace("-", "_")
+        if not urlparse(k).scheme:
+            k = k.replace("-", "_")
         try:
             return getattr(cls, k)
         except AttributeError:

@@ -15,6 +15,7 @@ from stac_pydantic.extensions import Extensions
 from stac_pydantic.extensions.single_file_stac import SingleFileStac
 from stac_pydantic.item import item_model_factory, validate_item
 from stac_pydantic.shared import DATETIME_RFC339, Link
+from stac_pydantic.version import STAC_VERSION
 
 from .conftest import dict_match, request
 
@@ -30,25 +31,23 @@ class LandsatExtension(BaseModel):
 landsat_alias = "https://example.com/stac/landsat-extension/1.0/schema.json"
 Extensions.register("landsat", LandsatExtension, alias=landsat_alias)
 
-COLLECTION = "https://raw.githubusercontent.com/radiantearth/stac-spec/v0.9.0/collection-spec/examples/landsat-collection.json"
-ITEM_COLLECTION = "https://raw.githubusercontent.com/radiantearth/stac-spec/v0.9.0/item-spec/examples/itemcollection-sample-full.json"
-SINGLE_FILE_STAC = "https://raw.githubusercontent.com/radiantearth/stac-spec/v0.9.0/extensions/single-file-stac/examples/example-search.json"
+COLLECTION = f"https://raw.githubusercontent.com/radiantearth/stac-spec/v{STAC_VERSION}/collection-spec/examples/landsat-collection.json"
+ITEM_COLLECTION = f"https://raw.githubusercontent.com/radiantearth/stac-spec/v{STAC_VERSION}/item-spec/examples/itemcollection-sample-full.json"
+SINGLE_FILE_STAC = f"https://raw.githubusercontent.com/radiantearth/stac-spec/v{STAC_VERSION}/extensions/single-file-stac/examples/example-search.json"
 
-ASSET_EXTENSION = "https://raw.githubusercontent.com/radiantearth/stac-spec/v0.9.0/extensions/asset/examples/example-landsat8.json"
-COMMONS_EXTENSION = "https://raw.githubusercontent.com/radiantearth/stac-spec/v0.9.0/extensions/commons/examples/landsat-collection.json"
-DATACUBE_EXTENSION = "https://raw.githubusercontent.com/radiantearth/stac-spec/v0.9.0/extensions/datacube/examples/example-item.json"
-EO_EXTENSION = "https://raw.githubusercontent.com/radiantearth/stac-spec/v0.9.0/extensions/eo/examples/example-landsat8.json"
-LABEL_EXTENSION = "https://raw.githubusercontent.com/radiantearth/stac-spec/v0.9.0/extensions/label/examples/spacenet-roads/roads_item.json"
-POINTCLOUD_EXTENSION = "https://raw.githubusercontent.com/radiantearth/stac-spec/v0.9.0/extensions/pointcloud/examples/example-autzen.json"
-PROJ_EXTENSION = "https://raw.githubusercontent.com/radiantearth/stac-spec/v0.9.0/extensions/projection/examples/example-landsat8.json"
-SAR_EXTENSION = "https://raw.githubusercontent.com/radiantearth/stac-spec/v0.9.0/extensions/sar/examples/sentinel1.json"
-SAT_EXTENSION = "https://raw.githubusercontent.com/radiantearth/stac-spec/v0.9.0/extensions/sat/examples/example-landsat8.json"
-SCIENTIFIC_EXTENSION = "https://raw.githubusercontent.com/radiantearth/stac-spec/v0.9.0/extensions/scientific/examples/item.json"
-VERSION_EXTENSION_ITEM = "https://raw.githubusercontent.com/radiantearth/stac-spec/v0.9.0/extensions/version/examples/item.json"
-VERSION_EXTENSION_COLLECTION = "https://raw.githubusercontent.com/radiantearth/stac-spec/v0.9.0/extensions/version/examples/collection.json"
-VIEW_EXTENSION = "https://raw.githubusercontent.com/radiantearth/stac-spec/v0.9.0/extensions/view/examples/example-landsat8.json"
-
-DATETIME_RANGE = "https://raw.githubusercontent.com/radiantearth/stac-spec/v0.9.0/item-spec/examples/datetimerange.json"
+ASSET_EXTENSION = f"https://raw.githubusercontent.com/radiantearth/stac-spec/v{STAC_VERSION}/extensions/asset/examples/example-landsat8.json"
+DATACUBE_EXTENSION = f"https://raw.githubusercontent.com/radiantearth/stac-spec/v{STAC_VERSION}/extensions/datacube/examples/example-item.json"
+EO_EXTENSION = f"https://raw.githubusercontent.com/radiantearth/stac-spec/v{STAC_VERSION}/extensions/eo/examples/example-landsat8.json"
+LABEL_EXTENSION = f"https://raw.githubusercontent.com/radiantearth/stac-spec/v{STAC_VERSION}/extensions/label/examples/spacenet-roads/roads_item.json"
+POINTCLOUD_EXTENSION = f"https://raw.githubusercontent.com/radiantearth/stac-spec/v{STAC_VERSION}/extensions/pointcloud/examples/example-autzen.json"
+PROJ_EXTENSION = f"https://raw.githubusercontent.com/radiantearth/stac-spec/v{STAC_VERSION}/extensions/projection/examples/example-landsat8.json"
+SAR_EXTENSION = f"https://raw.githubusercontent.com/radiantearth/stac-spec/v{STAC_VERSION}/extensions/sar/examples/sentinel1.json"
+SAT_EXTENSION = f"https://raw.githubusercontent.com/radiantearth/stac-spec/v{STAC_VERSION}/extensions/sat/examples/example-landsat8.json"
+SCIENTIFIC_EXTENSION = f"https://raw.githubusercontent.com/radiantearth/stac-spec/v{STAC_VERSION}/extensions/scientific/examples/item.json"
+VERSION_EXTENSION_ITEM = f"https://raw.githubusercontent.com/radiantearth/stac-spec/v{STAC_VERSION}/extensions/version/examples/item.json"
+VERSION_EXTENSION_COLLECTION = f"https://raw.githubusercontent.com/radiantearth/stac-spec/v{STAC_VERSION}/extensions/version/examples/collection.json"
+VIEW_EXTENSION = f"https://raw.githubusercontent.com/radiantearth/stac-spec/v{STAC_VERSION}/extensions/view/examples/example-landsat8.json"
+DATETIME_RANGE = f"https://raw.githubusercontent.com/radiantearth/stac-spec/v{STAC_VERSION}/item-spec/examples/datetimerange.json"
 
 
 @pytest.mark.parametrize(
@@ -130,13 +129,6 @@ def test_label_extension():
 
     valid_item = item_model_factory(test_item)(**test_item).to_dict()
     dict_match(test_item, valid_item)
-
-
-def test_commons_extension_collection():
-    test_coll = request(COMMONS_EXTENSION)
-    valid_coll = Collection(**test_coll).to_dict()
-    dict_match(test_coll, valid_coll)
-
 
 def test_explicit_extension_validation():
     test_item = request(EO_EXTENSION)
@@ -229,14 +221,6 @@ def test_item_to_json():
 def test_assets_extension_validation_error():
     test_collection = request(ASSET_EXTENSION)
     del test_collection["assets"]
-
-    with pytest.raises(ValidationError):
-        Collection(**test_collection)
-
-
-def test_commons_extension_validation_error():
-    test_collection = request(COMMONS_EXTENSION)
-    del test_collection["properties"]
 
     with pytest.raises(ValidationError):
         Collection(**test_collection)

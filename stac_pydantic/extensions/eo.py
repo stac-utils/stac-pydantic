@@ -3,7 +3,6 @@ from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
-from ..shared import NumType
 from ..utils import AutoValueEnum
 
 
@@ -37,8 +36,8 @@ class BandObject(BaseModel):
 
     name: Optional[str]
     common_name: Optional[CommonBandNames]
-    center_wavelength: Optional[NumType]
-    full_width_half_max: Optional[NumType]
+    center_wavelength: Optional[float]
+    full_width_half_max: Optional[float]
     description: Optional[str]
 
 
@@ -47,8 +46,8 @@ class ElectroOpticalExtension(BaseModel):
     https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/eo#electro-optical-extension-specification
     """
 
-    bands: List[BandObject] = Field(..., alias="eo:bands")
-    cloud_cover: Optional[NumType] = Field(None, alias="eo:cloud_cover")
+    bands: Optional[List[BandObject]] = Field(None, alias="eo:bands")
+    cloud_cover: Optional[float] = Field(None, alias="eo:cloud_cover")
 
     class Config:
         use_enum_values = True

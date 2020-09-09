@@ -4,6 +4,7 @@ from typing import List, Optional, Tuple, Union
 
 from pydantic import BaseModel, Extra, Field
 
+from .extensions.eo import BandObject
 from .utils import AutoValueEnum
 
 NumType = Union[float, int]
@@ -156,7 +157,7 @@ class Asset(StacCommonMetadata):
     description: Optional[str]
     roles: Optional[List[AssetRoles]]
     # EO extension
-    bands: Optional[List[int]] = Field(None, alias="eo:bands")
+    bands: Optional[List[BandObject]] = Field(None, alias="eo:bands")
     # SAR extension
     polarizations: Optional[List[str]] = Field(None, alias="sar:polarizations")
     # Checksum extension
