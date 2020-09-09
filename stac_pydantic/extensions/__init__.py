@@ -1,5 +1,4 @@
 from .assets import AssetExtension
-from .commons import CommonsExtension
 from .datacube import DatacubeExtension
 from .eo import ElectroOpticalExtension
 from .label import LabelExtension
@@ -14,7 +13,6 @@ from .view import ViewExtension
 
 class Extensions:
     asset = AssetExtension
-    commons = CommonsExtension
     datacube = DatacubeExtension
     eo = ElectroOpticalExtension
     label = LabelExtension

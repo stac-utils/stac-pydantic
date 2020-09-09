@@ -22,7 +22,6 @@ class ExtensionTypes(str, AutoValueEnum):
 
     asset = auto()
     checksum = auto()
-    commons = auto()
     context = auto()
     cube = auto()
     eo = auto()

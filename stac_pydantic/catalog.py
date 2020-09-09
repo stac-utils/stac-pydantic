@@ -27,7 +27,7 @@ class Catalog(BaseModel):
     def validate_extensions(cls, values):
         if "stac_extensions" in values:
             for ext in values["stac_extensions"]:
-                if ext in ("assets", "commons", "version"):
+                if ext in ("assets", "version"):
                     ext_model = Extensions.get(ext)
                     ext_model(**values)
         return values
