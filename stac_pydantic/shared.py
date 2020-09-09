@@ -142,6 +142,7 @@ class StacCommonMetadata(BaseModel):
     constellation: Optional[str] = Field(None, alias="constellation")
     mission: Optional[str] = Field(None, alias="mission")
     providers: Optional[List[Provider]] = Field(None, alias="providers")
+    gsd: Optional[NumType] = Field(None, alias="gsd")
 
 
 class Asset(StacCommonMetadata):

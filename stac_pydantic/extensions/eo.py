@@ -47,7 +47,6 @@ class ElectroOpticalExtension(BaseModel):
     https://github.com/radiantearth/stac-spec/tree/v0.9.0/extensions/eo#electro-optical-extension-specification
     """
 
-    gsd: NumType = Field(..., alias="eo:gsd")
     bands: List[BandObject] = Field(..., alias="eo:bands")
     cloud_cover: Optional[NumType] = Field(None, alias="eo:cloud_cover")
 
