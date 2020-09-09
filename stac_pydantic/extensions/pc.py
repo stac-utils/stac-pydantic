@@ -9,7 +9,7 @@ from ..utils import AutoValueEnum
 
 class ChannelTypes(str, AutoValueEnum):
     """
-    https://github.com/radiantearth/stac-spec/tree/v1.0.0-beta1/extensions/pointcloud#schema-object
+    https://github.com/radiantearth/stac-spec/tree/v1.0.0-beta.1/extensions/pointcloud#schema-object
     """
 
     floating = auto()
@@ -19,7 +19,7 @@ class ChannelTypes(str, AutoValueEnum):
 
 class SchemaObject(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/tree/v1.0.0-beta1/extensions/pointcloud#schema-object
+    https://github.com/radiantearth/stac-spec/tree/v1.0.0-beta.1/extensions/pointcloud#schema-object
     """
 
     name: str
@@ -32,7 +32,7 @@ class SchemaObject(BaseModel):
 
 class StatsObject(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/tree/v1.0.0-beta1/extensions/pointcloud#stats-object
+    https://github.com/radiantearth/stac-spec/tree/v1.0.0-beta.1/extensions/pointcloud#stats-object
     """
 
     average: Optional[NumType]
@@ -47,7 +47,7 @@ class StatsObject(BaseModel):
 
 class PointCloudExtension(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/tree/v1.0.0-beta1/extensions/pointcloud#point-cloud-extension-specification
+    https://github.com/radiantearth/stac-spec/tree/v1.0.0-beta.1/extensions/pointcloud#point-cloud-extension-specification
     """
 
     count: int = Field(..., alias="pc:count")
