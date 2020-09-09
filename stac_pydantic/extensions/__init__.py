@@ -7,6 +7,7 @@ from .proj import ProjectionExtension
 from .sar import SARExtension
 from .sat import SatelliteExtension
 from .sci import ScientificExtension
+from .timestamps import TimestampsExtension
 from .version import VersionExtension
 from .view import ViewExtension
 
@@ -21,6 +22,7 @@ class Extensions:
     sar = SARExtension
     sat = SatelliteExtension
     scientific = ScientificExtension
+    timestamps = TimestampsExtension
     version = VersionExtension
     view = ViewExtension
 

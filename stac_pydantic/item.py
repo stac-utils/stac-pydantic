@@ -20,6 +20,8 @@ class ItemProperties(BaseModel):
     """
 
     datetime: Union[str, dt] = Field(..., alias="datetime")
+    created: Optional[Union[str, dt]] = Field(None, alias="datetime")
+    updated: Optional[Union[str, dt]] = Field(None, alias="datetime")
     # stac common metadata (https://github.com/radiantearth/stac-spec/blob/v0.9.0/item-spec/common-metadata.md)
     title: Optional[str] = Field(None, alias="title")
     description: Optional[str] = Field(None, alias="description")
