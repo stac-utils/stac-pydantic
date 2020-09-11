@@ -1,3 +1,8 @@
+1.3.6 (2020-09-11)
+------------------
+- Publish mypy type hints (#30)
+- Correct Cloud Optimized GeoTiff mime type (#31)
+
 1.3.5 (2020-09-09)
 ------------------
 - Add `created` and `updated` to stac common metadata, fix aliases. (#28)
