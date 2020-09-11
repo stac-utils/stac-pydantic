@@ -47,7 +47,7 @@ class MimeTypes(str, Enum):
 
     # Raster
     geotiff = "image/tiff; application=geotiff"
-    cog = "image/geo+tiff; application=geotiff; profile=cloud-optimized"
+    cog = "image/tiff; application=geotiff; profile=cloud-optimized"
     jp2 = "image/jp2"
     png = "image/png"
     jpeg = "image/jpeg"
