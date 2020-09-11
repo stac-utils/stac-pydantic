@@ -25,10 +25,10 @@ setup(
     url="https://github.com/arturo-ai/stac-pydantic",
     license="MIT",
     packages=find_packages(exclude=["tests"]),
-    include_package_data=True,
     zip_safe=False,
     install_requires=["click", "pydantic>=1.6", "geojson-pydantic",],
     tests_require=["pytest", "pytest-cov", "requests", "shapely"],
     setup_requires=["pytest-runner"],
     entry_points={"console_scripts": ["stac-pydantic=stac_pydantic.scripts.cli:app"]},
+    package_data={"stac_pydantic": ["*.typed"]},
 )
