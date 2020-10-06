@@ -79,7 +79,7 @@ def test_sar_extensions():
 def test_proj_extension():
     # The example item uses an invalid band name
     test_item = request(PROJ_EXTENSION)
-    test_item["stac_extensions"][1] = "proj"
+    test_item["stac_extensions"][1] = "projection"
     test_item["assets"]["B8"]["eo:bands"][0]["common_name"] = "pan"
 
     valid_item = item_model_factory(test_item)(**test_item).to_dict()
@@ -170,10 +170,10 @@ def test_single_file_stac():
 
     # collection extents are from an older stac version
     for coll in test_sfs["collections"]:
-        coll["stac_extensions"][0] = "proj"
+        coll["stac_extensions"][0] = "projection"
 
     for feat in test_sfs["features"]:
-        feat["stac_extensions"][0] = "proj"
+        feat["stac_extensions"][0] = "projection"
 
     valid_sfs = SingleFileStac(**test_sfs).to_dict()
 
@@ -242,7 +242,7 @@ def test_point_cloud_extension_validation_error():
 
 def test_proj_extension_validation_error():
     test_item = request(PROJ_EXTENSION)
-    test_item["stac_extensions"][1] = "proj"
+    test_item["stac_extensions"][1] = "projection"
     del test_item["properties"]["proj:epsg"]
     model = item_model_factory(test_item)
 
