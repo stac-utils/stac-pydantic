@@ -6,7 +6,7 @@ from .eo import ElectroOpticalExtension
 from .item_assets import ItemAssetExtension
 from .label import LabelExtension
 from .pc import PointCloudExtension
-from .proj import ProjectionExtension
+from .projection import ProjectionExtension
 from .sar import SARExtension
 from .sat import SatelliteExtension
 from .sci import ScientificExtension
@@ -22,7 +22,7 @@ class Extensions:
     item_assets = ItemAssetExtension
     label = LabelExtension
     pointcloud = PointCloudExtension
-    proj = ProjectionExtension
+    projection = ProjectionExtension
     sar = SARExtension
     sat = SatelliteExtension
     scientific = ScientificExtension

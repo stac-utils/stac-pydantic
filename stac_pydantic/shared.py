@@ -31,7 +31,7 @@ class ExtensionTypes(str, AutoValueEnum):
     item_assets = "item-assets"
     label = auto()
     pc = auto()
-    proj = auto()
+    projection = auto()
     sar = auto()
     sat = auto()
     sci = auto()
