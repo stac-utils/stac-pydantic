@@ -630,3 +630,11 @@ def test_multi_inheritance():
     assert "gsd" in properties
     assert "view:off_nadir" in properties
     assert "landsat:path" in properties
+
+
+@pytest.mark.parametrize("url,cls", [[EO_EXTENSION, Item], [COLLECTION, Collection]])
+def test_extension(url, cls):
+    test_data = request(url)
+    test_data["stac_extensions"].append("foo")
+    model = cls.parse_obj(test_data)
+    assert "foo" in model.stac_extensions
