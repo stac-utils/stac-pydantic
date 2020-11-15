@@ -632,14 +632,9 @@ def test_multi_inheritance():
     assert "landsat:path" in properties
 
 
-def test_extension():
-    test_item = request(EO_EXTENSION)
-    test_item["stac_extensions"].append("foo")
-
-    item = Item.parse_obj(test_item)
-    assert "foo" in item.stac_extensions
-
-    test_collection = request(COLLECTION)
-    test_collection["stac_extensions"].append("foo")
-    collection = Collection.parse_obj(test_collection)
-    assert "foo" in collection.stac_extensions
+@pytest.mark.parametrize("url,cls", [[EO_EXTENSION, Item], [COLLECTION, Collection]])
+def test_extension(url, cls):
+    test_data = request(url)
+    test_data["stac_extensions"].append("foo")
+    model = cls.parse_obj(test_data)
+    assert "foo" in model.stac_extensions
