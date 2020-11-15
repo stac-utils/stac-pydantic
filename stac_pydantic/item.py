@@ -9,7 +9,7 @@ from pydantic.fields import FieldInfo
 from .api.extensions.context import ContextExtension
 from .api.extensions.paging import PaginationLink
 from .extensions import Extensions
-from .shared import Asset, BBox, ExtensionTypes, Link, StacCommonMetadata
+from .shared import Asset, BBox, Link, StacCommonMetadata
 from .utils import decompose_model
 from .version import STAC_VERSION
 
@@ -45,7 +45,7 @@ class Item(Feature):
     assets: Dict[str, Asset]
     links: List[Link]
     bbox: BBox
-    stac_extensions: Optional[List[Union[str, ExtensionTypes]]]
+    stac_extensions: Optional[List[str]]
     collection: Optional[str]
 
     def to_dict(self, **kwargs):
@@ -62,7 +62,7 @@ class ItemCollection(FeatureCollection):
 
     stac_version: str = Field(STAC_VERSION, const=True)
     features: List[Item]
-    stac_extensions: Optional[List[ExtensionTypes]]
+    stac_extensions: Optional[List[str]]
     links: List[Union[PaginationLink, Link]]
     context: Optional[ContextExtension]
 
