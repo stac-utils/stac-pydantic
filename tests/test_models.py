@@ -630,3 +630,16 @@ def test_multi_inheritance():
     assert "gsd" in properties
     assert "view:off_nadir" in properties
     assert "landsat:path" in properties
+
+
+def test_extension():
+    test_item = request(EO_EXTENSION)
+    test_item["stac_extensions"].append("foo")
+
+    item = Item.parse_obj(test_item)
+    assert "foo" in item.stac_extensions
+
+    test_collection = request(COLLECTION)
+    test_collection["stac_extensions"].append("foo")
+    collection = Collection.parse_obj(test_collection)
+    assert "foo" in collection.stac_extensions
