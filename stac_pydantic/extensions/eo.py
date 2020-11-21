@@ -1,5 +1,5 @@
 from enum import auto
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from pydantic import BaseModel, Field
 
@@ -35,7 +35,7 @@ class BandObject(BaseModel):
     """
 
     name: Optional[str]
-    common_name: Optional[CommonBandNames]
+    common_name: Optional[Union[str, CommonBandNames]]
     center_wavelength: Optional[float]
     full_width_half_max: Optional[float]
     description: Optional[str]
