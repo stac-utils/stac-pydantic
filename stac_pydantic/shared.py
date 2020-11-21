@@ -160,7 +160,7 @@ class Asset(StacCommonMetadata):
     type: Optional[str]
     title: Optional[str]
     description: Optional[str]
-    roles: Optional[List[AssetRoles]]
+    roles: Optional[List[str]]
     # EO extension
     bands: Optional[List[BandObject]] = Field(None, alias="eo:bands")
     # SAR extension
