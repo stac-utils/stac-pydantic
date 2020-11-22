@@ -1,4 +1,4 @@
-1.3.7 (2020-11-21)
+1.3.8 (2020-11-21)
 ------------------
 - Remove enum restriction for asset roles (#39).
 - Remove enum restriction for band common name (#40).
