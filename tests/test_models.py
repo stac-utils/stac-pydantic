@@ -6,7 +6,7 @@ import pytest
 from pydantic import BaseModel, Field, ValidationError
 from shapely.geometry import shape
 
-from stac_pydantic import Collection, Item, ItemCollection, ItemProperties
+from stac_pydantic import Catalog, Collection, Item, ItemCollection, ItemProperties
 from stac_pydantic.api.conformance import ConformanceClasses
 from stac_pydantic.api.extensions.paging import PaginationLink
 from stac_pydantic.api.landing import LandingPage
@@ -335,10 +335,20 @@ def test_api_conformance_invalid_url():
 
 def test_api_landing_page():
     LandingPage(
+        id='test-landing-page',
         description="stac-api landing page",
         stac_extensions=["eo", "proj"],
         links=[Link(href="http://link", rel="self",)],
     )
+
+def test_api_landing_page_is_catalog():
+    landing_page = LandingPage(
+        id='test-landing-page',
+        description="stac-api landing page",
+        stac_extensions=["eo", "proj"],
+        links=[Link(href="http://link", rel="self",)],
+    )
+    catalog = Catalog(**landing_page.dict())
 
 
 def test_search():
