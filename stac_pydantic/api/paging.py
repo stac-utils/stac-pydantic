@@ -1,8 +1,8 @@
 from enum import auto
 from typing import Any, Dict, Optional
 
-from ...shared import Link
-from ...utils import AutoValueEnum
+from stac_pydantic.shared import Link
+from stac_pydantic.utils import AutoValueEnum
 
 
 class PaginationMethods(str, AutoValueEnum):

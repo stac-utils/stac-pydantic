@@ -6,8 +6,9 @@ from geojson_pydantic.features import Feature, FeatureCollection
 from pydantic import BaseModel, Field, create_model, validator
 from pydantic.fields import FieldInfo
 
+from stac_pydantic.api.paging import PaginationLink
+
 from .api.extensions.context import ContextExtension
-from .api.extensions.paging import PaginationLink
 from .extensions import Extensions
 from .shared import Asset, BBox, Link, StacCommonMetadata
 from .utils import decompose_model

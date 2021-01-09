@@ -7,8 +7,8 @@ from pydantic import BaseModel, Field, ValidationError
 from shapely.geometry import shape
 
 from stac_pydantic import Catalog, Collection, Item, ItemCollection, ItemProperties
-from stac_pydantic.api.extensions.paging import PaginationLink
 from stac_pydantic.api.landing import LandingPage
+from stac_pydantic.api.paging import PaginationLink
 from stac_pydantic.api.search import Search
 from stac_pydantic.extensions import Extensions
 from stac_pydantic.extensions.single_file_stac import SingleFileStac
