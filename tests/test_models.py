@@ -7,7 +7,6 @@ from pydantic import BaseModel, Field, ValidationError
 from shapely.geometry import shape
 
 from stac_pydantic import Catalog, Collection, Item, ItemCollection, ItemProperties
-from stac_pydantic.api.conformance import ConformanceClasses
 from stac_pydantic.api.extensions.paging import PaginationLink
 from stac_pydantic.api.landing import LandingPage
 from stac_pydantic.api.search import Search
@@ -322,31 +321,23 @@ def test_geo_interface():
     Item(**test_item)
 
 
-def test_api_conformance():
-    ConformanceClasses(
-        conformsTo=["https://conformance-class-1", "http://conformance-class-2"]
-    )
-
-
-def test_api_conformance_invalid_url():
-    with pytest.raises(ValidationError):
-        ConformanceClasses(conformsTo=["s3://conformance-class"])
-
-
 def test_api_landing_page():
     LandingPage(
-        id='test-landing-page',
+        id="test-landing-page",
         description="stac-api landing page",
         stac_extensions=["eo", "proj"],
         links=[Link(href="http://link", rel="self",)],
+        conformsTo=["https://conformance-class-1", "http://conformance-class-2"],
     )
+
 
 def test_api_landing_page_is_catalog():
     landing_page = LandingPage(
-        id='test-landing-page',
+        id="test-landing-page",
         description="stac-api landing page",
         stac_extensions=["eo", "proj"],
         links=[Link(href="http://link", rel="self",)],
+        conformsTo=["https://conformance-class-1", "http://conformance-class-2"],
     )
     catalog = Catalog(**landing_page.dict())
 

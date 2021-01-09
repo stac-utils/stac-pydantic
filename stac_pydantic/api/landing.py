@@ -1,6 +1,6 @@
 from typing import List, Optional, Union
 
-from pydantic import BaseModel, Field
+from pydantic import AnyHttpUrl, BaseModel, Field
 
 from ..shared import ExtensionTypes, Link
 from ..version import STAC_VERSION
@@ -17,3 +17,4 @@ class LandingPage(BaseModel):
     stac_version: str = Field(STAC_VERSION, const=True)
     stac_extensions: Optional[List[Union[str, ExtensionTypes]]]
     links: List[Link]
+    conformsTo: List[AnyHttpUrl]
