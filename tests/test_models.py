@@ -341,15 +341,16 @@ def test_api_conformance_invalid_url():
 
 def test_api_landing_page():
     LandingPage(
-        id='test-landing-page',
+        id="test-landing-page",
         description="stac-api landing page",
         stac_extensions=["eo", "proj"],
         links=[Link(href="http://link", rel="self",)],
     )
 
+
 def test_api_landing_page_is_catalog():
     landing_page = LandingPage(
-        id='test-landing-page',
+        id="test-landing-page",
         description="stac-api landing page",
         stac_extensions=["eo", "proj"],
         links=[Link(href="http://link", rel="self",)],
