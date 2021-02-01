@@ -3,6 +3,10 @@ from setuptools import find_packages, setup
 with open("README.md") as f:
     desc = f.read()
 
+extras = {
+    "dev": ["pytest", "pytest-cov", "requests", "shapely"],
+}
+
 setup(
     name="stac-pydantic",
     description="Pydantic data models for the STAC spec",
@@ -30,5 +34,6 @@ setup(
     tests_require=["pytest", "pytest-cov", "requests", "shapely"],
     setup_requires=["pytest-runner"],
     entry_points={"console_scripts": ["stac-pydantic=stac_pydantic.scripts.cli:app"]},
+    extras_require=extras,
     package_data={"stac_pydantic": ["*.typed"]},
 )
