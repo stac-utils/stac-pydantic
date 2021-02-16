@@ -13,7 +13,8 @@ from stac_pydantic.api.search import Search
 from stac_pydantic.extensions import Extensions
 from stac_pydantic.extensions.single_file_stac import SingleFileStac
 from stac_pydantic.item import item_model_factory, validate_item
-from stac_pydantic.shared import DATETIME_RFC339, Link, Links, PaginationLink
+from stac_pydantic.links import Link, Links, PaginationLink
+from stac_pydantic.shared import DATETIME_RFC339
 from stac_pydantic.version import STAC_VERSION
 
 from .conftest import dict_match, request

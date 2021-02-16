@@ -2,7 +2,9 @@ from typing import List, Optional, Union
 
 from pydantic import BaseModel, Field
 
-from ..shared import ExtensionTypes, Links
+from stac_pydantic.links import Links
+
+from ..shared import ExtensionTypes
 from ..version import STAC_VERSION
 
 
