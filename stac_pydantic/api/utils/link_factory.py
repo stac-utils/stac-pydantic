@@ -1,6 +1,6 @@
 import inspect
 from dataclasses import dataclass
-from typing import List, get_type_hints
+from typing import List
 from urllib.parse import urljoin
 
 from ...links import Link, Relations
