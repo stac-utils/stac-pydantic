@@ -3,7 +3,7 @@ from typing import List, Optional
 from pydantic import BaseModel, Field, root_validator
 
 from .extensions import Extensions
-from .shared import Link
+from .shared import Link, Links
 from .version import STAC_VERSION
 
 
@@ -15,7 +15,7 @@ class Catalog(BaseModel):
     id: str
     description: str
     stac_version: str = Field(STAC_VERSION, const=True)
-    links: List[Link]
+    links: Links
     stac_extensions: Optional[List[str]]
     title: Optional[str]
 

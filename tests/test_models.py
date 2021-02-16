@@ -8,13 +8,12 @@ from shapely.geometry import shape
 
 from stac_pydantic import Catalog, Collection, Item, ItemCollection, ItemProperties
 from stac_pydantic.api.conformance import ConformanceClasses
-from stac_pydantic.api.extensions.paging import PaginationLink
 from stac_pydantic.api.landing import LandingPage
 from stac_pydantic.api.search import Search
 from stac_pydantic.extensions import Extensions
 from stac_pydantic.extensions.single_file_stac import SingleFileStac
 from stac_pydantic.item import item_model_factory, validate_item
-from stac_pydantic.shared import DATETIME_RFC339, Link
+from stac_pydantic.shared import DATETIME_RFC339, Link, Links, PaginationLink
 from stac_pydantic.version import STAC_VERSION
 
 from .conftest import dict_match, request
@@ -655,3 +654,28 @@ def test_extension(url, cls):
     test_data["stac_extensions"].append("foo")
     model = cls.parse_obj(test_data)
     assert "foo" in model.stac_extensions
+
+
+def test_resolve_link():
+    link = Link(href="/hello/world", type="image/jpeg", rel="test")
+    link.resolve(base_url="http://base_url.com")
+    assert link.href == "http://base_url.com/hello/world"
+
+
+def test_resolve_links():
+    links = Links.parse_obj([Link(href="/hello/world", type="image/jpeg", rel="test")])
+    links.resolve(base_url="http://base_url.com")
+    for link in links:
+        assert link.href == "http://base_url.com/hello/world"
+
+
+def test_resolve_pagination_link():
+    normal_link = Link(href="/hello/world", type="image/jpeg", rel="test")
+    page_link = PaginationLink(
+        href="/next/page", type="image/jpeg", method="POST", rel="next"
+    )
+    links = Links.parse_obj([normal_link, page_link])
+    links.resolve(base_url="http://base_url.com")
+    for link in links:
+        if isinstance(link, PaginationLink):
+            assert link.href == "http://base_url.com/next/page"

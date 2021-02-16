@@ -1,6 +1,7 @@
 from datetime import datetime
 from enum import Enum, auto
-from typing import List, Optional, Tuple, Union
+from typing import Any, Dict, Iterator, List, Optional, Tuple, Union
+from urllib.parse import urljoin
 
 from pydantic import BaseModel, Extra, Field
 
@@ -119,6 +120,52 @@ class Link(BaseModel):
 
     class Config:
         use_enum_values = True
+
+    def resolve(self, base_url: str):
+        """resolve a link to the given base URL"""
+        self.href = urljoin(base_url, self.href)
+
+
+class PaginationMethods(str, AutoValueEnum):
+    """
+    https://github.com/radiantearth/stac-api-spec/blob/master/api-spec.md#paging-extension
+    """
+
+    GET = auto()
+    POST = auto()
+
+
+class PaginationRelations(str, AutoValueEnum):
+    """
+    https://github.com/radiantearth/stac-api-spec/blob/master/api-spec.md#paging-extension
+    """
+
+    next = auto()
+    previous = auto()
+
+
+class PaginationLink(Link):
+    """
+    https://github.com/radiantearth/stac-api-spec/blob/master/api-spec.md#paging-extension
+    """
+
+    rel: PaginationRelations
+    method: PaginationMethods
+    body: Optional[Dict[Any, Any]]
+    merge: bool = False
+
+
+class Links(BaseModel):
+    __root__: List[Union[PaginationLink, Link]]
+
+    def resolve(self, base_url: str):
+        """resolve all links to the given base URL"""
+        for link in self:
+            link.resolve(base_url)
+
+    def __iter__(self) -> Iterator[Link]:
+        """iterate through links"""
+        return iter(self.__root__)
 
 
 class Provider(BaseModel):
