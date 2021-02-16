@@ -667,3 +667,15 @@ def test_resolve_links():
     links.resolve(base_url="http://base_url.com")
     for link in links:
         assert link.href == "http://base_url.com/hello/world"
+
+
+def test_resolve_pagination_link():
+    normal_link = Link(href="/hello/world", type="image/jpeg", rel="test")
+    page_link = PaginationLink(
+        href="/next/page", type="image/jpeg", method="POST", rel="next"
+    )
+    links = Links.parse_obj([normal_link, page_link])
+    links.resolve(base_url="http://base_url.com")
+    for link in links:
+        if isinstance(link, PaginationLink):
+            assert link.href == "http://base_url.com/next/page"
