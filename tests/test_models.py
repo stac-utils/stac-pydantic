@@ -13,7 +13,7 @@ from stac_pydantic.api.search import Search
 from stac_pydantic.extensions import Extensions
 from stac_pydantic.extensions.single_file_stac import SingleFileStac
 from stac_pydantic.item import item_model_factory, validate_item
-from stac_pydantic.shared import DATETIME_RFC339, Link, PaginationLink
+from stac_pydantic.shared import DATETIME_RFC339, Link, Links, PaginationLink
 from stac_pydantic.version import STAC_VERSION
 
 from .conftest import dict_match, request
@@ -654,3 +654,16 @@ def test_extension(url, cls):
     test_data["stac_extensions"].append("foo")
     model = cls.parse_obj(test_data)
     assert "foo" in model.stac_extensions
+
+
+def test_resolve_link():
+    link = Link(href="/hello/world", type="image/jpeg", rel="test")
+    link.resolve(base_url="http://base_url.com")
+    assert link.href == "http://base_url.com/hello/world"
+
+
+def test_resolve_links():
+    links = Links.parse_obj([Link(href="/hello/world", type="image/jpeg", rel="test")])
+    links.resolve(base_url="http://base_url.com")
+    for link in links:
+        assert link.href == "http://base_url.com/hello/world"
