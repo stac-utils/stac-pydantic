@@ -9,7 +9,7 @@ from pydantic.fields import FieldInfo
 from .api.extensions.context import ContextExtension
 from .api.extensions.paging import PaginationLink
 from .extensions import Extensions
-from .shared import Asset, BBox, Link, StacCommonMetadata
+from .shared import Asset, BBox, Link, Links, StacCommonMetadata
 from .utils import decompose_model
 from .version import STAC_VERSION
 
@@ -43,7 +43,7 @@ class Item(Feature):
     stac_version: str = Field(STAC_VERSION, const=True)
     properties: ItemProperties
     assets: Dict[str, Asset]
-    links: List[Link]
+    links: Links
     bbox: BBox
     stac_extensions: Optional[List[str]]
     collection: Optional[str]

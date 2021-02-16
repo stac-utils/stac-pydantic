@@ -1,6 +1,7 @@
 from datetime import datetime
 from enum import Enum, auto
 from typing import List, Optional, Tuple, Union
+from urllib.parse import urljoin
 
 from pydantic import BaseModel, Extra, Field
 
@@ -119,6 +120,19 @@ class Link(BaseModel):
 
     class Config:
         use_enum_values = True
+
+
+class Links(BaseModel):
+    __root__: List[Link]
+
+    def resolve(self, base_url: str):
+        """resolve links to the given base URL"""
+        for link in self:
+            link.href = urljoin(base_url, link.href)
+
+    def __iter__(self):
+        """iterate through links"""
+        return iter(self.__root__)
 
 
 class Provider(BaseModel):
