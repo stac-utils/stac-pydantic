@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import List
 from urllib.parse import urljoin
 
-from ...links import Link, Relations
+from ...links import Link, Links, Relations
 from ...shared import MimeTypes
 
 
@@ -20,17 +20,18 @@ class BaseLinks:
             rel=Relations.root, type=MimeTypes.json, href=urljoin(self.base_url, "/")
         )
 
-    def create_links(self) -> List[Link]:
+    def create_links(self) -> Links:
         """Create inferred links"""
         links = []
         methods = inspect.getmembers(self, predicate=inspect.ismethod)
         for method in methods:
             func = method[-1]
             ret_type = inspect.signature(func).return_annotation
+            # TODO: enforce full signature
             if inspect.isclass(ret_type):
                 if issubclass(ret_type, Link):
                     links.append(func())
-        return links
+        return Links.parse_obj(links)
 
 
 @dataclass
