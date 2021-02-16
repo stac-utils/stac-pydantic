@@ -1,5 +1,6 @@
+import inspect
 from dataclasses import dataclass
-from typing import List
+from typing import List, get_type_hints
 from urllib.parse import urljoin
 
 from ...links import Link, Relations
@@ -18,6 +19,18 @@ class BaseLinks:
         return Link(
             rel=Relations.root, type=MimeTypes.json, href=urljoin(self.base_url, "/")
         )
+
+    def create_links(self) -> List[Link]:
+        """Create inferred links"""
+        links = []
+        methods = inspect.getmembers(self, predicate=inspect.ismethod)
+        for method in methods:
+            func = method[-1]
+            ret_type = inspect.signature(func).return_annotation
+            if inspect.isclass(ret_type):
+                if issubclass(ret_type, Link):
+                    links.append(func())
+        return links
 
 
 @dataclass
@@ -45,10 +58,6 @@ class CollectionLinks(BaseLinks):
             type=MimeTypes.geojson,
             href=urljoin(self.base_url, f"/collections/{self.collection_id}/items"),
         )
-
-    def create_links(self) -> List[Link]:
-        """Return all inferred links."""
-        return [self.self(), self.parent(), self.item(), self.root()]
 
 
 @dataclass
@@ -82,13 +91,3 @@ class ItemLinks(BaseLinks):
             type=MimeTypes.json,
             href=urljoin(self.base_url, f"/collections/{self.collection_id}"),
         )
-
-    def create_links(self) -> List[Link]:
-        """Return all inferred links."""
-        links = [
-            self.self(),
-            self.parent(),
-            self.collection(),
-            self.root(),
-        ]
-        return links
