@@ -11,7 +11,6 @@ class BaseLinks:
     """Create inferred links common to collections and items."""
 
     base_url: str
-    collection_id: str
     _link_members: ClassVar[Tuple[str]] = ("root")
 
     def root(self) -> Link:
@@ -31,6 +30,7 @@ class BaseLinks:
 class CollectionLinks(BaseLinks):
     """Create inferred links specific to collections."""
 
+    collection_id: str
     _link_members: ClassVar[Tuple[str]] = ("root", "self", "parent", "item")
 
     def self(self) -> Link:
@@ -60,6 +60,7 @@ class CollectionLinks(BaseLinks):
 class ItemLinks(BaseLinks):
     """Create inferred links specific to items."""
 
+    collection_id: str
     item_id: str
     _link_members: ClassVar[Tuple[str]] = ("root", "self", "parent", "collection")
 
