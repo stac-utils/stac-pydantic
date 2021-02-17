@@ -1,6 +1,6 @@
 import inspect
 from dataclasses import dataclass
-from typing import List
+from typing import ClassVar, Tuple
 from urllib.parse import urljoin
 
 from ...links import Link, Links, Relations
@@ -13,6 +13,7 @@ class BaseLinks:
 
     base_url: str
     collection_id: str
+    _link_members: ClassVar[Tuple[str]] = ("root")
 
     def root(self) -> Link:
         """Return the catalog root."""
@@ -22,21 +23,14 @@ class BaseLinks:
 
     def create_links(self) -> Links:
         """Create inferred links"""
-        links = []
-        methods = inspect.getmembers(self, predicate=inspect.ismethod)
-        for method in methods:
-            func = method[-1]
-            ret_type = inspect.signature(func).return_annotation
-            # TODO: enforce full signature
-            if inspect.isclass(ret_type):
-                if issubclass(ret_type, Link):
-                    links.append(func())
-        return Links.parse_obj(links)
+        return Links.parse_obj([getattr(self, member) for member in self._link_members])
 
 
 @dataclass
 class CollectionLinks(BaseLinks):
     """Create inferred links specific to collections."""
+
+    _link_members: ClassVar[Tuple[str]] = ("root", "self", "parent", "item")
 
     def self(self) -> Link:
         """Create the `self` link."""
@@ -66,6 +60,7 @@ class ItemLinks(BaseLinks):
     """Create inferred links specific to items."""
 
     item_id: str
+    _link_members: ClassVar[Tuple[str]] = ("root", "self", "parent", "collection")
 
     def self(self) -> Link:
         """Create the `self` link."""
