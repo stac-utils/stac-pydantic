@@ -70,6 +70,12 @@ class Links(BaseModel):
         """iterate through links"""
         return iter(self.__root__)
 
+    def __len__(self):
+        return len(self.__root__)
+
+    def __getitem__(self, idx):
+        return self.__root__[idx]
+
 
 class Relations(str, AutoValueEnum):
     """
