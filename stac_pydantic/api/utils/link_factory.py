@@ -1,4 +1,3 @@
-import inspect
 from dataclasses import dataclass
 from typing import ClassVar, Tuple
 from urllib.parse import urljoin
@@ -23,7 +22,9 @@ class BaseLinks:
 
     def create_links(self) -> Links:
         """Create inferred links"""
-        return Links.parse_obj([getattr(self, member) for member in self._link_members])
+        return Links.parse_obj(
+            [getattr(self, member)() for member in self._link_members]
+        )
 
 
 @dataclass
