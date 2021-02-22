@@ -3,9 +3,8 @@ from typing import List, Optional, Union
 from pydantic import BaseModel, Field
 
 from stac_pydantic.links import Links
-
-from ..shared import ExtensionTypes
-from ..version import STAC_VERSION
+from stac_pydantic.shared import ExtensionTypes
+from stac_pydantic.version import STAC_VERSION
 
 
 class LandingPage(BaseModel):

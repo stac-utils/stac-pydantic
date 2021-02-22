@@ -3,8 +3,8 @@ from typing import Dict, List, Optional, Tuple, Union
 
 from pydantic import BaseModel, Field
 
-from ..shared import NumType
-from ..utils import AutoValueEnum
+from stac_pydantic.shared import NumType
+from stac_pydantic.utils import AutoValueEnum
 
 
 class HorizontalAxis(str, AutoValueEnum):

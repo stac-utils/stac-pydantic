@@ -1,7 +1,6 @@
 from typing import List
 
-from ..collection import Collection
-from ..item import ItemCollection
+from stac_pydantic import Collection, ItemCollection
 
 
 class SingleFileStac(ItemCollection):

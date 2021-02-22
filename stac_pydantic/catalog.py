@@ -2,10 +2,9 @@ from typing import List, Optional
 
 from pydantic import BaseModel, Field, root_validator
 
+from stac_pydantic.extensions import Extensions
 from stac_pydantic.links import Link, Links
-
-from .extensions import Extensions
-from .version import STAC_VERSION
+from stac_pydantic.version import STAC_VERSION
 
 
 class Catalog(BaseModel):

@@ -2,7 +2,7 @@ from typing import Dict, Optional
 
 from pydantic import BaseModel
 
-from ..shared import Asset
+from stac_pydantic.shared import Asset
 
 
 class CollectionAsset(Asset):

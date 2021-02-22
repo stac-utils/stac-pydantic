@@ -3,7 +3,7 @@ from typing import Any, Dict, List, Optional, Union
 from geojson_pydantic.geometries import Polygon
 from pydantic import BaseModel, Field
 
-from ..shared import BBox, NumType
+from stac_pydantic.shared import BBox, NumType
 
 
 class CentroidObject(BaseModel):

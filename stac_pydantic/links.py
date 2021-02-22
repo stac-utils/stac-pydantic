@@ -6,8 +6,6 @@ from pydantic import BaseModel, Field
 
 from stac_pydantic.utils import AutoValueEnum
 
-from .utils import AutoValueEnum
-
 
 class PaginationMethods(str, AutoValueEnum):
     """

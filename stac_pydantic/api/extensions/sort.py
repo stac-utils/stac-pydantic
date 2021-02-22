@@ -2,7 +2,7 @@ from enum import auto
 
 from pydantic import BaseModel
 
-from ...utils import AutoValueEnum
+from stac_pydantic.utils import AutoValueEnum
 
 
 class SortDirections(str, AutoValueEnum):
