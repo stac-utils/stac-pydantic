@@ -11,10 +11,10 @@ from geojson_pydantic.geometries import (
 )
 from pydantic import BaseModel, Field, validator
 
-from ..shared import DATETIME_RFC339, BBox
-from .extensions.fields import FieldsExtension
-from .extensions.query import Operator
-from .extensions.sort import SortExtension
+from stac_pydantic.api.extensions.fields import FieldsExtension
+from stac_pydantic.api.extensions.query import Operator
+from stac_pydantic.api.extensions.sort import SortExtension
+from stac_pydantic.shared import DATETIME_RFC339, BBox
 
 
 class Search(BaseModel):

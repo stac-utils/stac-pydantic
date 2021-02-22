@@ -2,7 +2,7 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
-from ..shared import NumType
+from stac_pydantic.shared import NumType
 
 
 class ViewExtension(BaseModel):

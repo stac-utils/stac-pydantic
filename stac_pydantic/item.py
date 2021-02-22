@@ -6,13 +6,12 @@ from geojson_pydantic.features import Feature, FeatureCollection
 from pydantic import BaseModel, Field, create_model, validator
 from pydantic.fields import FieldInfo
 
+from stac_pydantic.api.extensions.context import ContextExtension
+from stac_pydantic.extensions import Extensions
 from stac_pydantic.links import Links
-
-from .api.extensions.context import ContextExtension
-from .extensions import Extensions
-from .shared import Asset, BBox, StacCommonMetadata
-from .utils import decompose_model
-from .version import STAC_VERSION
+from stac_pydantic.shared import Asset, BBox, StacCommonMetadata
+from stac_pydantic.utils import decompose_model
+from stac_pydantic.version import STAC_VERSION
 
 
 class ItemProperties(StacCommonMetadata):

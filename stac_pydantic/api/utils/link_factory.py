@@ -2,8 +2,8 @@ from dataclasses import dataclass
 from typing import ClassVar, Tuple
 from urllib.parse import urljoin
 
-from ...links import Link, Links, Relations
-from ...shared import MimeTypes
+from stac_pydantic.links import Link, Links, Relations
+from stac_pydantic.shared import MimeTypes
 
 
 @dataclass

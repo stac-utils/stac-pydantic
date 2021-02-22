@@ -4,8 +4,8 @@ from typing import List, Optional, Tuple, Union
 
 from pydantic import BaseModel, Extra, Field
 
-from .extensions.eo import BandObject
-from .utils import AutoValueEnum
+from stac_pydantic.extensions.eo import BandObject
+from stac_pydantic.utils import AutoValueEnum
 
 NumType = Union[float, int]
 BBox = Union[

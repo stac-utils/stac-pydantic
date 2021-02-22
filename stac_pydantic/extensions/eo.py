@@ -3,7 +3,7 @@ from typing import List, Optional, Union
 
 from pydantic import BaseModel, Field
 
-from ..utils import AutoValueEnum
+from stac_pydantic.utils import AutoValueEnum
 
 
 class CommonBandNames(str, AutoValueEnum):

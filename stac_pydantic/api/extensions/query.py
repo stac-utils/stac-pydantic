@@ -1,6 +1,6 @@
 from enum import auto
 
-from ...utils import AutoValueEnum
+from stac_pydantic.utils import AutoValueEnum
 
 
 class Operator(str, AutoValueEnum):
