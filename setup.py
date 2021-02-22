@@ -13,7 +13,7 @@ setup(
     long_description=desc,
     long_description_content_type="text/markdown",
     version="1.3.8",
-    python_requires=">=3.6",
+    python_requires=">=3.7",
     classifiers=[
         "Intended Audience :: Developers",
         "Intended Audience :: Information Technology",
