@@ -35,7 +35,7 @@ class Search(BaseModel):
     sortby: Optional[List[SortExtension]]
 
     @property
-    def start_date(self):
+    def start_date(self) -> Optional[datetime]:
         values = self.datetime.split("/")
         if len(values) == 1:
             return None
@@ -44,7 +44,7 @@ class Search(BaseModel):
         return datetime.strptime(values[0], DATETIME_RFC339)
 
     @property
-    def end_date(self):
+    def end_date(self) -> Optional[datetime]:
         values = self.datetime.split("/")
         if len(values) == 1:
             return datetime.strptime(values[0], DATETIME_RFC339)
