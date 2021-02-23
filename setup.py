@@ -4,7 +4,7 @@ with open("README.md") as f:
     desc = f.read()
 
 extras = {
-    "dev": ["pytest", "pytest-cov", "requests", "shapely"],
+    "dev": ["pytest", "pytest-cov", "requests", "shapely", "dictdiffer"],
 }
 
 setup(
@@ -31,7 +31,7 @@ setup(
     packages=find_packages(exclude=["tests"]),
     zip_safe=False,
     install_requires=["click", "pydantic>=1.6", "geojson-pydantic",],
-    tests_require=["pytest", "pytest-cov", "requests", "shapely"],
+    tests_require=extras["dev"],
     setup_requires=["pytest-runner"],
     entry_points={"console_scripts": ["stac-pydantic=stac_pydantic.scripts.cli:app"]},
     extras_require=extras,
