@@ -30,7 +30,7 @@ class ItemProperties(StacCommonMetadata):
                 )
 
         if isinstance(v, str):
-            return dt.strptime(v, DATETIME_RFC339)
+            return cls._parse_rfc3339(v)
 
         return v
 

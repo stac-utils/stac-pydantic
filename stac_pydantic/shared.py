@@ -112,21 +112,30 @@ class StacCommonMetadata(BaseModel):
     providers: Optional[List[Provider]] = Field(None, alias="providers")
     gsd: Optional[NumType] = Field(None, alias="gsd")
 
+    @staticmethod
+    def _parse_rfc3339(dt: str):
+        try:
+            return datetime.strptime(dt, DATETIME_RFC339)
+        except Exception as e:
+            raise ValueError(
+                f"Invalid datetime, must match format ({DATETIME_RFC339})."
+            ) from e
+
     @validator("start_datetime", allow_reuse=True)
     def validate_start_datetime(cls, v):
-        return datetime.strptime(v, DATETIME_RFC339)
+        return cls._parse_rfc3339(v)
 
     @validator("end_datetime", allow_reuse=True)
     def validate_start_datetime(cls, v):
-        return datetime.strptime(v, DATETIME_RFC339)
+        return cls._parse_rfc3339(v)
 
     @validator("created", allow_reuse=True)
     def validate_start_datetime(cls, v):
-        return datetime.strptime(v, DATETIME_RFC339)
+        return cls._parse_rfc3339(v)
 
     @validator("updated", allow_reuse=True)
     def validate_start_datetime(cls, v):
-        return datetime.strptime(v, DATETIME_RFC339)
+        return cls._parse_rfc3339(v)
 
     class Config:
         json_encoders = {datetime: lambda v: v.strftime(DATETIME_RFC339)}
