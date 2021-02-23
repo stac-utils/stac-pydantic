@@ -203,13 +203,13 @@ def test_to_json(infile, model):
             feat["stac_version"] = STAC_VERSION
 
     validated = model(**test_item)
-    assert validated.to_json() == json.dumps(validated.to_dict())
+    dict_match(json.loads(validated.to_json()), validated.to_dict())
 
 
 def test_item_to_json():
     test_item = request(EO_EXTENSION)
     item = Item(**test_item)
-    assert item.to_json() == json.dumps(item.to_dict())
+    dict_match(json.loads(item.to_json()), item.to_dict())
 
 
 def test_datacube_extension_validation_error():
