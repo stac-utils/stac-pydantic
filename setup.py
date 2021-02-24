@@ -4,7 +4,7 @@ with open("README.md") as f:
     desc = f.read()
 
 extras = {
-    "dev": ["pytest", "pytest-cov", "requests", "shapely", "dictdiffer"],
+    "dev": ["arrow", "pytest", "pytest-cov", "requests", "shapely", "dictdiffer"],
 }
 
 setup(

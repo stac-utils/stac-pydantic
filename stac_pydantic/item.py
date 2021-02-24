@@ -9,7 +9,7 @@ from pydantic.fields import FieldInfo
 from stac_pydantic.api.extensions.context import ContextExtension
 from stac_pydantic.extensions import Extensions
 from stac_pydantic.links import Links
-from stac_pydantic.shared import Asset, BBox, StacCommonMetadata
+from stac_pydantic.shared import DATETIME_RFC339, Asset, BBox, StacCommonMetadata
 from stac_pydantic.utils import decompose_model
 from stac_pydantic.version import STAC_VERSION
 
@@ -19,7 +19,7 @@ class ItemProperties(StacCommonMetadata):
     https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/item-spec/item-spec.md#properties-object
     """
 
-    datetime: Union[str, dt] = Field(..., alias="datetime")
+    datetime: Union[dt, str] = Field(..., alias="datetime")
 
     @validator("datetime")
     def validate_datetime(cls, v, values):
@@ -28,10 +28,15 @@ class ItemProperties(StacCommonMetadata):
                 raise ValueError(
                     "start_datetime and end_datetime must be specified when datetime is null"
                 )
+
+        if isinstance(v, str):
+            return cls._parse_rfc3339(v)
+
         return v
 
     class Config:
         extra = "allow"
+        json_encoders = {dt: lambda v: v.strftime(DATETIME_RFC339)}
 
 
 class Item(Feature):

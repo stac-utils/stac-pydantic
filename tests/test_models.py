@@ -203,13 +203,13 @@ def test_to_json(infile, model):
             feat["stac_version"] = STAC_VERSION
 
     validated = model(**test_item)
-    assert validated.to_json() == json.dumps(validated.to_dict())
+    dict_match(json.loads(validated.to_json()), validated.to_dict())
 
 
 def test_item_to_json():
     test_item = request(EO_EXTENSION)
     item = Item(**test_item)
-    assert item.to_json() == json.dumps(item.to_dict())
+    dict_match(json.loads(item.to_json()), item.to_dict())
 
 
 def test_datacube_extension_validation_error():
@@ -395,26 +395,31 @@ def test_invalid_spatial_search():
         )
 
 
-def test_temporal_search():
+def test_temporal_search_single_tailed():
     # Test single tailed
-    utcnow = datetime.utcnow().strftime(DATETIME_RFC339)
-    search = Search(collections=["collection1"], datetime=utcnow)
-    assert len(search.datetime) == 2
-    assert search.datetime == ["..", utcnow]
+    utcnow = datetime.utcnow().replace(microsecond=0)
+    utcnow_str = utcnow.strftime(DATETIME_RFC339)
+    search = Search(collections=["collection1"], datetime=utcnow_str)
+    assert search.start_date == None
+    assert search.end_date == utcnow
 
+
+def test_temporal_search_two_tailed():
     # Test two tailed
-    search = Search(collections=["collection1"], datetime=f"{utcnow}/{utcnow}")
-    assert len(search.datetime) == 2
-    assert search.datetime == [utcnow, utcnow]
+    utcnow = datetime.utcnow().replace(microsecond=0)
+    utcnow_str = utcnow.strftime(DATETIME_RFC339)
+    search = Search(collections=["collection1"], datetime=f"{utcnow_str}/{utcnow_str}")
+    assert search.start_date == search.end_date == utcnow
 
-    search = Search(collections=["collection1"], datetime=f"{utcnow}/..")
-    assert len(search.datetime) == 2
-    assert search.datetime == [utcnow, ".."]
+    search = Search(collections=["collection1"], datetime=f"{utcnow_str}/..")
+    assert search.start_date == utcnow
+    assert search.end_date == None
 
+
+def test_temporal_search_open():
     # Test open date range
-    search = Search(collections=["collection1"], datetime=f"../..")
-    assert len(search.datetime) == 2
-    assert search.datetime == ["..", ".."]
+    search = Search(collections=["collection1"], datetime="../..")
+    assert search.start_date == search.end_date == None
 
 
 def test_invalid_temporal_search():

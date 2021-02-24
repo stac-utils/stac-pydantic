@@ -34,6 +34,24 @@ class Search(BaseModel):
     query: Optional[Dict[str, Dict[Operator, Any]]]
     sortby: Optional[List[SortExtension]]
 
+    @property
+    def start_date(self) -> Optional[datetime]:
+        values = self.datetime.split("/")
+        if len(values) == 1:
+            return None
+        if values[0] == "..":
+            return None
+        return datetime.strptime(values[0], DATETIME_RFC339)
+
+    @property
+    def end_date(self) -> Optional[datetime]:
+        values = self.datetime.split("/")
+        if len(values) == 1:
+            return datetime.strptime(values[0], DATETIME_RFC339)
+        if values[1] == "..":
+            return None
+        return datetime.strptime(values[1], DATETIME_RFC339)
+
     @validator("intersects")
     def validate_spatial(cls, v, values):
         if v and values["bbox"]:
@@ -68,5 +86,4 @@ class Search(BaseModel):
                 raise ValueError(
                     "Invalid datetime range, must match format (begin_date, end_date)"
                 )
-
-        return dates
+        return v
