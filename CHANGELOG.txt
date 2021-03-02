@@ -1,3 +1,14 @@
+1.3.9 (2020-03-02)
+------------------
+- Add id to landing page, making it a valid catalog (#43, @lossyrob)
+- Make `item_assets` (item assets extension) a dictionary of assets (#47, @kylebarron)
+- Add pre-commit to CI (#48, @kylebarron)
+- Add a `Links` model with custom root type to represent a list of links (#52)
+- Move link related models to their own file (#53)
+- Add link factories for generating inferred links (#55)
+- Switch from relative to absolute imports (#61)
+- Serialize date type fields to `datetime.datetime` upon model creation (#62)
+
 1.3.8 (2020-11-21)
 ------------------
 - Remove enum restriction for asset roles (#39).
