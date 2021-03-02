@@ -1,5 +1,5 @@
 # stac-pydantic ![tests](https://github.com/arturo-ai/stac-pydantic/workflows/cicd/badge.svg)
-[Pydantic](https://pydantic-docs.helpmanual.io/) models for [STAC](https://github.com/radiantearth/stac-spec) Catalogs, Collections, Items, and the [STAC API](https://github.com/radiantearth/stac-api-spec) spec.
+[Pydantic](https://pydantic-docs.helpmanual.io/) models for [STAC](https://github.com/radiantearth/stac-spec) Catalogs, Collections, Items, and the [STAC API](https://github.com/radiantearth/stac-api-spec) spec.  Initially developed by [arturo-ai](https://github.com/arturo-ai).
 
 ## Installation
 ```python
