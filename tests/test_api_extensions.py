@@ -1,10 +1,10 @@
 from datetime import datetime
 
-import pytest
-from shapely.geometry import Polygon
+from shapely.geometry import Polygon, shape
 
 from stac_pydantic import Item
 from stac_pydantic.api.extensions.fields import FieldsExtension
+from stac_pydantic.api.search import Search
 
 
 def test_fields_filter():
@@ -29,3 +29,10 @@ def test_fields_filter():
 
     assert not props.get("bar")
     assert not d
+
+
+def test_search_geometry_bbox():
+    search = Search(collections=["foo", "bar"], bbox=[0, 0, 1, 1])
+    geom1 = shape(search.spatial_filter)
+    geom2 = Polygon.from_bounds(*search.bbox)
+    assert (geom1.intersection(geom2).area / geom1.union(geom2).area) == 1.0
