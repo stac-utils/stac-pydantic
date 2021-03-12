@@ -98,11 +98,13 @@ class Search(BaseModel):
         if self.bbox:
             return Polygon(
                 coordinates=[
-                    [self.bbox[0], self.bbox[3]],
-                    [self.bbox[2], self.bbox[3]],
-                    [self.bbox[2], self.bbox[1]],
-                    [self.bbox[0], self.bbox[1]],
-                    [self.bbox[0], self.bbox[3]],
+                    [
+                        [self.bbox[0], self.bbox[3]],
+                        [self.bbox[2], self.bbox[3]],
+                        [self.bbox[2], self.bbox[1]],
+                        [self.bbox[0], self.bbox[1]],
+                        [self.bbox[0], self.bbox[3]],
+                    ]
                 ]
             )
         if self.intersects:
