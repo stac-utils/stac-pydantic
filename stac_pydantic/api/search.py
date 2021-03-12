@@ -8,6 +8,7 @@ from geojson_pydantic.geometries import (
     MultiPolygon,
     Point,
     Polygon,
+    _GeometryBase,
 )
 from pydantic import BaseModel, Field, validator
 
@@ -87,3 +88,23 @@ class Search(BaseModel):
                     "Invalid datetime range, must match format (begin_date, end_date)"
                 )
         return v
+
+    @property
+    def geometry(self) -> Optional[_GeometryBase]:
+        """Return a geojson-pydantic object representing the spatial filter for the search request.
+
+        Check for both because the ``bbox`` and ``intersects`` parameters are mutually exclusive.
+        """
+        if self.bbox:
+            return Polygon(
+                coordinates=[
+                    [self.bbox[0], self.bbox[3]],
+                    [self.bbox[2], self.bbox[3]],
+                    [self.bbox[2], self.bbox[1]],
+                    [self.bbox[0], self.bbox[1]],
+                    [self.bbox[0], self.bbox[3]],
+                ]
+            )
+        if self.intersects:
+            return self.intersects
+        return
