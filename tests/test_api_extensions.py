@@ -33,6 +33,6 @@ def test_fields_filter():
 
 def test_search_geometry_bbox():
     search = Search(collections=["foo", "bar"], bbox=[0, 0, 1, 1])
-    geom1 = shape(search.geometry)
+    geom1 = shape(search.spatial_filter)
     geom2 = Polygon.from_bounds(*search.bbox)
     assert (geom1.intersection(geom2).area / geom1.union(geom2).area) == 1.0

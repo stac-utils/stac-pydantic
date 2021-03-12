@@ -90,7 +90,7 @@ class Search(BaseModel):
         return v
 
     @property
-    def geometry(self) -> Optional[_GeometryBase]:
+    def spatial_filter(self) -> Optional[_GeometryBase]:
         """Return a geojson-pydantic object representing the spatial filter for the search request.
 
         Check for both because the ``bbox`` and ``intersects`` parameters are mutually exclusive.
