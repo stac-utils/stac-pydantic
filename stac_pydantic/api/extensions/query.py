@@ -13,10 +13,10 @@ _OPERATIONS = {
     "lt": lambda x, y: x < y,
     "le": lambda x, y: x <= y,
     "gt": lambda x, y: x > y,
-    "ge": lambda x, y: x > y,
+    "ge": lambda x, y: x >= y,
     "startsWith": lambda x, y: x.startsWith(y),
     "endsWith": lambda x, y: x.endsWith(y),
-    "constains": lambda x, y: y in x,
+    "contains": lambda x, y: y in x,
 }
 
 
