@@ -1,4 +1,4 @@
-from typing import List
+from typing import Dict
 
 from pydantic import BaseModel
 
@@ -10,4 +10,4 @@ class CollectionAssetExtension(BaseModel):
     https://github.com/radiantearth/stac-spec/tree/v1.0.0-beta.1/extensions/collection-assets
     """
 
-    assets: List[Asset]
+    assets: Dict[str, Asset]
