@@ -13,8 +13,8 @@ class Stats(BaseModel):
     https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/collection-spec/collection-spec.md#stats-object
     """
 
-    min: Union[NumType, str]
-    max: Union[NumType, str]
+    minimum: Union[NumType, str]
+    maximum: Union[NumType, str]
 
 
 class Catalog(BaseModel):
