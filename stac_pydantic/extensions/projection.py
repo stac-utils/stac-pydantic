@@ -1,6 +1,13 @@
 from typing import Any, Dict, List, Optional, Union
 
-from geojson_pydantic.geometries import Polygon
+from geojson_pydantic.geometries import (
+    LineString,
+    MultiLineString,
+    MultiPoint,
+    MultiPolygon,
+    Point,
+    Polygon,
+)
 from pydantic import BaseModel, Field
 
 from stac_pydantic.shared import BBox, NumType
@@ -23,7 +30,9 @@ class ProjectionExtension(BaseModel):
     epsg: Optional[Union[int]] = Field(..., alias="proj:epsg")
     wk2: Optional[Union[str, None]] = Field(None, alias="proj:wk2")
     projjson: Optional[Union[Dict[Any, Any], None]] = Field(None, alias="proj:projjson")
-    geometry: Optional[Polygon] = Field(None, alias="proj:geometry")
+    geometry: Optional[
+        Union[Point, MultiPoint, LineString, MultiLineString, Polygon, MultiPolygon]
+    ] = Field(None, alias="proj:geometry")
     bbox: Optional[BBox] = Field(None, alias="proj:bbox")
     centroid: Optional[CentroidObject] = Field(None, alias="proj:centroid")
     shape: Optional[List[int]] = Field(None, alias="proj:shape")
