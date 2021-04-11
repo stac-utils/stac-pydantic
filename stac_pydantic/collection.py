@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Optional, Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from stac_pydantic.catalog import Catalog
 from stac_pydantic.shared import NumType, Provider
@@ -45,6 +45,7 @@ class Collection(Catalog):
     https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/collection-spec/collection-spec.md
     """
 
+    type: str = Field("Collection", const=True)
     license: str
     extent: Extent
     title: Optional[str]

@@ -12,6 +12,7 @@ class Catalog(BaseModel):
     https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/catalog-spec/catalog-spec.md
     """
 
+    type: str = Field("Catalog", const=True)
     id: str
     description: str
     stac_version: str = Field(STAC_VERSION, const=True)
