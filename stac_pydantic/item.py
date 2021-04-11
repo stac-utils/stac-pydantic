@@ -89,8 +89,6 @@ def _extension_model_factory(
     for ext in stac_extensions:
         if skip_remote_refs and ext.startswith("http"):
             continue
-        if ext == "checksum":
-            continue
         fields.update(decompose_model(Extensions.get(ext)))
     return (
         create_model("CustomItemProperties", __base__=ItemProperties, **fields),
