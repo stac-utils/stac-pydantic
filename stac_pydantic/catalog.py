@@ -1,10 +1,20 @@
-from typing import List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from pydantic import BaseModel, Field, root_validator
 
 from stac_pydantic.extensions import Extensions
-from stac_pydantic.links import Link, Links
+from stac_pydantic.links import Links
+from stac_pydantic.shared import NumType
 from stac_pydantic.version import STAC_VERSION
+
+
+class Stats(BaseModel):
+    """
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/collection-spec/collection-spec.md#stats-object
+    """
+
+    min: Union[NumType, str]
+    max: Union[NumType, str]
 
 
 class Catalog(BaseModel):
@@ -19,6 +29,7 @@ class Catalog(BaseModel):
     links: Links
     stac_extensions: Optional[List[str]]
     title: Optional[str]
+    summaries: Optional[Dict[str, Union[Stats, List[Any]]]]
 
     class Config:
         use_enum_values = True

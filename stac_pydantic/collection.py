@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union
 
 from pydantic import BaseModel, Field
 
@@ -31,15 +31,6 @@ class Extent(BaseModel):
     temporal: TimeInterval
 
 
-class Stats(BaseModel):
-    """
-    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/collection-spec/collection-spec.md#stats-object
-    """
-
-    min: Union[NumType, str]
-    max: Union[NumType, str]
-
-
 class Collection(Catalog):
     """
     https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/collection-spec/collection-spec.md
@@ -51,5 +42,4 @@ class Collection(Catalog):
     title: Optional[str]
     keywords: Optional[List[str]]
     providers: Optional[List[Provider]]
-    summaries: Optional[Dict[str, Union[Stats, List[Any]]]]
     assets: Dict[str, Asset]
