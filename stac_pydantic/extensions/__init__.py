@@ -1,6 +1,5 @@
 from urllib.parse import urlparse
 
-from .collection_assets import CollectionAssetExtension
 from .datacube import DatacubeExtension
 from .eo import ElectroOpticalExtension
 from .item_assets import ItemAssetExtension
@@ -16,7 +15,6 @@ from .view import ViewExtension
 
 
 class Extensions:
-    collection_assets = CollectionAssetExtension
     datacube = DatacubeExtension
     eo = ElectroOpticalExtension
     item_assets = ItemAssetExtension

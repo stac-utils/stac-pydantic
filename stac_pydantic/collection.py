@@ -3,7 +3,7 @@ from typing import Any, Dict, List, Optional, Union
 from pydantic import BaseModel, Field
 
 from stac_pydantic.catalog import Catalog
-from stac_pydantic.shared import NumType, Provider
+from stac_pydantic.shared import Asset, NumType, Provider
 
 
 class SpatialExtent(BaseModel):
@@ -52,3 +52,4 @@ class Collection(Catalog):
     keywords: Optional[List[str]]
     providers: Optional[List[Provider]]
     summaries: Optional[Dict[str, Union[Stats, List[Any]]]]
+    assets: Dict[str, Asset]
