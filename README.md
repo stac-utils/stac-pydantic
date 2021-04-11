@@ -1,9 +1,14 @@
 # stac-pydantic ![tests](https://github.com/arturo-ai/stac-pydantic/workflows/cicd/badge.svg)
-[Pydantic](https://pydantic-docs.helpmanual.io/) models for [STAC](https://github.com/radiantearth/stac-spec) Catalogs, Collections, Items, and the [STAC API](https://github.com/radiantearth/stac-api-spec) spec.
+[Pydantic](https://pydantic-docs.helpmanual.io/) models for [STAC](https://github.com/radiantearth/stac-spec) Catalogs, Collections, Items, and the [STAC API](https://github.com/radiantearth/stac-api-spec) spec.  Initially developed by [arturo-ai](https://github.com/arturo-ai).
 
 ## Installation
-```python
+```
 pip install stac-pydantic
+```
+
+For local development:
+```
+pip install -e .["dev"]
 ```
 
 | stac-pydantic | stac     |
@@ -12,6 +17,16 @@ pip install stac-pydantic
 | 1.2.x             | 1.0.0-beta.1 |
 | 1.3.x             | 1.0.0-beta.2 |
 
+## Testing
+Run the entire test suite:
+```
+tox
+```
+
+Run a single test case using the standard pytest convention:
+```
+pytest -v tests/test_models.py::test_item_extensions
+```
 
 ## Usage
 ### Loading Models
@@ -179,6 +194,3 @@ Options:
 Commands:
   validate-item  Validate STAC Item
 ```
-
-## Testing
-```python setup.py test```

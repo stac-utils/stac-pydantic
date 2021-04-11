@@ -26,7 +26,7 @@ setup(
     keywords="stac pydantic validation",
     author=u"Arturo Engineering",
     author_email="engineering@arturo.ai",
-    url="https://github.com/arturo-ai/stac-pydantic",
+    url="https://github.com/stac-utils/stac-pydantic",
     license="MIT",
     packages=find_packages(exclude=["tests"]),
     zip_safe=False,
