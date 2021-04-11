@@ -2,6 +2,7 @@ from urllib.parse import urlparse
 
 from .datacube import DatacubeExtension
 from .eo import ElectroOpticalExtension
+from .file_info import FileInfoExtension
 from .item_assets import ItemAssetExtension
 from .label import LabelExtension
 from .pc import PointCloudExtension
@@ -18,6 +19,7 @@ from .view import ViewExtension
 class Extensions:
     datacube = DatacubeExtension
     eo = ElectroOpticalExtension
+    file_info = FileInfoExtension
     item_assets = ItemAssetExtension
     label = LabelExtension
     pointcloud = PointCloudExtension
