@@ -5,6 +5,7 @@ from typing import List, Optional, Tuple, Union
 from pydantic import BaseModel, Extra, Field, validator
 
 from stac_pydantic.extensions.eo import BandObject
+from stac_pydantic.extensions.processing import ProcessingExtension
 from stac_pydantic.utils import AutoValueEnum
 
 NumType = Union[float, int]
@@ -24,13 +25,13 @@ class ExtensionTypes(str, AutoValueEnum):
 
     asset = auto()
     checksum = auto()
-    collection_assets = "collection-assets"
     context = auto()
     cube = auto()
     eo = auto()
     item_assets = "item-assets"
     label = auto()
     pc = auto()
+    processing = auto()
     projection = auto()
     sar = auto()
     sat = auto()
@@ -83,7 +84,7 @@ class ProviderRoles(str, AutoValueEnum):
     host = auto()
 
 
-class Provider(BaseModel):
+class Provider(ProcessingExtension, BaseModel):
     """
     https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/collection-spec/collection-spec.md#provider-object
     """
