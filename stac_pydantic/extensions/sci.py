@@ -12,7 +12,7 @@ class PublicationObject(BaseModel):
     citation: Optional[str]
 
 
-class ScientificExtension(PublicationObject):
+class ScientificCitationExtension(PublicationObject):
     """
     https://github.com/stac-extensions/scientific
     """
