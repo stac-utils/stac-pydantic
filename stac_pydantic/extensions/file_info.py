@@ -7,6 +7,10 @@ from stac_pydantic.utils import AutoValueEnum
 
 
 class DataTypes(str, AutoValueEnum):
+    """
+    https://github.com/stac-extensions/file#data-types
+    """
+
     int8 = auto()
     int16 = auto()
     int32 = auto()
@@ -25,12 +29,20 @@ class DataTypes(str, AutoValueEnum):
     other = auto()
 
 
-class ValueMap(BaseModel):
+class ValueMapping(BaseModel):
+    """
+    https://github.com/stac-extensions/file#mapping-object
+    """
+
     value: Any
     summary: str
 
 
 class FileInfoExtension(BaseModel):
+    """
+    https://github.com/stac-extensions/file
+    """
+
     bits_per_sample: Optional[int] = Field(None, alias="file:bits_per_sample")
     byte_order: Optional[str] = Field(None, alias="file:byte_order")
     checksum: Optional[str] = Field(None, alias="file:checksum")
@@ -39,4 +51,4 @@ class FileInfoExtension(BaseModel):
     nodata: Optional[Any] = Field(None, alias="file:nodata")
     size: Optional[int] = Field(None, alias="file:size")
     unit: Optional[str] = Field(None, alias="file:unit")
-    values: Optional[ValueMap] = Field(None, alias="file:values")
+    values: Optional[ValueMapping] = Field(None, alias="file:values")

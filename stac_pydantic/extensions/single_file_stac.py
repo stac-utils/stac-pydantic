@@ -5,7 +5,7 @@ from stac_pydantic import Collection, ItemCollection
 
 class SingleFileStac(ItemCollection):
     """
-    https://github.com/radiantearth/stac-spec/tree/v1.0.0-beta.1/extensions/single-file-stac#single-file-stac-specification
+    https://github.com/stac-extensions/single-file-stac
     """
 
     collections: List[Collection]

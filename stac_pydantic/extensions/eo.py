@@ -8,7 +8,7 @@ from stac_pydantic.utils import AutoValueEnum
 
 class CommonBandNames(str, AutoValueEnum):
     """
-    https://github.com/radiantearth/stac-spec/tree/v1.0.0-beta.1/extensions/eo#common-band-names
+    https://github.com/stac-extensions/eo#common-band-names
     """
 
     coastal = auto()
@@ -31,7 +31,7 @@ class CommonBandNames(str, AutoValueEnum):
 
 class BandObject(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/tree/v1.0.0-beta.1/extensions/eo#band-object
+    https://github.com/stac-extensions/eo#band-object
     """
 
     name: Optional[str]
@@ -43,7 +43,7 @@ class BandObject(BaseModel):
 
 class ElectroOpticalExtension(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/tree/v1.0.0-beta.1/extensions/eo#electro-optical-extension-specification
+    https://github.com/stac-extensions/eo
     """
 
     bands: Optional[List[BandObject]] = Field(None, alias="eo:bands")

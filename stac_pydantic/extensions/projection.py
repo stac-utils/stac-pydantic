@@ -8,7 +8,7 @@ from stac_pydantic.shared import BBox, NumType
 
 class CentroidObject(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/tree/v1.0.0-beta.1/extensions/projection#centroid-object
+    https://github.com/stac-extensions/projection#centroid-object
     """
 
     lat: NumType
@@ -17,7 +17,7 @@ class CentroidObject(BaseModel):
 
 class ProjectionExtension(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/tree/v1.0.0-beta.1/extensions/projection#projection-extension-specification
+    https://github.com/stac-extensions/projection
     """
 
     epsg: Optional[Union[int]] = Field(..., alias="proj:epsg")
