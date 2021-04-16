@@ -123,19 +123,31 @@ class StacCommonMetadata(BaseModel):
 
     @validator("start_datetime", allow_reuse=True)
     def validate_start_datetime(cls, v):
-        return cls._parse_rfc3339(v)
+        if isinstance(v, str):
+            return cls._parse_rfc3339(v)
+
+        return v
 
     @validator("end_datetime", allow_reuse=True)
     def validate_start_datetime(cls, v):
-        return cls._parse_rfc3339(v)
+        if isinstance(v, str):
+            return cls._parse_rfc3339(v)
+
+        return v
 
     @validator("created", allow_reuse=True)
     def validate_start_datetime(cls, v):
-        return cls._parse_rfc3339(v)
+        if isinstance(v, str):
+            return cls._parse_rfc3339(v)
+
+        return v
 
     @validator("updated", allow_reuse=True)
     def validate_start_datetime(cls, v):
-        return cls._parse_rfc3339(v)
+        if isinstance(v, str):
+            return cls._parse_rfc3339(v)
+
+        return v
 
     class Config:
         json_encoders = {datetime: lambda v: v.strftime(DATETIME_RFC339)}
