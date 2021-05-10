@@ -7,8 +7,6 @@ import pytest
 import requests
 from click.testing import CliRunner
 
-from stac_pydantic.shared import DATETIME_RFC339
-
 
 def request(url: str):
     r = requests.get(url)
