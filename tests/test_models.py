@@ -1,6 +1,6 @@
 import json
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 
 import pytest
 from pydantic import BaseModel, Field, ValidationError
@@ -397,7 +397,7 @@ def test_invalid_spatial_search():
 
 def test_temporal_search_single_tailed():
     # Test single tailed
-    utcnow = datetime.utcnow().replace(microsecond=0)
+    utcnow = datetime.utcnow().replace(microsecond=0, tzinfo=timezone.utc)
     utcnow_str = utcnow.strftime(DATETIME_RFC339)
     search = Search(collections=["collection1"], datetime=utcnow_str)
     assert search.start_date == None
@@ -406,7 +406,7 @@ def test_temporal_search_single_tailed():
 
 def test_temporal_search_two_tailed():
     # Test two tailed
-    utcnow = datetime.utcnow().replace(microsecond=0)
+    utcnow = datetime.utcnow().replace(microsecond=0, tzinfo=timezone.utc)
     utcnow_str = utcnow.strftime(DATETIME_RFC339)
     search = Search(collections=["collection1"], datetime=f"{utcnow_str}/{utcnow_str}")
     assert search.start_date == search.end_date == utcnow
@@ -637,6 +637,12 @@ def test_validate_item_reraise_exception():
 
     with pytest.raises(ValidationError):
         validate_item(test_item, reraise_exception=True)
+
+
+def test_validate_item_rfc3339_with_partial_seconds():
+    test_item = request(EO_EXTENSION)
+    test_item["properties"]["updated"] = "2018-10-01T01:08:32.033Z"
+    assert validate_item(test_item)
 
 
 def test_multi_inheritance():

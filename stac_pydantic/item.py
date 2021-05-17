@@ -4,6 +4,7 @@ from typing import Dict, List, Optional, Tuple, Type, Union
 
 from geojson_pydantic.features import Feature, FeatureCollection
 from pydantic import BaseModel, Field, create_model, validator
+from pydantic.datetime_parse import parse_datetime
 from pydantic.fields import FieldInfo
 
 from stac_pydantic.api.extensions.context import ContextExtension
@@ -30,7 +31,7 @@ class ItemProperties(StacCommonMetadata):
                 )
 
         if isinstance(v, str):
-            return cls._parse_rfc3339(v)
+            return parse_datetime(v)
 
         return v
 
