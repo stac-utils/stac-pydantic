@@ -3,7 +3,7 @@ from typing import Any, Dict, List, Optional, Union
 from pydantic import BaseModel
 
 from stac_pydantic.catalog import Catalog
-from stac_pydantic.shared import NumType, Provider
+from stac_pydantic.shared import Asset, NumType, Provider
 
 
 class SpatialExtent(BaseModel):
@@ -31,13 +31,13 @@ class Extent(BaseModel):
     temporal: TimeInterval
 
 
-class Stats(BaseModel):
+class Range(BaseModel):
     """
     https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/collection-spec/collection-spec.md#stats-object
     """
 
-    min: Union[NumType, str]
-    max: Union[NumType, str]
+    minimum: Union[NumType, str]
+    maximum: Union[NumType, str]
 
 
 class Collection(Catalog):
@@ -45,9 +45,11 @@ class Collection(Catalog):
     https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/collection-spec/collection-spec.md
     """
 
+    assets: Dict[str, Asset]
     license: str
     extent: Extent
     title: Optional[str]
     keywords: Optional[List[str]]
     providers: Optional[List[Provider]]
-    summaries: Optional[Dict[str, Union[Stats, List[Any]]]]
+    summaries: Optional[Dict[str, Union[Range, List[Any], Dict[str, Any]]]]
+    type: str = "collection"
