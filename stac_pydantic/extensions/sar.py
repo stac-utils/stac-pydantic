@@ -1,7 +1,7 @@
 from enum import auto
 from typing import List, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import constr, BaseModel, Field
 
 from stac_pydantic.shared import NumType
 from stac_pydantic.utils import AutoValueEnum
@@ -50,7 +50,7 @@ class SARExtension(BaseModel):
     https://github.com/radiantearth/stac-spec/tree/v1.0.0-beta.1/extensions/sar#sar-extension-specification
     """
 
-    instrument_mode: str = Field(..., alias="sar:instrument_mode")
+    instrument_mode: constr(min_length=1) = Field(..., alias="sar:instrument_mode")
     center_frequency: Optional[NumType] = Field(None, alias="sar:center_frequency")
     polarizations: Polarizations = Field(..., alias="sar:polarizations")
     product_type: str = Field(..., alias="sar:product_type")

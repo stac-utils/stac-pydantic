@@ -1,7 +1,7 @@
 from enum import auto
 from typing import List, Optional, Union
 
-from pydantic import BaseModel, Field
+from pydantic import constr, BaseModel, Field
 
 from stac_pydantic.shared import NumType
 from stac_pydantic.utils import AutoValueEnum
@@ -56,7 +56,7 @@ class LabelExtension(BaseModel):
 
     properties: List[Union[str, None]] = Field(..., alias="label:properties")
     classes: List[ClassObject] = Field(..., alias="label:classes")
-    description: str = Field(..., alias="label:description")
+    description: constr(min_length=1) = Field(..., alias="label:description")
     type: LabelTypes = Field(..., alias="label:type")
     tasks: Optional[List[str]] = Field(None, alias="label:tasks")
     methods: Optional[List[str]] = Field(None, alias="label:methods")

@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from pydantic import BaseModel, Field, root_validator
+from pydantic import constr, BaseModel, Field, root_validator
 
 from stac_pydantic.extensions import Extensions
 from stac_pydantic.links import Link, Links
@@ -12,13 +12,13 @@ class Catalog(BaseModel):
     https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/catalog-spec/catalog-spec.md
     """
 
-    id: str
-    description: str
-    stac_version: str = Field(STAC_VERSION, const=True)
+    id: constr(min_length=1)
+    description: constr(min_length=1)
+    stac_version: constr(min_length=1) = Field(STAC_VERSION, const=True)
     links: Links
     stac_extensions: Optional[List[str]]
     title: Optional[str]
-    type: str = "catalog"
+    type: constr(min_length=1) = "catalog"
 
     class Config:
         use_enum_values = True

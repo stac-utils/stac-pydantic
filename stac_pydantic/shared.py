@@ -2,7 +2,7 @@ from datetime import datetime
 from enum import Enum, auto
 from typing import List, Optional, Tuple, Union
 
-from pydantic import BaseModel, Extra, Field
+from pydantic import constr, confloat, BaseModel, Extra, Field
 
 from stac_pydantic.extensions.eo import BandObject
 from stac_pydantic.utils import AutoValueEnum
@@ -89,7 +89,7 @@ class Provider(BaseModel):
     https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/collection-spec/collection-spec.md#provider-object
     """
 
-    name: str
+    name: constr(min_length=1)
     description: Optional[str]
     roles: Optional[List[str]]
     url: Optional[str]
@@ -111,7 +111,7 @@ class StacCommonMetadata(BaseModel):
     constellation: Optional[str] = Field(None, alias="constellation")
     mission: Optional[str] = Field(None, alias="mission")
     providers: Optional[List[Provider]] = Field(None, alias="providers")
-    gsd: Optional[NumType] = Field(None, alias="gsd")
+    gsd: Optional[confloat(gt=0)] = Field(None, alias="gsd")
 
     class Config:
         json_encoders = {datetime: lambda v: v.strftime(DATETIME_RFC339)}
@@ -122,7 +122,7 @@ class Asset(StacCommonMetadata):
     https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/item-spec/item-spec.md#asset-object
     """
 
-    href: str
+    href: constr(min_length=1)
     type: Optional[str]
     title: Optional[str]
     description: Optional[str]

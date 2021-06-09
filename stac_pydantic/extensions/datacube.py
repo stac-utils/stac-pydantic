@@ -1,7 +1,7 @@
 from enum import auto
 from typing import Dict, List, Optional, Tuple, Union
 
-from pydantic import BaseModel, Field
+from pydantic import constr, BaseModel, Field
 
 from stac_pydantic.shared import NumType
 from stac_pydantic.utils import AutoValueEnum
@@ -17,7 +17,7 @@ class DimensionObject(BaseModel):
     https://github.com/radiantearth/stac-spec/tree/v1.0.0-beta.1/extensions/datacube#additional-dimension-object
     """
 
-    type: str
+    type: constr(min_length=1)
     description: Optional[str]
     extent: Optional[Tuple[NumType, NumType]]
     values: Optional[List[Union[NumType, str]]]
@@ -32,7 +32,7 @@ class HorizontalSpatialDimension(DimensionObject):
     https://github.com/radiantearth/stac-spec/tree/v1.0.0-beta.1/extensions/datacube#horizontal-spatial-dimension-object
     """
 
-    type: str = Field("spatial", const=True)
+    type: constr(min_length=1) = Field("spatial", const=True)
     axis: HorizontalAxis
     extent: List[NumType]
 
@@ -45,7 +45,7 @@ class VerticalSpatialDimension(HorizontalSpatialDimension):
     https://github.com/radiantearth/stac-spec/tree/v1.0.0-beta.1/extensions/datacube#vertical-spatial-dimension-object
     """
 
-    axis: str = Field("z", const=True)
+    axis: constr(min_length=1) = Field("z", const=True)
 
 
 class TemporalDimension(DimensionObject):
@@ -53,7 +53,7 @@ class TemporalDimension(DimensionObject):
     https://github.com/radiantearth/stac-spec/tree/v1.0.0-beta.1/extensions/datacube#temporal-dimension-object
     """
 
-    type: str = Field("temporal", const=True)
+    type: constr(min_length=1) = Field("temporal", const=True)
     extent: Tuple[NumType, NumType]
 
 
