@@ -95,3 +95,4 @@ class Relations(str, AutoValueEnum):
     docs = auto()
     tiles = auto()
     search = auto()
+    preview = auto()
