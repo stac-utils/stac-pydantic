@@ -45,7 +45,7 @@ class Collection(Catalog):
     https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/collection-spec/collection-spec.md
     """
 
-    assets: Dict[str, Asset]
+    assets: Optional[Dict[str, Asset]]
     license: constr(min_length=1)
     extent: Extent
     title: Optional[str]

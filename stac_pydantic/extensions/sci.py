@@ -12,7 +12,7 @@ class PublicationObject(BaseModel):
     citation: Optional[str]
 
 
-class ScientificExtension(PublicationObject):
+class ScientificCitationExtension(PublicationObject):
     """
     https://github.com/radiantearth/stac-spec/tree/v1.0.0-beta.1/extensions/scientific#item-and-collection-fields
     """

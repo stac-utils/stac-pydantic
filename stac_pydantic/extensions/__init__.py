@@ -1,6 +1,5 @@
 from urllib.parse import urlparse
 
-from .collection_assets import CollectionAssetExtension
 from .datacube import DatacubeExtension
 from .eo import ElectroOpticalExtension
 from .item_assets import ItemAssetExtension
@@ -9,14 +8,13 @@ from .pc import PointCloudExtension
 from .projection import ProjectionExtension
 from .sar import SARExtension
 from .sat import SatelliteExtension
-from .sci import ScientificExtension
+from .sci import ScientificCitationExtension
 from .timestamps import TimestampsExtension
 from .version import VersionExtension
 from .view import ViewExtension
 
 
 class Extensions:
-    collection_assets = CollectionAssetExtension
     datacube = DatacubeExtension
     eo = ElectroOpticalExtension
     item_assets = ItemAssetExtension
@@ -25,7 +23,7 @@ class Extensions:
     projection = ProjectionExtension
     sar = SARExtension
     sat = SatelliteExtension
-    scientific = ScientificExtension
+    scientific = ScientificCitationExtension
     timestamps = TimestampsExtension
     version = VersionExtension
     view = ViewExtension

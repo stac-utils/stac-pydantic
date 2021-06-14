@@ -1,4 +1,8 @@
-1.3.9 (2020-03-02)
+Unreleased
+------------------
+- Update to stac version 1.0.0
+
+1.3.9 (2021-03-02)
 ------------------
 - Add id to landing page, making it a valid catalog (#43, @lossyrob)
 - Make `item_assets` (item assets extension) a dictionary of assets (#47, @kylebarron)
