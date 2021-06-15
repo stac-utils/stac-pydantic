@@ -27,7 +27,7 @@ class PaginationRelations(str, AutoValueEnum):
 
 class Link(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/collection-spec/collection-spec.md#link-object
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md#link-object
     """
 
     href: constr(min_length=1)
@@ -77,7 +77,7 @@ class Links(BaseModel):
 
 class Relations(str, AutoValueEnum):
     """
-    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/collection-spec/collection-spec.md#relation-types
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md#relation-types
     """
 
     self = auto()

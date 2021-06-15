@@ -8,7 +8,7 @@ from stac_pydantic.shared import Asset, NumType, Provider
 
 class SpatialExtent(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/collection-spec/collection-spec.md#spatial-extent-object
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md#spatial-extent-object
     """
 
     bbox: List[List[NumType]]
@@ -16,7 +16,7 @@ class SpatialExtent(BaseModel):
 
 class TimeInterval(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/collection-spec/collection-spec.md#temporal-extent-object
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md#temporal-extent-object
     """
 
     interval: List[List[Union[str, None]]]
@@ -24,7 +24,7 @@ class TimeInterval(BaseModel):
 
 class Extent(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/collection-spec/collection-spec.md#extent-object
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md#extent-object
     """
 
     spatial: SpatialExtent
@@ -33,7 +33,7 @@ class Extent(BaseModel):
 
 class Range(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/collection-spec/collection-spec.md#stats-object
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md#stats-object
     """
 
     minimum: Union[NumType, str]
@@ -42,7 +42,7 @@ class Range(BaseModel):
 
 class Collection(Catalog):
     """
-    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/collection-spec/collection-spec.md
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md
     """
 
     assets: Optional[Dict[str, Asset]]

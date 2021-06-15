@@ -9,7 +9,7 @@ from stac_pydantic.version import STAC_VERSION
 
 class Catalog(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/catalog-spec/catalog-spec.md
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0/catalog-spec/catalog-spec.md
     """
 
     id: constr(min_length=1)
