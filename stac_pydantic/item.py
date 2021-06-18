@@ -2,7 +2,7 @@ from datetime import datetime as dt
 from functools import lru_cache
 from typing import Dict, List, Optional, Tuple, Type, Union
 
-from geojson_pydantic.features import Feature, FeatureCollection
+from geojson_pydantic.features import Feature, FeatureCollection, Geom
 from pydantic import BaseModel, Field, create_model, validator
 from pydantic.datetime_parse import parse_datetime
 from pydantic.fields import FieldInfo
@@ -50,7 +50,8 @@ class Item(Feature):
     properties: ItemProperties
     assets: Dict[str, Asset]
     links: Links
-    bbox: BBox
+    geometry: Optional[Geom]
+    bbox: Optional[BBox]
     stac_extensions: Optional[List[str]]
     collection: Optional[str]
 
