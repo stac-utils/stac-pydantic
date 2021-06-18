@@ -328,6 +328,20 @@ def test_geo_interface():
     Item(**test_item)
 
 
+def test_item_null_geometry_bbox():
+    """
+    Tests that a STAC item is valid with
+    no bbox or geometry
+    """
+    test_item = request(EO_EXTENSION)
+
+    # remove geometry and bbox
+    test_item.pop("geometry")
+    test_item.pop("bbox")
+
+    Item(**test_item)
+
+
 def test_api_conformance():
     ConformanceClasses(
         conformsTo=["https://conformance-class-1", "http://conformance-class-2"]
