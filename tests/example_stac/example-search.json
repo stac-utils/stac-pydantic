@@ -2,7 +2,7 @@
     "id": "mysearchresults",
     "stac_version": "1.0.0",
     "stac_extensions": [
-        "single-file-stac"
+        "https://stac-extensions.github.io/single-file-stac/v1.0.0/schema.json"
     ],
     "description": "A bunch of results from a search",
     "type": "FeatureCollection",
@@ -10,9 +10,8 @@
         {
             "stac_version": "1.0.0",
             "stac_extensions": [
-                "projection",
-                "view",
-                "https://example.com/stac/landsat-extension/1.0/schema.json"
+                "https://stac-extensions.github.io/projection/v1.0.0/schema.json",
+                "https://stac-extensions.github.io/view/v1.0.0/schema.json"
             ],
             "type": "Feature",
             "id": "LC80370332018039LGN00",
@@ -147,9 +146,8 @@
         {
             "stac_version": "1.0.0",
             "stac_extensions": [
-                "projection",
-                "view",
-                "https://example.com/stac/landsat-extension/1.0/schema.json"
+                "https://stac-extensions.github.io/projection/v1.0.0/schema.json",
+                "https://stac-extensions.github.io/view/v1.0.0/schema.json"
             ],
             "type": "Feature",
             "id": "LC80340332018034LGN00",
@@ -294,7 +292,7 @@
             ],
             "stac_version": "1.0.0",
             "stac_extensions": [
-                "item_assets"
+                "https://stac-extensions.github.io/item-assets/v1.0.0/schema.json"
             ],
             "extent": {
                 "spatial": {

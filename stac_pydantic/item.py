@@ -3,9 +3,10 @@ from functools import lru_cache
 from typing import Dict, List, Optional, Tuple, Type, Union
 
 from geojson_pydantic.features import Feature, FeatureCollection
-from pydantic import constr, BaseModel, Field, create_model, validator
+from pydantic import constr, Field, validator, AnyUrl
 from pydantic.datetime_parse import parse_datetime
-from pydantic.fields import FieldInfo
+import requests
+import jsonschema
 
 from stac_pydantic.api.extensions.context import ContextExtension
 from stac_pydantic.extensions import Extensions
@@ -51,7 +52,7 @@ class Item(Feature):
     assets: Dict[str, Asset]
     links: Links
     bbox: BBox
-    stac_extensions: Optional[List[str]]
+    stac_extensions: Optional[List[AnyUrl]]
     collection: Optional[str]
 
     def to_dict(self, **kwargs):
@@ -79,49 +80,17 @@ class ItemCollection(FeatureCollection):
         return self.json(by_alias=True, exclude_unset=True, **kwargs)
 
 
-@lru_cache()
-def _extension_model_factory(
-    stac_extensions: Tuple[str], base_class: Type[Item], skip_remote_refs: bool = False
-) -> Tuple[Type[BaseModel], FieldInfo]:
-    """
-    Create a stac item properties model for a set of stac extensions
-    """
-    fields = decompose_model(base_class.__fields__["properties"].type_)
-    for ext in stac_extensions:
-        if skip_remote_refs and ext.startswith("http"):
-            continue
-        if ext == "checksum":
-            continue
-        fields.update(decompose_model(Extensions.get(ext)))
-    return (
-        create_model("CustomItemProperties", __base__=ItemProperties, **fields),
-        FieldInfo(...),
-    )
-
-
-def item_model_factory(
-    item: Dict, skip_remote_refs: bool = False, base_class: Type[Item] = Item
-) -> Type[BaseModel]:
-    """
-    Create a pydantic model based on the extensions used by the item
-    """
-    item_fields = decompose_model(base_class)
-    stac_extensions = item.get("stac_extensions")
-
-    if stac_extensions:
-        item_fields["properties"] = _extension_model_factory(
-            tuple(stac_extensions), base_class, skip_remote_refs
-        )
-
-    return create_model("CustomStacItem", **item_fields, __base__=base_class)
-
-
 def validate_item(item: Dict, reraise_exception: bool = False, **kwargs) -> bool:
     """
     Wrapper around ``item_model_factory`` for stac item validation
     """
     try:
-        item_model_factory(item, **kwargs)(**item)
+        Item.parse_obj(item)
+        if item["stac_extensions"]:
+            for ext in item["stac_extensions"]:
+                req = requests.get(ext)
+                schema = req.json()
+                jsonschema.validate(instance=item, schema=schema)
     except Exception:
         if reraise_exception:
             raise

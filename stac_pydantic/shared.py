@@ -4,7 +4,7 @@ from typing import List, Optional, Tuple, Union
 
 from pydantic import constr, confloat, BaseModel, Extra, Field
 
-from stac_pydantic.extensions.eo import BandObject
+# from stac_pydantic.extensions.eo import BandObject
 from stac_pydantic.utils import AutoValueEnum
 
 NumType = Union[float, int]
@@ -16,29 +16,6 @@ BBox = Union[
 # https://tools.ietf.org/html/rfc3339#section-5.6
 # Unused, but leaving it here since it's used by dependencies
 DATETIME_RFC339 = "%Y-%m-%dT%H:%M:%SZ"
-
-
-class ExtensionTypes(str, AutoValueEnum):
-    """
-    https://github.com/radiantearth/stac-spec/blob/v1.0.0/extensions/README.md#list-of-content-extensions
-    """
-
-    asset = auto()
-    checksum = auto()
-    collection_assets = "collection-assets"
-    context = auto()
-    cube = auto()
-    eo = auto()
-    item_assets = "item-assets"
-    label = auto()
-    pc = auto()
-    projection = auto()
-    sar = auto()
-    sat = auto()
-    sci = auto()
-    single_file_stac = "single-file-stac"
-    version = auto()
-    view = auto()
 
 
 class MimeTypes(str, Enum):
@@ -128,11 +105,11 @@ class Asset(StacCommonMetadata):
     description: Optional[str]
     roles: Optional[List[str]]
     # EO extension
-    bands: Optional[List[BandObject]] = Field(None, alias="eo:bands")
+    # bands: Optional[List[BandObject]] = Field(None, alias="eo:bands")
     # SAR extension
-    polarizations: Optional[List[str]] = Field(None, alias="sar:polarizations")
+    # polarizations: Optional[List[str]] = Field(None, alias="sar:polarizations")
     # Checksum extension
-    multihash: Optional[str] = Field(None, alias="checksum:multihash")
+    # multihash: Optional[str] = Field(None, alias="checksum:multihash")
 
     class Config:
         allow_population_by_field_name = True

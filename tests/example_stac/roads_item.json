@@ -1,8 +1,8 @@
 {
     "stac_version": "1.0.0",
     "stac_extensions": [
-      "label",
-      "version"
+      "https://stac-extensions.github.io/label/v1.0.0/schema.json",
+      "https://stac-extensions.github.io/version/v1.0.0/schema.json"
     ],
     "id": "AOI_3_Paris_img101",
     "type": "Feature",

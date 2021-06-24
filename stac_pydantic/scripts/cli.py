@@ -2,7 +2,7 @@ import click
 import requests
 from pydantic import ValidationError
 
-from stac_pydantic import validate_item as validate
+from stac_pydantic.item import validate_item as validate
 
 
 @click.group(short_help="Validate STAC")

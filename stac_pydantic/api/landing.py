@@ -1,9 +1,8 @@
 from typing import List, Optional, Union
 
-from pydantic import constr, BaseModel, Field
+from pydantic import constr, BaseModel, Field, AnyUrl
 
 from stac_pydantic.links import Links
-from stac_pydantic.shared import ExtensionTypes
 from stac_pydantic.version import STAC_VERSION
 
 
@@ -16,5 +15,5 @@ class LandingPage(BaseModel):
     description: constr(min_length=1)
     title: Optional[str]
     stac_version: str = Field(STAC_VERSION, const=True)
-    stac_extensions: Optional[List[Union[str, ExtensionTypes]]]
+    stac_extensions: Optional[List[AnyUrl]]
     links: Links

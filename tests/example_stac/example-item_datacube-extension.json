@@ -1,7 +1,7 @@
 {
     "stac_version": "1.0.0",
     "stac_extensions": [
-      "datacube"
+      "https://stac-extensions.github.io/datacube/v1.0.0/schema.json"
     ],
     "id": "datacube-123",
     "type": "Feature",
