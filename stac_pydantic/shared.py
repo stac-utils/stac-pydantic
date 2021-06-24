@@ -104,12 +104,6 @@ class Asset(StacCommonMetadata):
     title: Optional[str]
     description: Optional[str]
     roles: Optional[List[str]]
-    # EO extension
-    # bands: Optional[List[BandObject]] = Field(None, alias="eo:bands")
-    # SAR extension
-    # polarizations: Optional[List[str]] = Field(None, alias="sar:polarizations")
-    # Checksum extension
-    # multihash: Optional[str] = Field(None, alias="checksum:multihash")
 
     class Config:
         allow_population_by_field_name = True
