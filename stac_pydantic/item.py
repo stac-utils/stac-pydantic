@@ -1,18 +1,13 @@
 from datetime import datetime as dt
-from functools import lru_cache
-from typing import Dict, List, Optional, Tuple, Type, Union
+from typing import Dict, List, Optional, Union
 
 from geojson_pydantic.features import Feature, FeatureCollection
 from pydantic import constr, Field, validator, AnyUrl
 from pydantic.datetime_parse import parse_datetime
-import requests
-import jsonschema
 
 from stac_pydantic.api.extensions.context import ContextExtension
-from stac_pydantic.extensions import Extensions
 from stac_pydantic.links import Links
 from stac_pydantic.shared import DATETIME_RFC339, Asset, BBox, StacCommonMetadata
-from stac_pydantic.utils import decompose_model
 from stac_pydantic.version import STAC_VERSION
 
 
@@ -69,30 +64,13 @@ class ItemCollection(FeatureCollection):
 
     stac_version: constr(min_length=1) = Field(STAC_VERSION, const=True)
     features: List[Item]
-    stac_extensions: Optional[List[str]]
+    stac_extensions: Optional[List[AnyUrl]]
     links: Links
     context: Optional[ContextExtension]
+
 
     def to_dict(self, **kwargs):
         return self.dict(by_alias=True, exclude_unset=True, **kwargs)
 
     def to_json(self, **kwargs):
         return self.json(by_alias=True, exclude_unset=True, **kwargs)
-
-
-def validate_item(item: Dict, reraise_exception: bool = False, **kwargs) -> bool:
-    """
-    Wrapper around ``item_model_factory`` for stac item validation
-    """
-    try:
-        Item.parse_obj(item)
-        if item["stac_extensions"]:
-            for ext in item["stac_extensions"]:
-                req = requests.get(ext)
-                schema = req.json()
-                jsonschema.validate(instance=item, schema=schema)
-    except Exception:
-        if reraise_exception:
-            raise
-        return False
-    return True

@@ -1,9 +1,8 @@
 from typing import List, Optional
 
 from pydantic import constr, BaseModel, Field, root_validator, AnyUrl
-from jsonschema import validate
 
-from stac_pydantic.links import Link, Links
+from stac_pydantic.links import Links
 from stac_pydantic.version import STAC_VERSION
 
 

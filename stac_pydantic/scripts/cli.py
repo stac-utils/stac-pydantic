@@ -2,7 +2,8 @@ import click
 import requests
 from pydantic import ValidationError
 
-from stac_pydantic.item import validate_item as validate
+from stac_pydantic import Catalog, Collection, Item
+from stac_pydantic.extensions import validate_extensions
 
 
 @click.group(short_help="Validate STAC")
@@ -19,7 +20,8 @@ def validate_item(infile):
     r.raise_for_status()
     stac_item = r.json()
     try:
-        validate(stac_item, skip_remote_refs=True, reraise_exception=True)
+        item = Item(**stac_item)
+        validate_extensions(item, reraise_exception=True)
     except ValidationError as e:
         click.echo(str(e))
         return

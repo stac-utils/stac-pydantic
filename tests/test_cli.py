@@ -6,7 +6,7 @@ def test_valid_stac_item(cli_runner):
         app,
         [
             "validate-item",
-            "https://raw.githubusercontent.com/radiantearth/stac-spec/v0.9.0/extensions/eo/examples/example-landsat8.json",
+            "https://raw.githubusercontent.com/radiantearth/stac-spec/v1.0.0/examples/extended-item.json"
         ],
     )
     assert not result.exception
