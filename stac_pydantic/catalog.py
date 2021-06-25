@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from pydantic import constr, BaseModel, Field, root_validator, AnyUrl
+from pydantic import AnyUrl, BaseModel, Field, constr, root_validator
 
 from stac_pydantic.links import Links
 from stac_pydantic.version import STAC_VERSION
@@ -17,7 +17,7 @@ class Catalog(BaseModel):
     links: Links
     stac_extensions: Optional[List[AnyUrl]]
     title: Optional[str]
-    type: constr(min_length=1) = "catalog"
+    type: constr(min_length=1) = Field("catalog", const=True)
 
     class Config:
         use_enum_values = True

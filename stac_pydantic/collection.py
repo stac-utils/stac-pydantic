@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Optional, Union
 
-from pydantic import constr, BaseModel
+from pydantic import BaseModel, Field, constr
 
 from stac_pydantic.catalog import Catalog
 from stac_pydantic.shared import Asset, NumType, Provider
@@ -52,4 +52,4 @@ class Collection(Catalog):
     keywords: Optional[List[str]]
     providers: Optional[List[Provider]]
     summaries: Optional[Dict[str, Union[Range, List[Any], Dict[str, Any]]]]
-    type: constr(min_length=1) = "collection"
+    type: constr(min_length=1) = Field("collection", const=True)
