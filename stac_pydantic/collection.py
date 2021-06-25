@@ -1,14 +1,14 @@
 from typing import Any, Dict, List, Optional, Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, constr
 
 from stac_pydantic.catalog import Catalog
-from stac_pydantic.shared import NumType, Provider
+from stac_pydantic.shared import Asset, NumType, Provider
 
 
 class SpatialExtent(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/collection-spec/collection-spec.md#spatial-extent-object
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md#spatial-extent-object
     """
 
     bbox: List[List[NumType]]
@@ -16,7 +16,7 @@ class SpatialExtent(BaseModel):
 
 class TimeInterval(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/collection-spec/collection-spec.md#temporal-extent-object
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md#temporal-extent-object
     """
 
     interval: List[List[Union[str, None]]]
@@ -24,30 +24,32 @@ class TimeInterval(BaseModel):
 
 class Extent(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/collection-spec/collection-spec.md#extent-object
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md#extent-object
     """
 
     spatial: SpatialExtent
     temporal: TimeInterval
 
 
-class Stats(BaseModel):
+class Range(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/collection-spec/collection-spec.md#stats-object
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md#stats-object
     """
 
-    min: Union[NumType, str]
-    max: Union[NumType, str]
+    minimum: Union[NumType, str]
+    maximum: Union[NumType, str]
 
 
 class Collection(Catalog):
     """
-    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/collection-spec/collection-spec.md
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md
     """
 
-    license: str
+    assets: Optional[Dict[str, Asset]]
+    license: constr(min_length=1)
     extent: Extent
     title: Optional[str]
     keywords: Optional[List[str]]
     providers: Optional[List[Provider]]
-    summaries: Optional[Dict[str, Union[Stats, List[Any]]]]
+    summaries: Optional[Dict[str, Union[Range, List[Any], Dict[str, Any]]]]
+    type: constr(min_length=1) = Field("collection", const=True)

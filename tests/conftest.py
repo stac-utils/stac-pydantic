@@ -1,4 +1,6 @@
+import json
 import operator
+import os
 from datetime import datetime, timedelta
 
 import arrow
@@ -9,9 +11,16 @@ from click.testing import CliRunner
 
 
 def request(url: str):
-    r = requests.get(url)
-    r.raise_for_status()
-    return r.json()
+    if url.startswith("http"):
+        r = requests.get(url)
+        r.raise_for_status()
+        return r.json()
+    else:
+        full_path = os.path.join(*["tests", "example_stac", url])
+        with open(full_path, "r") as local_file:
+            lines = local_file.readlines()
+        full_file = "".join(lines)
+        return json.loads(full_file)
 
 
 def dict_match(d1: dict, d2: dict):

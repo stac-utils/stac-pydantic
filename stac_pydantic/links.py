@@ -2,7 +2,7 @@ from enum import auto
 from typing import Any, Dict, Iterator, List, Optional, Union
 from urllib.parse import urljoin
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, constr
 
 from stac_pydantic.utils import AutoValueEnum
 
@@ -27,11 +27,11 @@ class PaginationRelations(str, AutoValueEnum):
 
 class Link(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/collection-spec/collection-spec.md#link-object
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md#link-object
     """
 
-    href: str
-    rel: str
+    href: constr(min_length=1)
+    rel: constr(min_length=1)
     type: Optional[str]
     title: Optional[str]
     # Label extension
@@ -77,7 +77,7 @@ class Links(BaseModel):
 
 class Relations(str, AutoValueEnum):
     """
-    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/collection-spec/collection-spec.md#relation-types
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md#relation-types
     """
 
     self = auto()
@@ -95,3 +95,4 @@ class Relations(str, AutoValueEnum):
     docs = auto()
     tiles = auto()
     search = auto()
+    preview = auto()

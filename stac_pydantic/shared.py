@@ -2,9 +2,8 @@ from datetime import datetime
 from enum import Enum, auto
 from typing import List, Optional, Tuple, Union
 
-from pydantic import BaseModel, Extra, Field
+from pydantic import BaseModel, Extra, Field, confloat, constr
 
-from stac_pydantic.extensions.eo import BandObject
 from stac_pydantic.utils import AutoValueEnum
 
 NumType = Union[float, int]
@@ -18,32 +17,9 @@ BBox = Union[
 DATETIME_RFC339 = "%Y-%m-%dT%H:%M:%SZ"
 
 
-class ExtensionTypes(str, AutoValueEnum):
-    """
-    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/extensions/README.md#list-of-content-extensions
-    """
-
-    asset = auto()
-    checksum = auto()
-    collection_assets = "collection-assets"
-    context = auto()
-    cube = auto()
-    eo = auto()
-    item_assets = "item-assets"
-    label = auto()
-    pc = auto()
-    projection = auto()
-    sar = auto()
-    sat = auto()
-    sci = auto()
-    single_file_stac = "single-file-stac"
-    version = auto()
-    view = auto()
-
-
 class MimeTypes(str, Enum):
     """
-    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/item-spec/item-spec.md#media-types
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0/item-spec/item-spec.md#media-types
     """
 
     # Raster
@@ -68,7 +44,7 @@ class MimeTypes(str, Enum):
 
 class AssetRoles(str, AutoValueEnum):
     """
-    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/extensions/asset/README.md
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0/extensions/asset/README.md
     """
 
     thumbnail = auto()
@@ -86,10 +62,10 @@ class ProviderRoles(str, AutoValueEnum):
 
 class Provider(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/collection-spec/collection-spec.md#provider-object
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md#provider-object
     """
 
-    name: str
+    name: constr(min_length=1)
     description: Optional[str]
     roles: Optional[List[str]]
     url: Optional[str]
@@ -97,7 +73,7 @@ class Provider(BaseModel):
 
 class StacCommonMetadata(BaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/item-spec/common-metadata.md#date-and-time-range
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0/item-spec/common-metadata.md#date-and-time-range
     """
 
     title: Optional[str] = Field(None, alias="title")
@@ -111,7 +87,7 @@ class StacCommonMetadata(BaseModel):
     constellation: Optional[str] = Field(None, alias="constellation")
     mission: Optional[str] = Field(None, alias="mission")
     providers: Optional[List[Provider]] = Field(None, alias="providers")
-    gsd: Optional[NumType] = Field(None, alias="gsd")
+    gsd: Optional[confloat(gt=0)] = Field(None, alias="gsd")
 
     class Config:
         json_encoders = {datetime: lambda v: v.strftime(DATETIME_RFC339)}
@@ -119,20 +95,14 @@ class StacCommonMetadata(BaseModel):
 
 class Asset(StacCommonMetadata):
     """
-    https://github.com/radiantearth/stac-spec/blob/v1.0.0-beta.1/item-spec/item-spec.md#asset-object
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0/item-spec/item-spec.md#asset-object
     """
 
-    href: str
+    href: constr(min_length=1)
     type: Optional[str]
     title: Optional[str]
     description: Optional[str]
     roles: Optional[List[str]]
-    # EO extension
-    bands: Optional[List[BandObject]] = Field(None, alias="eo:bands")
-    # SAR extension
-    polarizations: Optional[List[str]] = Field(None, alias="sar:polarizations")
-    # Checksum extension
-    multihash: Optional[str] = Field(None, alias="checksum:multihash")
 
     class Config:
         allow_population_by_field_name = True
