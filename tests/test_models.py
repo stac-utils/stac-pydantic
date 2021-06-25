@@ -17,7 +17,6 @@ from stac_pydantic.version import STAC_VERSION
 
 from .conftest import dict_match, request
 
-
 COLLECTION = "landsat-collection.json"
 ITEM_COLLECTION = "itemcollection-sample-full.json"
 SINGLE_FILE_STAC = "example-search.json"
@@ -66,7 +65,9 @@ def test_sar_extensions():
 def test_proj_extension():
     # The example item uses an invalid band name
     test_item = request(PROJ_EXTENSION)
-    test_item["stac_extensions"][1] = "https://raw.githubusercontent.com/stac-extensions/projection/v1.0.0/json-schema/schema.json"
+    test_item["stac_extensions"][
+        1
+    ] = "https://raw.githubusercontent.com/stac-extensions/projection/v1.0.0/json-schema/schema.json"
     test_item["assets"]["B8"]["eo:bands"][0]["common_name"] = "pan"
 
     valid_item = Item.parse_obj(test_item).to_dict()
@@ -110,7 +111,7 @@ def test_explicit_extension_validation():
     # This item implements the eo and view extensions
     assert test_item["stac_extensions"][:-1] == [
         "https://stac-extensions.github.io/eo/v1.0.0/schema.json",
-        "https://stac-extensions.github.io/view/v1.0.0/schema.json"
+        "https://stac-extensions.github.io/view/v1.0.0/schema.json",
     ]
 
     validate_extensions(test_item)
@@ -194,7 +195,7 @@ def test_api_landing_page():
         description="stac-api landing page",
         stac_extensions=[
             "https://raw.githubusercontent.com/stac-extensions/eo/v1.0.0/json-schema/schema.json",
-            "https://raw.githubusercontent.com/stac-extensions/projection/v1.0.0/json-schema/schema.json"
+            "https://raw.githubusercontent.com/stac-extensions/projection/v1.0.0/json-schema/schema.json",
         ],
         links=[Link(href="http://link", rel="self",)],
     )
@@ -206,7 +207,7 @@ def test_api_landing_page_is_catalog():
         description="stac-api landing page",
         stac_extensions=[
             "https://raw.githubusercontent.com/stac-extensions/eo/v1.0.0/json-schema/schema.json",
-            "https://raw.githubusercontent.com/stac-extensions/projection/v1.0.0/json-schema/schema.json"
+            "https://raw.githubusercontent.com/stac-extensions/projection/v1.0.0/json-schema/schema.json",
         ],
         links=[Link(href="http://link", rel="self",)],
     )

@@ -2,7 +2,7 @@ from datetime import datetime as dt
 from typing import Dict, List, Optional, Union
 
 from geojson_pydantic.features import Feature, FeatureCollection
-from pydantic import constr, Field, validator, AnyUrl
+from pydantic import AnyUrl, Field, constr, validator
 from pydantic.datetime_parse import parse_datetime
 
 from stac_pydantic.api.extensions.context import ContextExtension
@@ -67,7 +67,6 @@ class ItemCollection(FeatureCollection):
     stac_extensions: Optional[List[AnyUrl]]
     links: Links
     context: Optional[ContextExtension]
-
 
     def to_dict(self, **kwargs):
         return self.dict(by_alias=True, exclude_unset=True, **kwargs)

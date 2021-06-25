@@ -1,11 +1,11 @@
+import json
 import operator
+import os
 from datetime import datetime, timedelta
 
 import arrow
 import dictdiffer
-import json
 import pytest
-import os
 import requests
 from click.testing import CliRunner
 
@@ -17,9 +17,9 @@ def request(url: str):
         return r.json()
     else:
         full_path = os.path.join(*["tests", "example_stac", url])
-        with open(full_path, 'r') as local_file:
+        with open(full_path, "r") as local_file:
             lines = local_file.readlines()
-        full_file = ''.join(lines)
+        full_file = "".join(lines)
         return json.loads(full_file)
 
 

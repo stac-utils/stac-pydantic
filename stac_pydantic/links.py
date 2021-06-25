@@ -2,7 +2,7 @@ from enum import auto
 from typing import Any, Dict, Iterator, List, Optional, Union
 from urllib.parse import urljoin
 
-from pydantic import constr, BaseModel, Field
+from pydantic import BaseModel, Field, constr
 
 from stac_pydantic.utils import AutoValueEnum
 

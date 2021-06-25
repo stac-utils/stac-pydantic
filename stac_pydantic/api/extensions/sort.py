@@ -1,6 +1,6 @@
 from enum import auto
 
-from pydantic import constr, BaseModel
+from pydantic import BaseModel, constr
 
 from stac_pydantic.utils import AutoValueEnum
 

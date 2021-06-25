@@ -1,14 +1,14 @@
 from functools import singledispatch
 
-import requests
 import jsonschema
+import requests
 
-from stac_pydantic import Item, Catalog, Collection
+from stac_pydantic import Catalog, Collection, Item
 
 
 @singledispatch
 def validate_extensions(stac_obj, b):
-    raise NotImplementedError('Unsupported type')
+    raise NotImplementedError("Unsupported type")
 
 
 @validate_extensions.register
