@@ -4,7 +4,6 @@ from typing import List, Optional, Tuple, Union
 
 from pydantic import constr, confloat, BaseModel, Extra, Field
 
-# from stac_pydantic.extensions.eo import BandObject
 from stac_pydantic.utils import AutoValueEnum
 
 NumType = Union[float, int]

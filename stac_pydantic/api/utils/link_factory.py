@@ -11,7 +11,7 @@ class BaseLinks:
     """Create inferred links common to collections and items."""
 
     base_url: str
-    _link_members: ClassVar[Tuple[str]] = "root"
+    _link_members: ClassVar[Tuple[str]] = ("root",)
 
     def root(self) -> Link:
         """Return the catalog root."""
