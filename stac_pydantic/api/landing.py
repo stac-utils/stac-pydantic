@@ -16,4 +16,5 @@ class LandingPage(BaseModel):
     title: Optional[str]
     stac_version: str = Field(STAC_VERSION, const=True)
     stac_extensions: Optional[List[AnyUrl]]
+    conformsTo: List[AnyUrl]
     links: Links

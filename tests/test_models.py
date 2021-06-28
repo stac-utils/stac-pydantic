@@ -199,6 +199,10 @@ def test_api_landing_page():
             "https://raw.githubusercontent.com/stac-extensions/eo/v1.0.0/json-schema/schema.json",
             "https://raw.githubusercontent.com/stac-extensions/projection/v1.0.0/json-schema/schema.json",
         ],
+        conformsTo=[
+            "http://www.opengis.net/spec/ogcapi-features-1/1.0/conf/core",
+            "http://www.opengis.net/spec/ogcapi-features-1/1.0/conf/geojson",
+        ],
         links=[Link(href="http://link", rel="self",)],
     )
 
@@ -210,6 +214,10 @@ def test_api_landing_page_is_catalog():
         stac_extensions=[
             "https://raw.githubusercontent.com/stac-extensions/eo/v1.0.0/json-schema/schema.json",
             "https://raw.githubusercontent.com/stac-extensions/projection/v1.0.0/json-schema/schema.json",
+        ],
+        conformsTo=[
+            "http://www.opengis.net/spec/ogcapi-features-1/1.0/conf/core",
+            "http://www.opengis.net/spec/ogcapi-features-1/1.0/conf/geojson",
         ],
         links=[Link(href="http://link", rel="self",)],
     )
