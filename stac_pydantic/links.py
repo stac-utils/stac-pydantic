@@ -64,6 +64,9 @@ class Links(BaseModel):
         for link in self:
             link.resolve(base_url)
 
+    def append(self, link: Link):
+        self.__root__.append(link)
+
     def __iter__(self) -> Iterator[Link]:
         """iterate through links"""
         return iter(self.__root__)
