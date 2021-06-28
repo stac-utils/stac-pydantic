@@ -1,5 +1,6 @@
 Unreleased
 ------------------
+- Add Collections model (#81, @moradology)
 - Update to stac version 1.0.0 (#86, @moradology)
 - Remove models for STAC spec extensions (#86, @moradology)
 
