@@ -2,6 +2,7 @@ Unreleased
 ------------------
 - Update to stac version 1.0.0 (#86, @moradology)
 - Remove models for STAC spec extensions (#86, @moradology)
+- Add conformsTo to LandingPage (#90, @moradology)
 
 1.3.9 (2021-03-02)
 ------------------
