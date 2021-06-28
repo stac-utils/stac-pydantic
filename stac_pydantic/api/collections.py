@@ -13,3 +13,9 @@ class Collections(BaseModel):
 
     links: List[Link]
     collections: List[Collection]
+
+    def to_dict(self, **kwargs):
+        return self.dict(by_alias=True, exclude_unset=True, **kwargs)
+
+    def to_json(self, **kwargs):
+        return self.json(by_alias=True, exclude_unset=True, **kwargs)

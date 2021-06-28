@@ -7,6 +7,7 @@ from pydantic import Field, ValidationError
 from shapely.geometry import shape
 
 from stac_pydantic import Catalog, Collection, Item, ItemCollection, ItemProperties
+from stac_pydantic.api import Collections
 from stac_pydantic.api.conformance import ConformanceClasses
 from stac_pydantic.api.landing import LandingPage
 from stac_pydantic.api.search import Search
@@ -36,6 +37,7 @@ VERSION_EXTENSION_ITEM = "example-item_version-extension.json"
 VERSION_EXTENSION_COLLECTION = "example-collection_version-extension.json"
 VIEW_EXTENSION = "example-landsat8_view-extension.json"
 DATETIME_RANGE = "datetimerange.json"
+EXAMPLE_COLLECTION_LIST = "example-collection-list.json"
 
 
 @pytest.mark.parametrize(
@@ -505,3 +507,9 @@ def test_resolve_pagination_link():
     for link in links:
         if isinstance(link, PaginationLink):
             assert link.href == "http://base_url.com/next/page"
+
+
+def test_collection_list():
+    test_collection_list = request(EXAMPLE_COLLECTION_LIST)
+    valid_collection_list = Collections(**test_collection_list).to_dict()
+    dict_match(test_collection_list, valid_collection_list)
