@@ -16,6 +16,7 @@ pip install -e .["dev"]
 | 1.1.x             | 0.9.0        |
 | 1.2.x             | 1.0.0-beta.1 |
 | 1.3.x             | 1.0.0-beta.2 |
+| 2.0.x             | 1.0.0        |
 
 ## Testing
 Run the entire test suite:
