@@ -70,7 +70,7 @@ class Search(BaseModel):
                 xmin, ymin, min_elev, xmax, ymax, max_elev = v
                 if max_elev < min_elev:
                     raise ValueError(
-                        "Maximum elevation must greater than than minimum elevation"
+                        "Maximum elevation must greater than minimum elevation"
                     )
 
             if xmax < xmin:
