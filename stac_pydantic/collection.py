@@ -52,4 +52,4 @@ class Collection(Catalog):
     keywords: Optional[List[str]]
     providers: Optional[List[Provider]]
     summaries: Optional[Dict[str, Union[Range, List[Any], Dict[str, Any]]]]
-    type: constr(min_length=1) = Field("collection", const=True)
+    type: constr(min_length=1) = Field("Collection", const=True)

@@ -18,3 +18,4 @@ class LandingPage(BaseModel):
     stac_extensions: Optional[List[AnyUrl]]
     conformsTo: List[AnyUrl]
     links: Links
+    type: constr(min_length=1) = Field("Catalog", const=True)
