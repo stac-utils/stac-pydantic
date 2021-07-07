@@ -17,7 +17,7 @@ class Catalog(BaseModel):
     links: Links
     stac_extensions: Optional[List[AnyUrl]]
     title: Optional[str]
-    type: constr(min_length=1) = Field("catalog", const=True)
+    type: constr(min_length=1) = Field("Catalog", const=True)
 
     class Config:
         use_enum_values = True
