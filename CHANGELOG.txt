@@ -1,6 +1,10 @@
 Unreleased
 ------------------
+
+2.0.1 (2021-07-08)
+------------------
 - Add bbox validator to STAC search (#95, @geospatialjeff)
+- Fix LandPage to make valid STAC 1.0 catalog (#96, @lossyrob)
 
 2.0.0 (2020-06-29)
 ------------------
