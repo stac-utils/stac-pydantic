@@ -243,6 +243,17 @@ def test_spatial_search():
     )
     shape(search.intersects)
 
+    # Search GeometryCollection
+    search = Search(
+        collections=["collection1", "collection2"],
+        intersects={
+            "type": "GeometryCollection", 
+            "geometries": [
+                {"type": "Point", "coordinates": [0, 0]}
+            ]
+        },
+    )
+
 
 def test_invalid_spatial_search():
     # bbox and intersects are mutually exclusive
