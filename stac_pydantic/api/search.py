@@ -28,7 +28,7 @@ class Search(BaseModel):
     ids: Optional[List[str]]
     bbox: Optional[BBox]
     intersects: Optional[
-        Union[Point, MultiPoint, LineString, MultiLineString, Polygon, MultiPolygon]
+        Union[Point, MultiPoint, LineString, MultiLineString, Polygon, MultiPolygon, GeometryCollection]
     ]
     datetime: Optional[str]
     limit: int = 10
