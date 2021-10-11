@@ -8,6 +8,7 @@ from geojson_pydantic.geometries import (
     MultiPolygon,
     Point,
     Polygon,
+    GeometryCollection,
     _GeometryBase,
 )
 from pydantic import BaseModel, Field, validator
