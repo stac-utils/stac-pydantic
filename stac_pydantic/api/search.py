@@ -2,13 +2,13 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional, Union
 
 from geojson_pydantic.geometries import (
+    GeometryCollection,
     LineString,
     MultiLineString,
     MultiPoint,
     MultiPolygon,
     Point,
     Polygon,
-    GeometryCollection,
     _GeometryBase,
 )
 from pydantic import BaseModel, Field, validator
@@ -29,7 +29,15 @@ class Search(BaseModel):
     ids: Optional[List[str]]
     bbox: Optional[BBox]
     intersects: Optional[
-        Union[Point, MultiPoint, LineString, MultiLineString, Polygon, MultiPolygon, GeometryCollection]
+        Union[
+            Point,
+            MultiPoint,
+            LineString,
+            MultiLineString,
+            Polygon,
+            MultiPolygon,
+            GeometryCollection,
+        ]
     ]
     datetime: Optional[str]
     limit: int = 10

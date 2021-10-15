@@ -247,10 +247,8 @@ def test_spatial_search():
     search = Search(
         collections=["collection1", "collection2"],
         intersects={
-            "type": "GeometryCollection", 
-            "geometries": [
-                {"type": "Point", "coordinates": [0, 0]}
-            ]
+            "type": "GeometryCollection",
+            "geometries": [{"type": "Point", "coordinates": [0, 0]}],
         },
     )
 
