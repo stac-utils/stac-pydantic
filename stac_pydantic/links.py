@@ -99,4 +99,5 @@ class Relations(str, AutoValueEnum):
     tiles = auto()
     search = auto()
     preview = auto()
+    canonical = auto()
     service_desc = "service-desc"
