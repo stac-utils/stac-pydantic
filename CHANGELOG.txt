@@ -1,5 +1,6 @@
 Unreleased
 ------------------
+- Allow for non-ellipsis open temporal windows (#103, @moradology)
 
 2.0.1 (2021-07-08)
 ------------------

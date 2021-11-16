@@ -50,7 +50,7 @@ class Search(BaseModel):
         values = self.datetime.split("/")
         if len(values) == 1:
             return None
-        if values[0] == "..":
+        if values[0] == ".." or values[0] == "":
             return None
         return parse_datetime(values[0])
 
@@ -59,7 +59,7 @@ class Search(BaseModel):
         values = self.datetime.split("/")
         if len(values) == 1:
             return parse_datetime(values[0])
-        if values[1] == "..":
+        if values[1] == ".." or values[1] == "":
             return None
         return parse_datetime(values[1])
 
@@ -110,6 +110,9 @@ class Search(BaseModel):
         for value in values:
             if value == "..":
                 dates.append(value)
+                continue
+            elif value == "":
+                dates.append("..")
                 continue
 
             parse_datetime(value)
