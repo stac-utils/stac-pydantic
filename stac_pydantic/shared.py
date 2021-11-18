@@ -40,6 +40,7 @@ class MimeTypes(str, Enum):
     json = "application/json"
     html = "text/html"
     text = "text/plain"
+    openapi = "application/vnd.oai.openapi+json;version=3.0"
 
 
 class AssetRoles(str, AutoValueEnum):
