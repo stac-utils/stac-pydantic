@@ -101,3 +101,4 @@ class Relations(str, AutoValueEnum):
     preview = auto()
     canonical = auto()
     service_desc = "service-desc"
+    service_doc = "service-doc"
