@@ -1,6 +1,8 @@
 Unreleased
 ------------------
 
+- Add the canonical and service-doc relation types (#104, @moradology)
+
 2.0.1 (2021-07-08)
 ------------------
 - Add bbox validator to STAC search (#95, @geospatialjeff)
