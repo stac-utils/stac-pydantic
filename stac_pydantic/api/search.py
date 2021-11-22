@@ -108,10 +108,7 @@ class Search(BaseModel):
 
         dates = []
         for value in values:
-            if value == "..":
-                dates.append(value)
-                continue
-            elif value == "":
+            if value == ".." or value == "":
                 dates.append("..")
                 continue
 
