@@ -290,6 +290,10 @@ def test_temporal_search_two_tailed():
     assert search.start_date == utcnow
     assert search.end_date == None
 
+    search = Search(collections=["collection1"], datetime=f"{utcnow_str}/")
+    assert search.start_date == utcnow
+    assert search.end_date == None
+
 
 def test_temporal_search_open():
     # Test open date range
