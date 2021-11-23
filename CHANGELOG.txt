@@ -1,7 +1,9 @@
 Unreleased
 ------------------
-- Allow for non-ellipsis open temporal windows (#103, @moradology)
 
+2.0.2 (2021-11-22)
+------------------
+- Allow for non-ellipsis open temporal windows (#103, @moradology)
 - Add the canonical and service-doc relation types (#104, @moradology)
 
 2.0.1 (2021-07-08)
