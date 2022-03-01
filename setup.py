@@ -39,7 +39,7 @@ setup(
     license="MIT",
     packages=find_packages(exclude=["tests"]),
     zip_safe=False,
-    install_requires=["click", "pydantic>=1.6", "geojson-pydantic", "ciso8601>=2.2"],
+    install_requires=["click", "pydantic>=1.6", "geojson-pydantic"],
     tests_require=extras["dev"],
     setup_requires=["pytest-runner"],
     entry_points={"console_scripts": ["stac-pydantic=stac_pydantic.scripts.cli:app"]},
