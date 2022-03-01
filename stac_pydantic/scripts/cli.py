@@ -2,7 +2,7 @@ import click
 import requests
 from pydantic import ValidationError
 
-from stac_pydantic import Catalog, Collection, Item
+from stac_pydantic import Item
 from stac_pydantic.extensions import validate_extensions
 
 

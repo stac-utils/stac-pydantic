@@ -1,7 +1,6 @@
 import json
 import operator
 import os
-from datetime import datetime, timedelta
 
 import arrow
 import dictdiffer

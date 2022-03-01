@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from pydantic import AnyUrl, BaseModel, Field, constr, root_validator
+from pydantic import AnyUrl, BaseModel, Field, constr
 
 from stac_pydantic.links import Links
 from stac_pydantic.version import STAC_VERSION

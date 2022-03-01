@@ -1,7 +1,4 @@
 from enum import Enum
-from typing import Dict, Optional, Type
-
-from pydantic import BaseModel
 
 
 class AutoValueEnum(Enum):

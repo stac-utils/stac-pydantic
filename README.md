@@ -11,32 +11,57 @@ For local development:
 pip install -e .["dev"]
 ```
 
-| stac-pydantic | stac     |
-|-------------------|--------------|
-| 1.1.x             | 0.9.0        |
-| 1.2.x             | 1.0.0-beta.1 |
-| 1.3.x             | 1.0.0-beta.2 |
-| 2.0.x             | 1.0.0        |
+| stac-pydantic | STAC Version |
+|---------------|--------------|
+| 1.1.x         | 0.9.0        |
+| 1.2.x         | 1.0.0-beta.1 |
+| 1.3.x         | 1.0.0-beta.2 |
+| 2.0.x         | 1.0.0        |
+
+## Development
+
+Install the [pre-commit](https://pre-commit.com/) hooks:
+
+```shell
+pre-commit install
+```
 
 ## Testing
-Run the entire test suite:
+
+Ensure you have all Python versions installed that the tests will be run against. If using pyenv, run:
+
+```shell
+pyenv install 3.7.12
+pyenv install 3.8.12 
+pyenv install 3.9.10
+pyenv install 3.10.2
+pyenv local 3.7.12 3.8.12 3.9.10 3.10.2
 ```
+
+Run the entire test suite:
+
+```shell
 tox
 ```
 
 Run a single test case using the standard pytest convention:
-```
+
+```shell
 pytest -v tests/test_models.py::test_item_extensions
 ```
 
 ## Usage
+
 ### Loading Models
+
 Load data into models with standard pydantic:
+
 ```python
 from stac_pydantic import Catalog
 
 stac_catalog = {
-  "stac_version": "0.9.0",
+  "type": "Catalog",
+  "stac_version": "1.0.0",
   "id": "sample",
   "description": "This is a very basic sample catalog.",
   "links": [
