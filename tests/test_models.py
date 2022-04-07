@@ -203,7 +203,12 @@ def test_api_landing_page():
             "http://www.opengis.net/spec/ogcapi-features-1/1.0/conf/core",
             "http://www.opengis.net/spec/ogcapi-features-1/1.0/conf/geojson",
         ],
-        links=[Link(href="http://link", rel="self",)],
+        links=[
+            Link(
+                href="http://link",
+                rel="self",
+            )
+        ],
     )
 
 
@@ -219,7 +224,12 @@ def test_api_landing_page_is_catalog():
             "http://www.opengis.net/spec/ogcapi-features-1/1.0/conf/core",
             "http://www.opengis.net/spec/ogcapi-features-1/1.0/conf/geojson",
         ],
-        links=[Link(href="http://link", rel="self",)],
+        links=[
+            Link(
+                href="http://link",
+                rel="self",
+            )
+        ],
     )
     catalog = Catalog(**landing_page.dict())
 
