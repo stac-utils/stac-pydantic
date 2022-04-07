@@ -38,6 +38,7 @@ VERSION_EXTENSION_COLLECTION = "example-collection_version-extension.json"
 VIEW_EXTENSION = "example-landsat8_view-extension.json"
 DATETIME_RANGE = "datetimerange.json"
 EXAMPLE_COLLECTION_LIST = "example-collection-list.json"
+ITEM_GEOMETRY_NULL = "example-item_geometry-null.json"
 
 
 @pytest.mark.parametrize(
@@ -544,3 +545,18 @@ def test_collection_list():
     test_collection_list = request(EXAMPLE_COLLECTION_LIST)
     valid_collection_list = Collections(**test_collection_list).to_dict()
     dict_match(test_collection_list, valid_collection_list)
+
+
+def test_geometry_null_item():
+    test_item = request(ITEM_GEOMETRY_NULL)
+    valid_item = Item(**test_item).to_dict()
+    dict_match(test_item, valid_item)
+
+
+def test_item_bbox_validation():
+    test_item = request(LABEL_EXTENSION)
+    test_item["bbox"] = None
+    with pytest.raises(
+        ValueError, match="bbox is required if geometry is not null"
+    ) as e:
+        Item(**test_item)
