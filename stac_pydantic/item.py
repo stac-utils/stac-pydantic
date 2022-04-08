@@ -46,7 +46,7 @@ class Item(Feature):
     properties: ItemProperties
     assets: Dict[str, Asset]
     links: Links
-    bbox: BBox
+    bbox: Optional[BBox]
     stac_extensions: Optional[List[AnyUrl]]
     collection: Optional[str]
 
@@ -55,6 +55,12 @@ class Item(Feature):
 
     def to_json(self, **kwargs):
         return self.json(by_alias=True, exclude_unset=True, **kwargs)
+
+    @validator("bbox")
+    def validate_bbox(cls, v, values):
+        if v is None and not values.get("geometry"):
+            raise ValueError("bbox is required if geometry is not null")
+        return v
 
 
 class ItemCollection(FeatureCollection):

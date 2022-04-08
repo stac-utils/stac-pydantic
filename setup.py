@@ -31,7 +31,7 @@ setup(
         "License :: OSI Approved :: MIT License",
     ],
     keywords="stac pydantic validation",
-    author=u"Arturo Engineering",
+    author="Arturo Engineering",
     author_email="engineering@arturo.ai",
     url="https://github.com/stac-utils/stac-pydantic",
     license="MIT",

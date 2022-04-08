@@ -1,5 +1,6 @@
 Unreleased
 ------------------
+- Allow item bbox to be null if item geometry is null (#108, @yellowcap)
 
 2.0.2 (2021-11-22)
 ------------------
