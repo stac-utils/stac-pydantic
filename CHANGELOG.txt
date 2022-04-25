@@ -1,6 +1,7 @@
 Unreleased
 ------------------
 - Allow item bbox to be null if item geometry is null (#108, @yellowcap)
+- Include 'children' link relation (#112, @moradology)
 
 2.0.2 (2021-11-22)
 ------------------
