@@ -87,6 +87,7 @@ class Relations(str, AutoValueEnum):
     root = auto()
     parent = auto()
     child = auto()
+    children = auto()
     item = auto()
     license = auto()
     derived_from = auto()
