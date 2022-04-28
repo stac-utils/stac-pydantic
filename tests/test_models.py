@@ -559,7 +559,5 @@ def test_geometry_null_item():
 def test_item_bbox_validation():
     test_item = request(LABEL_EXTENSION)
     test_item["bbox"] = None
-    with pytest.raises(
-        ValueError, match="bbox is required if geometry is not null"
-    ) as e:
+    with pytest.raises(ValueError, match="bbox is required if geometry is not null"):
         Item(**test_item)
