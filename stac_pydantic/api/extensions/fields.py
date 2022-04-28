@@ -37,7 +37,7 @@ class FieldsExtension(BaseModel):
 
         Ref: https://pydantic-docs.helpmanual.io/usage/exporting_models/#advanced-include-and-exclude
         """
-        include = set()
+        include: Set[str] = set()
         # If only include is specified, add fields to the set
         if self.includes and not self.excludes:
             include = include.union(self.includes)
@@ -46,5 +46,5 @@ class FieldsExtension(BaseModel):
             include = include.union(self.includes) - self.excludes
         return {
             "include": self._get_field_dict(include),
-            "exclude": self._get_field_dict(self.excludes),
+            "exclude": self._get_field_dict(self.excludes or Set()),
         }

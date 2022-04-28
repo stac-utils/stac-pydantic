@@ -1,5 +1,5 @@
-from datetime import datetime
-from typing import Any, Dict, List, Optional, Union
+from datetime import datetime as dt
+from typing import Any, Dict, List, Optional, Tuple, Union, cast
 
 from geojson_pydantic.geometries import (
     GeometryCollection,
@@ -45,8 +45,8 @@ class Search(BaseModel):
     limit: int = 10
 
     @property
-    def start_date(self) -> Optional[datetime]:
-        values = self.datetime.split("/")
+    def start_date(self) -> Optional[dt]:
+        values = (self.datetime or "").split("/")
         if len(values) == 1:
             return None
         if values[0] == ".." or values[0] == "":
@@ -54,8 +54,8 @@ class Search(BaseModel):
         return parse_datetime(values[0])
 
     @property
-    def end_date(self) -> Optional[datetime]:
-        values = self.datetime.split("/")
+    def end_date(self) -> Optional[dt]:
+        values = (self.datetime or "").split("/")
         if len(values) == 1:
             return parse_datetime(values[0])
         if values[1] == ".." or values[1] == "":
@@ -73,9 +73,11 @@ class Search(BaseModel):
         if v:
             # Validate order
             if len(v) == 4:
-                xmin, ymin, xmax, ymax = v
+                xmin, ymin, xmax, ymax = cast(Tuple[int, int, int, int], (*v, 4))
             else:
-                xmin, ymin, min_elev, xmax, ymax, max_elev = v
+                xmin, ymin, min_elev, xmax, ymax, max_elev = cast(
+                    Tuple[int, int, int, int, int, int], (*v, 6)
+                )
                 if max_elev < min_elev:
                     raise ValueError(
                         "Maximum elevation must greater than minimum elevation"
@@ -142,7 +144,7 @@ class Search(BaseModel):
             )
         if self.intersects:
             return self.intersects
-        return
+        return None
 
 
 class ExtendedSearch(Search):

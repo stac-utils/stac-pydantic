@@ -12,6 +12,8 @@ extras = {
         "shapely",
         "dictdiffer",
         "jsonschema",
+        "types-requests",
+        "types-jsonschema"
     ],
 }
 

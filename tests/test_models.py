@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 
 import pytest
 from pydantic import Field, ValidationError
-from shapely.geometry import shape
+from shapely.geometry import shape  # type: ignore
 
 from stac_pydantic import Catalog, Collection, Item, ItemCollection, ItemProperties
 from stac_pydantic.api import Collections

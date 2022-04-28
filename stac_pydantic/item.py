@@ -2,7 +2,7 @@ from datetime import datetime as dt
 from typing import Dict, List, Optional, Union
 
 from geojson_pydantic.features import Feature, FeatureCollection
-from pydantic import AnyUrl, Field, constr, root_validator, validator
+from pydantic import AnyUrl, Field, root_validator, validator
 from pydantic.datetime_parse import parse_datetime
 
 from stac_pydantic.api.extensions.context import ContextExtension
@@ -41,9 +41,9 @@ class Item(Feature):
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/item-spec/item-spec.md
     """
 
-    id: constr(min_length=1)
-    stac_version: constr(min_length=1) = Field(STAC_VERSION, const=True)
-    properties: ItemProperties
+    id: str = Field(..., alias="id", min_length=1)
+    stac_version: str = Field(STAC_VERSION, const=True, min_length=1)
+    properties: ItemProperties  # type: ignore
     assets: Dict[str, Asset]
     links: Links
     stac_extensions: Optional[List[AnyUrl]]
@@ -67,8 +67,8 @@ class ItemCollection(FeatureCollection):
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/item-spec/itemcollection-spec.md
     """
 
-    stac_version: constr(min_length=1) = Field(STAC_VERSION, const=True)
-    features: List[Item]
+    stac_version: str = Field(STAC_VERSION, const=True, min_length=1)
+    features: List[Item]  # type: ignore
     stac_extensions: Optional[List[AnyUrl]]
     links: Links
     context: Optional[ContextExtension]

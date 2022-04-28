@@ -3,7 +3,7 @@ import operator
 import os
 
 import arrow
-import dictdiffer
+import dictdiffer  # type: ignore
 import pytest
 import requests
 from click.testing import CliRunner

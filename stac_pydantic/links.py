@@ -2,7 +2,7 @@ from enum import auto
 from typing import Any, Dict, Iterator, List, Optional, Union
 from urllib.parse import urljoin
 
-from pydantic import BaseModel, Field, constr
+from pydantic import BaseModel, Field
 
 from stac_pydantic.utils import AutoValueEnum
 
@@ -30,8 +30,8 @@ class Link(BaseModel):
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md#link-object
     """
 
-    href: constr(min_length=1)
-    rel: constr(min_length=1)
+    href: str = Field(..., alias="href", min_length=1)
+    rel: str = Field(..., alias="rel", min_length=1)
     type: Optional[str]
     title: Optional[str]
     # Label extension
@@ -59,17 +59,17 @@ class PaginationLink(Link):
 class Links(BaseModel):
     __root__: List[Union[PaginationLink, Link]]
 
+    def link_iterator(self) -> Iterator[Link]:
+        """Produce iterator to iterate through links"""
+        return iter(self.__root__)
+
     def resolve(self, base_url: str):
         """resolve all links to the given base URL"""
-        for link in self:
+        for link in self.link_iterator():
             link.resolve(base_url)
 
     def append(self, link: Link):
         self.__root__.append(link)
-
-    def __iter__(self) -> Iterator[Link]:
-        """iterate through links"""
-        return iter(self.__root__)
 
     def __len__(self):
         return len(self.__root__)
