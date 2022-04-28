@@ -24,3 +24,4 @@ repos:
       - id: mypy
         exclude: ^tests/
         args: [--strict]
+        additional_dependencies: ["pydantic", "types-jsonschema", "types-requests"]
