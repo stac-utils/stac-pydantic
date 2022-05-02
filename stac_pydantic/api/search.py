@@ -68,7 +68,7 @@ class Search(BaseModel):
         v: Intersection,
         values: Dict[str, Any],
     ) -> Intersection:
-        if v and values["bbox"]:
+        if v and values["bbox"] is not None:
             raise ValueError("intersects and bbox parameters are mutually exclusive")
         return v
 
@@ -77,10 +77,10 @@ class Search(BaseModel):
         if v:
             # Validate order
             if len(v) == 4:
-                xmin, ymin, xmax, ymax = cast(Tuple[int, int, int, int], (*v, 4))
+                xmin, ymin, xmax, ymax = cast(Tuple[int, int, int, int], v)
             else:
                 xmin, ymin, min_elev, xmax, ymax, max_elev = cast(
-                    Tuple[int, int, int, int, int, int], (*v, 6)
+                    Tuple[int, int, int, int, int, int], v
                 )
                 if max_elev < min_elev:
                     raise ValueError(
@@ -135,17 +135,7 @@ class Search(BaseModel):
         Check for both because the ``bbox`` and ``intersects`` parameters are mutually exclusive.
         """
         if self.bbox:
-            return Polygon(
-                coordinates=[
-                    [
-                        [self.bbox[0], self.bbox[3]],
-                        [self.bbox[2], self.bbox[3]],
-                        [self.bbox[2], self.bbox[1]],
-                        [self.bbox[0], self.bbox[1]],
-                        [self.bbox[0], self.bbox[3]],
-                    ]
-                ]
-            )
+            return Polygon.from_bounds(*self.bbox)
         if self.intersects:
             return self.intersects
         else:

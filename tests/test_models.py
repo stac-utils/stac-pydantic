@@ -528,7 +528,7 @@ def test_resolve_link():
 def test_resolve_links():
     links = Links.parse_obj([Link(href="/hello/world", type="image/jpeg", rel="test")])
     links.resolve(base_url="http://base_url.com")
-    for link in links:
+    for link in links.link_iterator():
         assert link.href == "http://base_url.com/hello/world"
 
 
@@ -539,7 +539,7 @@ def test_resolve_pagination_link():
     )
     links = Links.parse_obj([normal_link, page_link])
     links.resolve(base_url="http://base_url.com")
-    for link in links:
+    for link in links.link_iterator():
         if isinstance(link, PaginationLink):
             assert link.href == "http://base_url.com/next/page"
 
