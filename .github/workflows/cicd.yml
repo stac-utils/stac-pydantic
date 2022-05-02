@@ -29,11 +29,6 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install tox codecov pre-commit
 
-      # Run pre-commit (only for python-3.7)
-      - name: run pre-commit
-        if: matrix.python-version == 3.7
-        run: pre-commit run --all-files
-
       # Run tox using the version of Python in `PATH`
       - name: Run Tox
         run: tox -e py
