@@ -10,7 +10,7 @@ from stac_pydantic import Catalog, Collection, Item, ItemCollection, ItemPropert
 from stac_pydantic.api import Collections
 from stac_pydantic.api.conformance import ConformanceClasses
 from stac_pydantic.api.landing import LandingPage
-from stac_pydantic.api.search import Search, ExtendedSearch
+from stac_pydantic.api.search import ExtendedSearch, Search
 from stac_pydantic.extensions import validate_extensions
 from stac_pydantic.links import Link, Links, PaginationLink
 from stac_pydantic.shared import DATETIME_RFC339
