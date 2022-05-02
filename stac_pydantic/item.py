@@ -46,7 +46,6 @@ class Item(Feature):
     properties: ItemProperties
     assets: Dict[str, Asset]
     links: Links
-    bbox: Optional[BBox]
     stac_extensions: Optional[List[AnyUrl]]
     collection: Optional[str]
 

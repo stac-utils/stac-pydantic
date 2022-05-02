@@ -22,10 +22,12 @@ from stac_pydantic.shared import BBox
 
 class Search(BaseModel):
     """
+    The base class for STAC API searches.
+
     https://github.com/radiantearth/stac-api-spec/blob/master/api-spec.md#filter-parameters-and-fields
     """
 
-    collections: List[str]
+    collections: Optional[List[str]]
     ids: Optional[List[str]]
     bbox: Optional[BBox]
     intersects: Optional[
@@ -41,9 +43,6 @@ class Search(BaseModel):
     ]
     datetime: Optional[str]
     limit: int = 10
-    field: Optional[FieldsExtension] = Field(None, alias="fields")
-    query: Optional[Dict[str, Dict[Operator, Any]]]
-    sortby: Optional[List[SortExtension]]
 
     @property
     def start_date(self) -> Optional[datetime]:
@@ -144,3 +143,13 @@ class Search(BaseModel):
         if self.intersects:
             return self.intersects
         return
+
+
+class ExtendedSearch(Search):
+    """
+    STAC API search with extensions enabled.
+    """
+
+    field: Optional[FieldsExtension] = Field(None, alias="fields")
+    query: Optional[Dict[str, Dict[Operator, Any]]]
+    sortby: Optional[List[SortExtension]]

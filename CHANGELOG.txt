@@ -5,6 +5,8 @@ Unreleased
 
 2.0.2 (2021-11-22)
 ------------------
+- Remove fields added by STAC API search extensions (#100, @rsmith013 & @moradology)
+- Add ExtendedSearch class with fields from STAC API search extensions (#100, @rsmith013 & @moradology)
 - Allow for non-ellipsis open temporal windows (#103, @moradology)
 - Add the canonical and service-doc relation types (#104, @moradology)
 
