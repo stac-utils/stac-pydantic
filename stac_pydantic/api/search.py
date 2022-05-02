@@ -1,7 +1,7 @@
 from datetime import datetime as dt
 from typing import Any, Dict, List, Optional, Tuple, Union, cast
 
-from geojson_pydantic.geometries import (
+from geojson_pydantic.geometries import (  # type: ignore
     GeometryCollection,
     LineString,
     MultiLineString,
@@ -19,6 +19,16 @@ from stac_pydantic.api.extensions.query import Operator
 from stac_pydantic.api.extensions.sort import SortExtension
 from stac_pydantic.shared import BBox
 
+Intersection = Union[
+    Point,
+    MultiPoint,
+    LineString,
+    MultiLineString,
+    Polygon,
+    MultiPolygon,
+    GeometryCollection,
+]
+
 
 class Search(BaseModel):
     """
@@ -30,17 +40,7 @@ class Search(BaseModel):
     collections: Optional[List[str]]
     ids: Optional[List[str]]
     bbox: Optional[BBox]
-    intersects: Optional[
-        Union[
-            Point,
-            MultiPoint,
-            LineString,
-            MultiLineString,
-            Polygon,
-            MultiPolygon,
-            GeometryCollection,
-        ]
-    ]
+    intersects: Optional[Intersection]
     datetime: Optional[str]
     limit: int = 10
 
@@ -63,13 +63,17 @@ class Search(BaseModel):
         return parse_datetime(values[1])
 
     @validator("intersects")
-    def validate_spatial(cls, v, values):
+    def validate_spatial(
+        cls,
+        v: Intersection,
+        values: Dict[str, Any],
+    ) -> Intersection:
         if v and values["bbox"]:
             raise ValueError("intersects and bbox parameters are mutually exclusive")
         return v
 
     @validator("bbox")
-    def validate_bbox(cls, v: BBox):
+    def validate_bbox(cls, v: BBox) -> BBox:
         if v:
             # Validate order
             if len(v) == 4:
@@ -100,7 +104,7 @@ class Search(BaseModel):
         return v
 
     @validator("datetime")
-    def validate_datetime(cls, v):
+    def validate_datetime(cls, v: str) -> str:
         if "/" in v:
             values = v.split("/")
         else:
@@ -144,7 +148,8 @@ class Search(BaseModel):
             )
         if self.intersects:
             return self.intersects
-        return None
+        else:
+            return None
 
 
 class ExtendedSearch(Search):

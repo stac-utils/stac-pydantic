@@ -13,7 +13,7 @@ extras = {
         "dictdiffer",
         "jsonschema",
         "types-requests",
-        "types-jsonschema"
+        "types-jsonschema",
     ],
 }
 

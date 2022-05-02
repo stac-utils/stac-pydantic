@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Any, Dict, Optional
 
 from pydantic import BaseModel, validator
 
@@ -13,7 +13,7 @@ class ContextExtension(BaseModel):
     matched: Optional[int]
 
     @validator("limit")
-    def validate_limit(cls, v, values):
+    def validate_limit(cls, v: Optional[int], values: Dict[str, Any]) -> None:
         if values["returned"] > v:
             raise ValueError(
                 "Number of returned items must be less than or equal to the limit"

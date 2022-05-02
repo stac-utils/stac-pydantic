@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
 from pydantic import AnyUrl, BaseModel, Field
 
@@ -23,8 +23,8 @@ class Catalog(BaseModel):
         use_enum_values = True
         extra = "allow"
 
-    def to_dict(self, **kwargs):
+    def to_dict(self: "Catalog", **kwargs: Any) -> Dict[str, Any]:
         return self.dict(by_alias=True, exclude_unset=True, **kwargs)
 
-    def to_json(self, **kwargs):
+    def to_json(self: "Catalog", **kwargs: Any) -> str:
         return self.json(by_alias=True, exclude_unset=True, **kwargs)

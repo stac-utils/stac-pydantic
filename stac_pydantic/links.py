@@ -40,7 +40,7 @@ class Link(BaseModel):
     class Config:
         use_enum_values = True
 
-    def resolve(self, base_url: str):
+    def resolve(self, base_url: str) -> None:
         """resolve a link to the given base URL"""
         self.href = urljoin(base_url, self.href)
 
@@ -63,18 +63,18 @@ class Links(BaseModel):
         """Produce iterator to iterate through links"""
         return iter(self.__root__)
 
-    def resolve(self, base_url: str):
+    def resolve(self, base_url: str) -> None:
         """resolve all links to the given base URL"""
         for link in self.link_iterator():
             link.resolve(base_url)
 
-    def append(self, link: Link):
+    def append(self, link: Link) -> None:
         self.__root__.append(link)
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.__root__)
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx: int) -> Union[PaginationLink, Link]:
         return self.__root__[idx]
 
 

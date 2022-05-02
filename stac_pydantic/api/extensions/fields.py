@@ -11,7 +11,7 @@ class FieldsExtension(BaseModel):
     includes: Optional[Set[str]]
     excludes: Optional[Set[str]]
 
-    def _get_field_dict(self, fields: Set[str]) -> Dict:
+    def _get_field_dict(self, fields: Set[str]) -> Dict[str, Set[str]]:
         """Internal method to create a dictionary for advanced include or exclude of pydantic fields on model export
 
         Ref: https://pydantic-docs.helpmanual.io/usage/exporting_models/#advanced-include-and-exclude
@@ -29,7 +29,7 @@ class FieldsExtension(BaseModel):
         return field_dict
 
     @property
-    def filter(self) -> Dict:
+    def filter(self) -> Dict[str, Dict[str, Set[str]]]:
         """
         Create dictionary of fields to include/exclude on model export based on the included and excluded fields passed
         to the API.  The output of this property may be passed to pydantic's serialization methods to include or exclude
