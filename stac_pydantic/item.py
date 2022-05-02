@@ -2,7 +2,7 @@ from datetime import datetime as dt
 from typing import Dict, List, Optional, Union
 
 from geojson_pydantic.features import Feature, FeatureCollection
-from pydantic import AnyUrl, Field, constr, validator
+from pydantic import AnyUrl, Field, constr, root_validator, validator
 from pydantic.datetime_parse import parse_datetime
 
 from stac_pydantic.api.extensions.context import ContextExtension
@@ -56,11 +56,11 @@ class Item(Feature):
     def to_json(self, **kwargs):
         return self.json(by_alias=True, exclude_unset=True, **kwargs)
 
-    @validator("bbox")
-    def validate_bbox(cls, v, values):
-        if v is None and not values.get("geometry"):
+    @root_validator(pre=True)
+    def validate_bbox(cls, values):
+        if values.get("geometry") and values.get("bbox") is None:
             raise ValueError("bbox is required if geometry is not null")
-        return v
+        return values
 
 
 class ItemCollection(FeatureCollection):
