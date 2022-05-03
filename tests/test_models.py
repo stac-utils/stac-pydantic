@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 
 import pytest
 from pydantic import Field, ValidationError
-from shapely.geometry import shape
+from shapely.geometry import shape  # type: ignore
 
 from stac_pydantic import Catalog, Collection, Item, ItemCollection, ItemProperties
 from stac_pydantic.api import Collections
@@ -22,8 +22,10 @@ COLLECTION = "landsat-collection.json"
 ITEM_COLLECTION = "itemcollection-sample-full.json"
 SINGLE_FILE_STAC = "example-search.json"
 
-# ASSET_EXTENSION = f"https://raw.githubusercontent.com/radiantearth/stac-spec/v{STAC_VERSION}/extensions/asset/examples/example-landsat8.json"
-# COLLECTION_ASSET_EXTENSION = f"https://raw.githubusercontent.com/radiantearth/stac-spec/v{STAC_VERSION}/extensions/collection-assets/examples/example-esm.json"
+# ASSET_EXTENSION = f"https://raw.githubusercontent.com/radiantearth/stac-spec/v{STAC_VERSION}/extensions
+# /asset/examples/example-landsat8.json"
+# COLLECTION_ASSET_EXTENSION = f"https://raw.githubusercontent.com/radiantearth/stac-spec/v{STAC_VERSION}
+# /extensions/collection-assets/examples/example-esm.json"
 DATACUBE_EXTENSION = "example-item_datacube-extension.json"
 EO_EXTENSION = "example-landsat8_eo-extension.json"
 ITEM_ASSET_EXTENSION = "example-landsat8_item-assets-extension.json"
@@ -159,7 +161,7 @@ def test_invalid_geometry():
     # Remove the last coordinate
     test_item["geometry"]["coordinates"][0].pop(-1)
 
-    with pytest.raises(ValidationError) as e:
+    with pytest.raises(ValidationError):
         Item(**test_item)
 
 
@@ -232,7 +234,7 @@ def test_api_landing_page_is_catalog():
             )
         ],
     )
-    catalog = Catalog(**landing_page.dict())
+    Catalog(**landing_page.dict())
 
 
 def test_search():
@@ -286,7 +288,7 @@ def test_temporal_search_single_tailed():
     utcnow = datetime.utcnow().replace(microsecond=0, tzinfo=timezone.utc)
     utcnow_str = utcnow.strftime(DATETIME_RFC339)
     search = Search(collections=["collection1"], datetime=utcnow_str)
-    assert search.start_date == None
+    assert search.start_date is None
     assert search.end_date == utcnow
 
 
@@ -299,31 +301,32 @@ def test_temporal_search_two_tailed():
 
     search = Search(collections=["collection1"], datetime=f"{utcnow_str}/..")
     assert search.start_date == utcnow
-    assert search.end_date == None
+    assert search.end_date is None
 
     search = Search(collections=["collection1"], datetime=f"{utcnow_str}/")
     assert search.start_date == utcnow
-    assert search.end_date == None
+    assert search.end_date is None
 
 
 def test_temporal_search_open():
     # Test open date range
     search = Search(collections=["collection1"], datetime="../..")
-    assert search.start_date == search.end_date == None
+    assert search.start_date is None
+    assert search.end_date is None
 
 
 def test_invalid_temporal_search():
     # Not RFC339
     utcnow = datetime.utcnow().strftime("%Y-%m-%d")
     with pytest.raises(ValidationError):
-        search = Search(collections=["collection1"], datetime=utcnow)
+        Search(collections=["collection1"], datetime=utcnow)
 
     # End date is before start date
     start = datetime.utcnow()
     time.sleep(2)
     end = datetime.utcnow()
     with pytest.raises(ValidationError):
-        search = Search(
+        Search(
             collections=["collection1"],
             datetime=f"{end.strftime(DATETIME_RFC339)}/{start.strftime(DATETIME_RFC339)}",
         )
@@ -442,7 +445,7 @@ def test_declared_model():
 
         class Config:
             allow_population_by_fieldname = True
-            alias_generator = lambda field_name: f"test:{field_name}"
+            alias_generator = lambda field_name: f"test:{field_name}"  # noqa: E731
 
     class TestItem(Item):
         properties: TestProperties
@@ -525,7 +528,7 @@ def test_resolve_link():
 def test_resolve_links():
     links = Links.parse_obj([Link(href="/hello/world", type="image/jpeg", rel="test")])
     links.resolve(base_url="http://base_url.com")
-    for link in links:
+    for link in links.link_iterator():
         assert link.href == "http://base_url.com/hello/world"
 
 
@@ -536,7 +539,7 @@ def test_resolve_pagination_link():
     )
     links = Links.parse_obj([normal_link, page_link])
     links.resolve(base_url="http://base_url.com")
-    for link in links:
+    for link in links.link_iterator():
         if isinstance(link, PaginationLink):
             assert link.href == "http://base_url.com/next/page"
 
@@ -556,7 +559,5 @@ def test_geometry_null_item():
 def test_item_bbox_validation():
     test_item = request(LABEL_EXTENSION)
     test_item["bbox"] = None
-    with pytest.raises(
-        ValueError, match="bbox is required if geometry is not null"
-    ) as e:
+    with pytest.raises(ValueError, match="bbox is required if geometry is not null"):
         Item(**test_item)

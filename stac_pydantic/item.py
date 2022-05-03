@@ -1,13 +1,13 @@
 from datetime import datetime as dt
-from typing import Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
-from geojson_pydantic.features import Feature, FeatureCollection
-from pydantic import AnyUrl, Field, constr, root_validator, validator
+from geojson_pydantic.features import Feature, FeatureCollection  # type: ignore
+from pydantic import AnyUrl, Field, root_validator, validator
 from pydantic.datetime_parse import parse_datetime
 
 from stac_pydantic.api.extensions.context import ContextExtension
 from stac_pydantic.links import Links
-from stac_pydantic.shared import DATETIME_RFC339, Asset, BBox, StacCommonMetadata
+from stac_pydantic.shared import DATETIME_RFC339, Asset, StacCommonMetadata
 from stac_pydantic.version import STAC_VERSION
 
 
@@ -19,7 +19,7 @@ class ItemProperties(StacCommonMetadata):
     datetime: Union[dt, str] = Field(..., alias="datetime")
 
     @validator("datetime")
-    def validate_datetime(cls, v, values):
+    def validate_datetime(cls, v: Union[dt, str], values: Dict[str, Any]) -> dt:
         if v == "null":
             if not values["start_datetime"] and not values["end_datetime"]:
                 raise ValueError(
@@ -36,45 +36,45 @@ class ItemProperties(StacCommonMetadata):
         json_encoders = {dt: lambda v: v.strftime(DATETIME_RFC339)}
 
 
-class Item(Feature):
+class Item(Feature):  # type: ignore
     """
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/item-spec/item-spec.md
     """
 
-    id: constr(min_length=1)
-    stac_version: constr(min_length=1) = Field(STAC_VERSION, const=True)
+    id: str = Field(..., alias="id", min_length=1)
+    stac_version: str = Field(STAC_VERSION, const=True, min_length=1)
     properties: ItemProperties
     assets: Dict[str, Asset]
     links: Links
     stac_extensions: Optional[List[AnyUrl]]
     collection: Optional[str]
 
-    def to_dict(self, **kwargs):
-        return self.dict(by_alias=True, exclude_unset=True, **kwargs)
+    def to_dict(self, **kwargs: Any) -> Dict[str, Any]:
+        return self.dict(by_alias=True, exclude_unset=True, **kwargs)  # type: ignore
 
-    def to_json(self, **kwargs):
-        return self.json(by_alias=True, exclude_unset=True, **kwargs)
+    def to_json(self, **kwargs: Any) -> str:
+        return self.json(by_alias=True, exclude_unset=True, **kwargs)  # type: ignore
 
     @root_validator(pre=True)
-    def validate_bbox(cls, values):
+    def validate_bbox(cls, values: Dict[str, Any]) -> Dict[str, Any]:
         if values.get("geometry") and values.get("bbox") is None:
             raise ValueError("bbox is required if geometry is not null")
         return values
 
 
-class ItemCollection(FeatureCollection):
+class ItemCollection(FeatureCollection):  # type: ignore
     """
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/item-spec/itemcollection-spec.md
     """
 
-    stac_version: constr(min_length=1) = Field(STAC_VERSION, const=True)
+    stac_version: str = Field(STAC_VERSION, const=True, min_length=1)
     features: List[Item]
     stac_extensions: Optional[List[AnyUrl]]
     links: Links
     context: Optional[ContextExtension]
 
-    def to_dict(self, **kwargs):
-        return self.dict(by_alias=True, exclude_unset=True, **kwargs)
+    def to_dict(self, **kwargs: Any) -> Dict[str, Any]:
+        return self.dict(by_alias=True, exclude_unset=True, **kwargs)  # type: ignore
 
-    def to_json(self, **kwargs):
-        return self.json(by_alias=True, exclude_unset=True, **kwargs)
+    def to_json(self, **kwargs: Any) -> str:
+        return self.json(by_alias=True, exclude_unset=True, **kwargs)  # type: ignore

@@ -1,4 +1,4 @@
-from typing import List
+from typing import Any, Dict, List
 
 from pydantic import BaseModel
 
@@ -14,8 +14,8 @@ class Collections(BaseModel):
     links: List[Link]
     collections: List[Collection]
 
-    def to_dict(self, **kwargs):
+    def to_dict(self, **kwargs: Any) -> Dict[str, Any]:
         return self.dict(by_alias=True, exclude_unset=True, **kwargs)
 
-    def to_json(self, **kwargs):
+    def to_json(self, **kwargs: Any) -> str:
         return self.json(by_alias=True, exclude_unset=True, **kwargs)

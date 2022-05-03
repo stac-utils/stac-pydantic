@@ -1,9 +1,9 @@
 from enum import Enum
-from typing import Dict, Optional, Type
-
-from pydantic import BaseModel
+from typing import Any, List
 
 
 class AutoValueEnum(Enum):
-    def _generate_next_value_(name, start, count, last_values):
+    def _generate_next_value_(  # type: ignore
+        name: str, start: int, count: int, last_values: List[Any]
+    ) -> Any:
         return name

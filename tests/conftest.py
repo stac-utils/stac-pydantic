@@ -1,10 +1,9 @@
 import json
 import operator
 import os
-from datetime import datetime, timedelta
 
 import arrow
-import dictdiffer
+import dictdiffer  # type: ignore
 import pytest
 import requests
 from click.testing import CliRunner

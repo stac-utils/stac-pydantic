@@ -2,7 +2,7 @@ from datetime import datetime
 
 import pytest
 from pydantic import ValidationError
-from shapely.geometry import Polygon, shape
+from shapely.geometry import Polygon, shape  # type: ignore
 
 from stac_pydantic import Item
 from stac_pydantic.api.extensions.fields import FieldsExtension

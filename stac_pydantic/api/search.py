@@ -1,7 +1,7 @@
-from datetime import datetime
-from typing import Any, Dict, List, Optional, Union
+from datetime import datetime as dt
+from typing import Any, Dict, List, Optional, Tuple, Union, cast
 
-from geojson_pydantic.geometries import (
+from geojson_pydantic.geometries import (  # type: ignore
     GeometryCollection,
     LineString,
     MultiLineString,
@@ -19,6 +19,16 @@ from stac_pydantic.api.extensions.query import Operator
 from stac_pydantic.api.extensions.sort import SortExtension
 from stac_pydantic.shared import BBox
 
+Intersection = Union[
+    Point,
+    MultiPoint,
+    LineString,
+    MultiLineString,
+    Polygon,
+    MultiPolygon,
+    GeometryCollection,
+]
+
 
 class Search(BaseModel):
     """
@@ -30,23 +40,13 @@ class Search(BaseModel):
     collections: Optional[List[str]]
     ids: Optional[List[str]]
     bbox: Optional[BBox]
-    intersects: Optional[
-        Union[
-            Point,
-            MultiPoint,
-            LineString,
-            MultiLineString,
-            Polygon,
-            MultiPolygon,
-            GeometryCollection,
-        ]
-    ]
+    intersects: Optional[Intersection]
     datetime: Optional[str]
     limit: int = 10
 
     @property
-    def start_date(self) -> Optional[datetime]:
-        values = self.datetime.split("/")
+    def start_date(self) -> Optional[dt]:
+        values = (self.datetime or "").split("/")
         if len(values) == 1:
             return None
         if values[0] == ".." or values[0] == "":
@@ -54,8 +54,8 @@ class Search(BaseModel):
         return parse_datetime(values[0])
 
     @property
-    def end_date(self) -> Optional[datetime]:
-        values = self.datetime.split("/")
+    def end_date(self) -> Optional[dt]:
+        values = (self.datetime or "").split("/")
         if len(values) == 1:
             return parse_datetime(values[0])
         if values[1] == ".." or values[1] == "":
@@ -63,19 +63,25 @@ class Search(BaseModel):
         return parse_datetime(values[1])
 
     @validator("intersects")
-    def validate_spatial(cls, v, values):
-        if v and values["bbox"]:
+    def validate_spatial(
+        cls,
+        v: Intersection,
+        values: Dict[str, Any],
+    ) -> Intersection:
+        if v and values["bbox"] is not None:
             raise ValueError("intersects and bbox parameters are mutually exclusive")
         return v
 
     @validator("bbox")
-    def validate_bbox(cls, v: BBox):
+    def validate_bbox(cls, v: BBox) -> BBox:
         if v:
             # Validate order
             if len(v) == 4:
-                xmin, ymin, xmax, ymax = v
+                xmin, ymin, xmax, ymax = cast(Tuple[int, int, int, int], v)
             else:
-                xmin, ymin, min_elev, xmax, ymax, max_elev = v
+                xmin, ymin, min_elev, xmax, ymax, max_elev = cast(
+                    Tuple[int, int, int, int, int, int], v
+                )
                 if max_elev < min_elev:
                     raise ValueError(
                         "Maximum elevation must greater than minimum elevation"
@@ -98,7 +104,7 @@ class Search(BaseModel):
         return v
 
     @validator("datetime")
-    def validate_datetime(cls, v):
+    def validate_datetime(cls, v: str) -> str:
         if "/" in v:
             values = v.split("/")
         else:
@@ -129,20 +135,11 @@ class Search(BaseModel):
         Check for both because the ``bbox`` and ``intersects`` parameters are mutually exclusive.
         """
         if self.bbox:
-            return Polygon(
-                coordinates=[
-                    [
-                        [self.bbox[0], self.bbox[3]],
-                        [self.bbox[2], self.bbox[3]],
-                        [self.bbox[2], self.bbox[1]],
-                        [self.bbox[0], self.bbox[1]],
-                        [self.bbox[0], self.bbox[3]],
-                    ]
-                ]
-            )
+            return Polygon.from_bounds(*self.bbox)
         if self.intersects:
             return self.intersects
-        return
+        else:
+            return None
 
 
 class ExtendedSearch(Search):

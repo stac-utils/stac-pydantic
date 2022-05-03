@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Optional, Union
 
-from pydantic import BaseModel, Field, constr
+from pydantic import BaseModel, Field
 
 from stac_pydantic.catalog import Catalog
 from stac_pydantic.shared import Asset, NumType, Provider
@@ -46,10 +46,10 @@ class Collection(Catalog):
     """
 
     assets: Optional[Dict[str, Asset]]
-    license: constr(min_length=1)
+    license: str = Field(..., alias="license", min_length=1)
     extent: Extent
     title: Optional[str]
     keywords: Optional[List[str]]
     providers: Optional[List[Provider]]
     summaries: Optional[Dict[str, Union[Range, List[Any], Dict[str, Any]]]]
-    type: constr(min_length=1) = Field("Collection", const=True)
+    type: str = Field("Collection", const=True, min_length=1)

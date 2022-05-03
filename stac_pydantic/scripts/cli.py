@@ -2,19 +2,19 @@ import click
 import requests
 from pydantic import ValidationError
 
-from stac_pydantic import Catalog, Collection, Item
+from stac_pydantic import Item
 from stac_pydantic.extensions import validate_extensions
 
 
 @click.group(short_help="Validate STAC")
-def app():
+def app() -> None:
     """stac-pydantic cli group"""
     pass
 
 
 @app.command(short_help="Validate STAC Item")
 @click.argument("infile")
-def validate_item(infile):
+def validate_item(infile: str) -> None:
     """Validate stac item"""
     r = requests.get(infile)
     r.raise_for_status()
