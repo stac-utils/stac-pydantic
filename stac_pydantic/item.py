@@ -16,18 +16,15 @@ class ItemProperties(StacCommonMetadata):
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/item-spec/item-spec.md#properties-object
     """
 
-    datetime: Union[dt, str, None] = Field(..., alias="datetime")
+    datetime: Optional[dt] = Field(..., alias="datetime")
 
     @validator("datetime")
-    def validate_datetime(cls, v: Union[dt, str, None], values: Dict[str, Any]) -> dt:
-        if v in ("null", None):
+    def validate_datetime(cls, v: Optional[dt], values: Dict[str, Any]) -> Optional[dt]:
+        if v is None:
             if not values["start_datetime"] and not values["end_datetime"]:
                 raise ValueError(
                     "start_datetime and end_datetime must be specified when datetime is null"
                 )
-
-        if isinstance(v, str):
-            return parse_datetime(v)
 
         return v
 
