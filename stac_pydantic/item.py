@@ -3,7 +3,6 @@ from typing import Any, Dict, List, Optional, Union
 
 from geojson_pydantic.features import Feature, FeatureCollection  # type: ignore
 from pydantic import AnyUrl, Field, root_validator, validator
-from pydantic.datetime_parse import parse_datetime
 
 from stac_pydantic.api.extensions.context import ContextExtension
 from stac_pydantic.links import Links
@@ -16,18 +15,15 @@ class ItemProperties(StacCommonMetadata):
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/item-spec/item-spec.md#properties-object
     """
 
-    datetime: Union[dt, str] = Field(..., alias="datetime")
+    datetime: Optional[dt] = Field(..., alias="datetime")
 
     @validator("datetime")
-    def validate_datetime(cls, v: Union[dt, str], values: Dict[str, Any]) -> dt:
-        if v == "null":
-            if not values["start_datetime"] and not values["end_datetime"]:
+    def validate_datetime(cls, v: Optional[dt], values: Dict[str, Any]) -> Optional[dt]:
+        if v is None:
+            if not all([values.get("start_datetime"), values.get("end_datetime")]):
                 raise ValueError(
                     "start_datetime and end_datetime must be specified when datetime is null"
                 )
-
-        if isinstance(v, str):
-            return parse_datetime(v)
 
         return v
 
