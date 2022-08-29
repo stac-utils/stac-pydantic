@@ -21,7 +21,7 @@ class ItemProperties(StacCommonMetadata):
     @validator("datetime")
     def validate_datetime(cls, v: Optional[dt], values: Dict[str, Any]) -> Optional[dt]:
         if v is None:
-            if not values["start_datetime"] and not values["end_datetime"]:
+            if not all([values.get("start_datetime"), values.get("end_datetime")]):
                 raise ValueError(
                     "start_datetime and end_datetime must be specified when datetime is null"
                 )
