@@ -3,7 +3,6 @@ from typing import Any, Dict, List, Optional, Union
 
 from geojson_pydantic.features import Feature, FeatureCollection  # type: ignore
 from pydantic import AnyUrl, Field, root_validator, validator
-from pydantic.datetime_parse import parse_datetime
 
 from stac_pydantic.api.extensions.context import ContextExtension
 from stac_pydantic.links import Links
