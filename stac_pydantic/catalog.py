@@ -11,7 +11,7 @@ class Catalog(BaseModel):
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/catalog-spec/catalog-spec.md
     """
 
-    id: str = Field(..., alias="", min_length=1)
+    id: str = Field(..., alias="id", min_length=1)
     description: str = Field(..., alias="description", min_length=1)
     stac_version: str = Field(STAC_VERSION, const=True, min_length=1)
     links: Links
