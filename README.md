@@ -1,22 +1,29 @@
-# stac-pydantic ![tests](https://github.com/arturo-ai/stac-pydantic/workflows/cicd/badge.svg)
-[Pydantic](https://pydantic-docs.helpmanual.io/) models for [STAC](https://github.com/radiantearth/stac-spec) Catalogs, Collections, Items, and the [STAC API](https://github.com/radiantearth/stac-api-spec) spec.  Initially developed by [arturo-ai](https://github.com/arturo-ai).
+# stac-pydantic
+
+![tests](https://github.com/stac-utils/stac-pydantic/actions/workflows/cicd.yml/badge.svg)
+
+[Pydantic](https://pydantic-docs.helpmanual.io/) models for [STAC](https://github.com/radiantearth/stac-spec) Catalogs, Collections, Items, and the [STAC API](https://github.com/radiantearth/stac-api-spec) spec.
+
+Initially developed by [arturo-ai](https://github.com/arturo-ai).
 
 ## Installation
-```
+
+```bash
 pip install stac-pydantic
 ```
 
 For local development:
-```
+
+```bash
 pip install -e .["dev"]
 ```
 
 | stac-pydantic | STAC Version |
-|---------------|--------------|
-| 1.1.x         | 0.9.0        |
-| 1.2.x         | 1.0.0-beta.1 |
-| 1.3.x         | 1.0.0-beta.2 |
+| ------------- | ------------ |
 | 2.0.x         | 1.0.0        |
+| 1.3.x         | 1.0.0-beta.2 |
+| 1.2.x         | 1.0.0-beta.1 |
+| 1.1.x         | 0.9.0        |
 
 ## Development
 
@@ -78,7 +85,8 @@ assert catalog.links[0].href == "item.json"
 ```
 
 ### Extensions
-STAC defines many extensions which let the user customize the data in their catalog. `stac-pydantic.extensions.validate_extensions` will validate a `dict`, `Item`, `Collection` or `Catalog` against the schema urls provided in the `stac_extensions` property: 
+
+STAC defines many extensions which let the user customize the data in their catalog. `stac-pydantic.extensions.validate_extensions` will validate a `dict`, `Item`, `Collection` or `Catalog` against the schema urls provided in the `stac_extensions` property:
 
 ```python
 from stac_pydantic import Item
@@ -107,9 +115,11 @@ assert getattr(model.properties, "eo:cloud_cover") == 25
 The complete list of current STAC Extensions can be found [here](https://stac-extensions.github.io/).
 
 #### Vendor Extensions
+
 The same procedure described above works for any STAC Extension schema as long as it can be loaded from a public url.
 
 ### Exporting Models
+
 Most STAC extensions are namespaced with a colon (ex `eo:gsd`) to keep them distinct from other extensions.  Because
 Python doesn't support the use of colons in variable names, we use [Pydantic aliasing](https://pydantic-docs.helpmanual.io/usage/model_config/#alias-generator)
 to add the namespace upon model export.  This requires [exporting](https://pydantic-docs.helpmanual.io/usage/exporting_models/)
@@ -122,7 +132,8 @@ assert item_dict['properties']['landsat:row'] == item.properties.row == 250
 ```
 
 ### CLI
-```
+
+```text
 Usage: stac-pydantic [OPTIONS] COMMAND [ARGS]...
 
   stac-pydantic cli group
