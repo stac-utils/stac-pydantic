@@ -9,10 +9,10 @@ UNSUPPORTED_OPERATORS = {"startsWith", "endsWith", "contains", "in"}
 
 _OPERATIONS = {
     "eq": lambda x, y: x == y,
-    "ne": lambda x, y: x != y,
-    "lt": lambda x, y: x < y,
+    "neq": lambda x, y: x != y,
+    "lte": lambda x, y: x < y,
     "le": lambda x, y: x <= y,
-    "gt": lambda x, y: x > y,
+    "gte": lambda x, y: x > y,
     "ge": lambda x, y: x >= y,
     "startsWith": lambda x, y: x.startsWith(y),
     "endsWith": lambda x, y: x.endsWith(y),
@@ -26,11 +26,11 @@ class Operator(str, AutoValueEnum):
     """
 
     eq = auto()
-    ne = auto()
+    neq = auto()
     lt = auto()
-    le = auto()
+    lte = auto()
     gt = auto()
-    ge = auto()
+    gte = auto()
     startsWith = auto()
     endsWith = auto()
     contains = auto()
