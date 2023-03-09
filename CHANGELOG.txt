@@ -1,5 +1,6 @@
 Unreleased
 ------------------
+- Fix STAC API Query Extension operator names from ne->neq, le->lte, and ge->gte
 
 2.0.3 (2022-5-3)
 ------------------
