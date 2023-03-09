@@ -1,5 +1,4 @@
 {
-    "type": "Collection",
     "stac_version": "1.0.0",
     "stac_extensions": [],
     "id": "landsat-8-l1",

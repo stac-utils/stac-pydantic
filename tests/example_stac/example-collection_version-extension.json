@@ -1,5 +1,4 @@
 {
-    "type": "Collection",
     "stac_version": "1.0.0",
     "stac_extensions": ["https://stac-extensions.github.io/version/v1.0.0/schema.json"],
     "id": "merraclim",

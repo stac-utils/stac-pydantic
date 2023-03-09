@@ -196,7 +196,6 @@ def test_api_conformance_invalid_url():
 
 def test_api_landing_page():
     LandingPage(
-        type="Catalog",
         id="test-landing-page",
         description="stac-api landing page",
         stac_extensions=[
@@ -218,7 +217,6 @@ def test_api_landing_page():
 
 def test_api_landing_page_is_catalog():
     landing_page = LandingPage(
-        type="Catalog",
         id="test-landing-page",
         description="stac-api landing page",
         stac_extensions=[
