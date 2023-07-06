@@ -103,3 +103,4 @@ class Relations(str, AutoValueEnum):
     canonical = auto()
     service_desc = "service-desc"
     service_doc = "service-doc"
+    queryables = "http://www.opengis.net/def/rel/ogc/1.0/queryables"
