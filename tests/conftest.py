@@ -41,6 +41,10 @@ def dict_match(d1: dict, d2: dict):
                 dates.append(date)
             assert operator.sub(*dates).days == 0
         # any other differences are errors
+        elif "stac_extensions" in diff[1]:
+            url1, url2 = map(str, diff[2])
+            assert url1 == url2
+
         else:
             raise AssertionError("Unexpected difference: ", diff)
 

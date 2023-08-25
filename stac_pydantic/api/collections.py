@@ -15,7 +15,7 @@ class Collections(BaseModel):
     collections: List[Collection]
 
     def to_dict(self, **kwargs: Any) -> Dict[str, Any]:
-        return self.dict(by_alias=True, exclude_unset=True, **kwargs)
+        return self.model_dump(by_alias=True, exclude_unset=True, **kwargs)
 
     def to_json(self, **kwargs: Any) -> str:
-        return self.json(by_alias=True, exclude_unset=True, **kwargs)
+        return self.model_dump_json(by_alias=True, exclude_unset=True, **kwargs)

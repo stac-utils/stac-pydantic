@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Literal, List, Optional
 
 from pydantic import AnyUrl, BaseModel, Field
 
@@ -13,9 +13,9 @@ class LandingPage(BaseModel):
 
     id: str = Field(..., alias="id", min_length=1)
     description: str = Field(..., alias="description", min_length=1)
-    title: Optional[str]
-    stac_version: str = Field(STAC_VERSION, const=True)
-    stac_extensions: Optional[List[AnyUrl]]
+    title: Optional[str] = None
+    stac_version: Literal[STAC_VERSION] = STAC_VERSION
+    stac_extensions: Optional[List[AnyUrl]] = []
     conformsTo: List[AnyUrl]
     links: Links
-    type: str = Field("Catalog", const=True, min_length=1)
+    type: Literal["Catalog"] = "Catalog"

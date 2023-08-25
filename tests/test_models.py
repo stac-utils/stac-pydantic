@@ -1,6 +1,7 @@
 import json
 import time
 from datetime import datetime, timezone
+from typing import Literal
 
 import pytest
 from pydantic import Field, ValidationError
@@ -75,7 +76,7 @@ def test_proj_extension():
     ] = "https://raw.githubusercontent.com/stac-extensions/projection/v1.0.0/json-schema/schema.json"
     test_item["assets"]["B8"]["eo:bands"][0]["common_name"] = "pan"
 
-    valid_item = Item.parse_obj(test_item).to_dict()
+    valid_item = Item.model_validate(test_item).to_dict()
     dict_match(test_item, valid_item)
 
 
@@ -234,7 +235,9 @@ def test_api_landing_page_is_catalog():
             )
         ],
     )
-    Catalog(**landing_page.dict())
+    d = landing_page.model_dump()
+    print(d)
+    Catalog(**d)
 
 
 def test_search():
@@ -466,7 +469,7 @@ def test_declared_model():
 
 def test_item_factory_custom_base():
     class TestProperties(ItemProperties):
-        foo: str = Field("bar", const=True)
+        foo: Literal["bar"] = "bar"
 
     class TestItem(Item):
         properties: TestProperties
@@ -501,7 +504,7 @@ def test_validate_extensions_reraise_exception():
     del test_item["properties"]["datetime"]
 
     with pytest.raises(ValidationError):
-        Item.parse_obj(test_item)
+        Item.model_validate(test_item)
         validate_extensions(test_item, reraise_exception=True)
 
 
@@ -515,8 +518,8 @@ def test_validate_extensions_rfc3339_with_partial_seconds():
 def test_extension(url, cls):
     test_data = request(url)
     test_data["stac_extensions"].append("https://foo")
-    model = cls.parse_obj(test_data)
-    assert "https://foo" in model.stac_extensions
+    model = cls.model_validate(test_data)
+    assert "https://foo/" in list(map(str, model.stac_extensions))
 
 
 def test_resolve_link():
@@ -526,7 +529,7 @@ def test_resolve_link():
 
 
 def test_resolve_links():
-    links = Links.parse_obj([Link(href="/hello/world", type="image/jpeg", rel="test")])
+    links = Links.model_validate([Link(href="/hello/world", type="image/jpeg", rel="test")])
     links.resolve(base_url="http://base_url.com")
     for link in links.link_iterator():
         assert link.href == "http://base_url.com/hello/world"
@@ -537,7 +540,7 @@ def test_resolve_pagination_link():
     page_link = PaginationLink(
         href="/next/page", type="image/jpeg", method="POST", rel="next"
     )
-    links = Links.parse_obj([normal_link, page_link])
+    links = Links.model_validate([normal_link, page_link])
     links.resolve(base_url="http://base_url.com")
     for link in links.link_iterator():
         if isinstance(link, PaginationLink):

@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union, Literal
 
 from pydantic import BaseModel, Field
 
@@ -45,11 +45,11 @@ class Collection(Catalog):
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md
     """
 
-    assets: Optional[Dict[str, Asset]]
+    assets: Optional[Dict[str, Asset]] = None
     license: str = Field(..., alias="license", min_length=1)
     extent: Extent
-    title: Optional[str]
-    keywords: Optional[List[str]]
-    providers: Optional[List[Provider]]
-    summaries: Optional[Dict[str, Union[Range, List[Any], Dict[str, Any]]]]
-    type: str = Field("Collection", const=True, min_length=1)
+    title: Optional[str] = None
+    keywords: Optional[List[str]] = None
+    providers: Optional[List[Provider]] = None
+    summaries: Optional[Dict[str, Union[Range, List[Any], Dict[str, Any]]]] = None
+    type: Literal["Collection"] = "Collection"

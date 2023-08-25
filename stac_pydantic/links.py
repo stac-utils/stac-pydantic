@@ -2,7 +2,7 @@ from enum import auto
 from typing import Any, Dict, Iterator, List, Optional, Union
 from urllib.parse import urljoin
 
-from pydantic import BaseModel, Field
+from pydantic import ConfigDict, BaseModel, Field, RootModel
 
 from stac_pydantic.utils import AutoValueEnum
 
@@ -32,13 +32,11 @@ class Link(BaseModel):
 
     href: str = Field(..., alias="href", min_length=1)
     rel: str = Field(..., alias="rel", min_length=1)
-    type: Optional[str]
-    title: Optional[str]
+    type: Optional[str] = None
+    title: Optional[str] = None
     # Label extension
     label: Optional[str] = Field(None, alias="label:assets")
-
-    class Config:
-        use_enum_values = True
+    model_config = ConfigDict(use_enum_values=True)
 
     def resolve(self, base_url: str) -> None:
         """resolve a link to the given base URL"""
@@ -52,16 +50,16 @@ class PaginationLink(Link):
 
     rel: PaginationRelations
     method: PaginationMethods
-    body: Optional[Dict[Any, Any]]
+    body: Optional[Dict[Any, Any]] = None
     merge: bool = False
 
 
-class Links(BaseModel):
-    __root__: List[Union[PaginationLink, Link]]
+class Links(RootModel):
+    root: List[Union[PaginationLink, Link]]
 
     def link_iterator(self) -> Iterator[Link]:
         """Produce iterator to iterate through links"""
-        return iter(self.__root__)
+        return iter(self.root)
 
     def resolve(self, base_url: str) -> None:
         """resolve all links to the given base URL"""
@@ -69,13 +67,13 @@ class Links(BaseModel):
             link.resolve(base_url)
 
     def append(self, link: Link) -> None:
-        self.__root__.append(link)
+        self.root.append(link)
 
     def __len__(self) -> int:
-        return len(self.__root__)
+        return len(self.root)
 
     def __getitem__(self, idx: int) -> Union[PaginationLink, Link]:
-        return self.__root__[idx]
+        return self.root[idx]
 
 
 class Relations(str, AutoValueEnum):

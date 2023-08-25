@@ -1,6 +1,6 @@
 from typing import Any, Dict, Optional
 
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, model_validator
 
 
 class ContextExtension(BaseModel):
@@ -9,12 +9,13 @@ class ContextExtension(BaseModel):
     """
 
     returned: int
-    limit: Optional[int]
-    matched: Optional[int]
+    limit: Optional[int] = None
+    matched: Optional[int] = None
 
-    @validator("limit")
-    def validate_limit(cls, v: Optional[int], values: Dict[str, Any]) -> None:
-        if values["returned"] > v:
+    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-validators for more information.
+    @model_validator(mode="before")
+    def validate_limit(cls, values: Dict[str, Any]) -> None:
+        if values["limit"] and values["returned"] > values["limit"]:
             raise ValueError(
                 "Number of returned items must be less than or equal to the limit"
             )

@@ -21,6 +21,7 @@ def test_fields_filter():
         assets={},
         links=[],
         bbox=[0, 0, 0, 0],
+        type="Feature"
     )
 
     d = item.to_dict(**fields.filter)
