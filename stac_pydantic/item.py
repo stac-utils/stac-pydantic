@@ -2,7 +2,14 @@ from datetime import datetime as dt
 from typing import Any, Dict, List, Optional, Union
 
 from geojson_pydantic import Feature
-from pydantic import AnyUrl, ConfigDict, Field, field_serializer, model_validator
+from pydantic import (
+    AnyUrl,
+    ConfigDict,
+    Field,
+    field_serializer,
+    model_serializer,
+    model_validator,
+)
 
 from stac_pydantic.links import Links
 from stac_pydantic.shared import (
@@ -22,6 +29,9 @@ class ItemProperties(StacCommonMetadata):
     """
 
     datetime: Union[dt, str] = Field(..., alias="datetime")
+
+    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-config for more information.
+    model_config = ConfigDict(extra="allow")
 
     @model_validator(mode="before")
     @classmethod
@@ -51,11 +61,8 @@ class ItemProperties(StacCommonMetadata):
     def serialize_datetime(self, v: dt, _info: Any) -> str:
         return v.strftime(DATETIME_RFC339)
 
-    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-config for more information.
-    model_config = ConfigDict(extra="allow")
 
-
-class Item(Feature, StacBaseModel):  # type: ignore
+class Item(Feature, StacBaseModel):
     """
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/item-spec/item-spec.md
     """
@@ -75,3 +82,12 @@ class Item(Feature, StacBaseModel):  # type: ignore
             if values.get("geometry") and values.get("bbox") is None:
                 raise ValueError("bbox is required if geometry is not null")
         return values
+
+    # https://github.com/developmentseed/geojson-pydantic/issues/147
+    @model_serializer(mode="wrap")
+    def _serialize(self, handler):
+        data = handler(self)
+        for field in self.__geojson_exclude_if_none__:
+            if field in data and data[field] is None:
+                del data[field]
+        return data

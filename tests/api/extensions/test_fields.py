@@ -1,4 +1,5 @@
 from datetime import datetime
+
 from shapely.geometry import Polygon
 
 from stac_pydantic.api import Item
@@ -6,7 +7,6 @@ from stac_pydantic.api.extensions.fields import FieldsExtension
 from stac_pydantic.api.search import Search
 
 
-# https://github.com/developmentseed/geojson-pydantic/issues/147
 def test_fields_filter_item():
     fields = FieldsExtension(
         includes={"id", "geometry", "properties.foo"}, excludes={"properties.bar"}
