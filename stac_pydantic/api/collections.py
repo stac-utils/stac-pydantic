@@ -1,21 +1,33 @@
-from typing import Any, Dict, List
+from typing import List
 
-from pydantic import BaseModel
+from pydantic import model_validator
 
-from ..collection import Collection
-from ..links import Link
+from stac_pydantic.api.collection import Collection
+from stac_pydantic.api.links import Links
+from stac_pydantic.links import Relations
+from stac_pydantic.shared import StacBaseModel
 
 
-class Collections(BaseModel):
+class Collections(StacBaseModel):
     """
-    http://docs.opengeospatial.org/is/17-069r3/17-069r3.html#_feature_collections_rootcollections
+    https://github.com/radiantearth/stac-api-spec/tree/v1.0.0/ogcapi-features#endpoints
+    https://github.com/radiantearth/stac-api-spec/tree/v1.0.0/ogcapi-features#collections-collections
     """
 
-    links: List[Link]
+    links: Links
     collections: List[Collection]
 
-    def to_dict(self, **kwargs: Any) -> Dict[str, Any]:
-        return self.model_dump(by_alias=True, exclude_unset=True, **kwargs)
+    @model_validator(mode="after")
+    def required_links(self) -> "Collections":
+        links_rel = []
+        for link in self.links.root:
+            links_rel.append(link.rel)
 
-    def to_json(self, **kwargs: Any) -> str:
-        return self.model_dump_json(by_alias=True, exclude_unset=True, **kwargs)
+        required_rels = [Relations.root, Relations.self]
+
+        for rel in required_rels:
+            assert (
+                rel in links_rel
+            ), f"STAC API COLLECTIONS conform Collections pages must include a `{rel}` link."
+
+        return self

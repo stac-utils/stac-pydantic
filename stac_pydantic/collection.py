@@ -1,12 +1,12 @@
-from typing import Any, Dict, List, Optional, Union, Literal
+from typing import Any, Dict, List, Optional, Union
 
-from pydantic import BaseModel, Field
+from pydantic import Field, field_validator
 
 from stac_pydantic.catalog import Catalog
-from stac_pydantic.shared import Asset, NumType, Provider
+from stac_pydantic.shared import Asset, NumType, Provider, StacBaseModel
 
 
-class SpatialExtent(BaseModel):
+class SpatialExtent(StacBaseModel):
     """
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md#spatial-extent-object
     """
@@ -14,7 +14,7 @@ class SpatialExtent(BaseModel):
     bbox: List[List[NumType]]
 
 
-class TimeInterval(BaseModel):
+class TimeInterval(StacBaseModel):
     """
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md#temporal-extent-object
     """
@@ -22,7 +22,7 @@ class TimeInterval(BaseModel):
     interval: List[List[Union[str, None]]]
 
 
-class Extent(BaseModel):
+class Extent(StacBaseModel):
     """
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md#extent-object
     """
@@ -31,7 +31,7 @@ class Extent(BaseModel):
     temporal: TimeInterval
 
 
-class Range(BaseModel):
+class Range(StacBaseModel):
     """
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md#stats-object
     """
@@ -52,4 +52,11 @@ class Collection(Catalog):
     keywords: Optional[List[str]] = None
     providers: Optional[List[Provider]] = None
     summaries: Optional[Dict[str, Union[Range, List[Any], Dict[str, Any]]]] = None
-    type: Literal["Collection"] = "Collection"
+    type: str = "Collection"  # type:ignore
+
+    @field_validator("type")
+    @classmethod
+    def type_value(cls, v: str) -> str:
+        if v != "Collection":
+            raise ValueError("Field `type` must be `Collection`")
+        return v
