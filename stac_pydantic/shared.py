@@ -140,4 +140,6 @@ class Asset(StacCommonMetadata):
     title: Optional[str] = None
     description: Optional[str] = None
     roles: Optional[List[str]] = None
-    model_config = ConfigDict(populate_by_name=True, use_enum_values=True, extra="allow")
+    model_config = ConfigDict(
+        populate_by_name=True, use_enum_values=True, extra="allow"
+    )

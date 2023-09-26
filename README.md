@@ -8,7 +8,7 @@ pip install stac-pydantic
 
 For local development:
 ```
-pip install -e .["dev"]
+pip install -e ".[dev]"
 ```
 
 | stac-pydantic | STAC Version |
@@ -32,7 +32,7 @@ Ensure you have all Python versions installed that the tests will be run against
 
 ```shell
 pyenv install 3.7.12
-pyenv install 3.8.12 
+pyenv install 3.8.12
 pyenv install 3.9.10
 pyenv install 3.10.2
 pyenv local 3.7.12 3.8.12 3.9.10 3.10.2
@@ -78,7 +78,7 @@ assert catalog.links[0].href == "item.json"
 ```
 
 ### Extensions
-STAC defines many extensions which let the user customize the data in their catalog. `stac-pydantic.extensions.validate_extensions` will validate a `dict`, `Item`, `Collection` or `Catalog` against the schema urls provided in the `stac_extensions` property: 
+STAC defines many extensions which let the user customize the data in their catalog. `stac-pydantic.extensions.validate_extensions` will validate a `dict`, `Item`, `Collection` or `Catalog` against the schema urls provided in the `stac_extensions` property:
 
 ```python
 from stac_pydantic import Item
@@ -88,7 +88,7 @@ stac_item = {
     "id": "12345",
     "type": "Feature",
     "stac_extensions": [
-        "https://stac-extensions.github.io/eo/v1.0.0/schema.json" 
+        "https://stac-extensions.github.io/eo/v1.0.0/schema.json"
     ],
     "geometry": { "type": "Point", "coordinates": [0, 0] },
     "properties": {
@@ -99,9 +99,9 @@ stac_item = {
     "assets": [],
 }
 
-model = Item(**stac_item) 
+model = Item(**stac_item)
 validate_extensions(model, reraise_exception=True)
-assert getattr(model.properties, "eo:cloud_cover") == 25 
+assert getattr(model.properties, "eo:cloud_cover") == 25
 ```
 
 The complete list of current STAC Extensions can be found [here](https://stac-extensions.github.io/).
