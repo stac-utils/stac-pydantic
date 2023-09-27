@@ -1,8 +1,8 @@
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Literal, Optional, Union
 
-from pydantic import Field, field_validator
+from pydantic import Field
 
-from stac_pydantic.catalog import Catalog
+from stac_pydantic.catalog import _Catalog
 from stac_pydantic.shared import Asset, NumType, Provider, StacBaseModel
 
 
@@ -40,7 +40,7 @@ class Range(StacBaseModel):
     maximum: Union[NumType, str]
 
 
-class Collection(Catalog):
+class Collection(_Catalog):
     """
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md
     """
@@ -52,11 +52,4 @@ class Collection(Catalog):
     keywords: Optional[List[str]] = None
     providers: Optional[List[Provider]] = None
     summaries: Optional[Dict[str, Union[Range, List[Any], Dict[str, Any]]]] = None
-    type: str = "Collection"  # type:ignore
-
-    @field_validator("type")
-    @classmethod
-    def type_value(cls, v: str) -> str:
-        if v != "Collection":
-            raise ValueError("Field `type` must be `Collection`")
-        return v
+    type: Literal["Collection"] = "Collection"

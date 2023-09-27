@@ -1,13 +1,13 @@
-from typing import List, Optional
+from typing import List, Literal, Optional
 
-from pydantic import AnyUrl, ConfigDict, Field, field_validator
+from pydantic import AnyUrl, ConfigDict, Field
 
 from stac_pydantic.links import Links
 from stac_pydantic.shared import SEMVER_REGEX, StacBaseModel
 from stac_pydantic.version import STAC_VERSION
 
 
-class Catalog(StacBaseModel):
+class _Catalog(StacBaseModel):
     """
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/catalog-spec/catalog-spec.md
     """
@@ -18,13 +18,9 @@ class Catalog(StacBaseModel):
     links: Links
     stac_extensions: Optional[List[AnyUrl]] = []
     title: Optional[str] = None
-    type: str = "Catalog"
-
+    type: str
     model_config = ConfigDict(use_enum_values=True, extra="allow")
 
-    @field_validator("type")
-    @classmethod
-    def type_value(cls, v: str) -> str:
-        if v != "Catalog":
-            raise ValueError("Field `type` must be `Catalog`")
-        return v
+
+class Catalog(_Catalog):
+    type: Literal["Catalog"] = "Catalog"

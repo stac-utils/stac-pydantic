@@ -2,14 +2,7 @@ import pytest
 from pydantic import ValidationError
 
 from stac_pydantic.api import ItemCollection
-from stac_pydantic.api.links import (
-    Link,
-    Links,
-    PaginationLink,
-    PaginationMethods,
-    Relations,
-    SearchLink,
-)
+from stac_pydantic.api.links import Link, Links, PaginationLink, Relations, SearchLink
 from stac_pydantic.api.version import STAC_API_VERSION
 from stac_pydantic.links import MimeTypes
 from stac_pydantic.version import STAC_VERSION
@@ -50,14 +43,14 @@ def test_api_paging_extension():
         {
             "title": "next page",
             "rel": Relations.next,
-            "method": PaginationMethods.GET,
+            "method": "GET",
             "href": "http://my.stac.com/search?next",
             "type": MimeTypes.geojson,
         },
         {
             "title": "previous page",
             "rel": Relations.prev,
-            "method": PaginationMethods.POST,
+            "method": "POST",
             "href": "http://my.stac.com/search?prev",
             "body": {"key": "value"},
             "type": MimeTypes.geojson,
