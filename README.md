@@ -8,7 +8,7 @@ pip install stac-pydantic
 
 For local development:
 ```
-pip install -e ".[dev]"
+pip install -e ".[all]"
 ```
 
 | stac-pydantic | STAC Version |
@@ -31,11 +31,11 @@ pre-commit install
 Ensure you have all Python versions installed that the tests will be run against. If using pyenv, run:
 
 ```shell
-pyenv install 3.7.12
-pyenv install 3.8.12
-pyenv install 3.9.10
-pyenv install 3.10.2
-pyenv local 3.7.12 3.8.12 3.9.10 3.10.2
+pyenv install 3.8.18
+pyenv install 3.9.18
+pyenv install 3.10.13
+pyenv install 3.11.5
+pyenv local 3.8.18 3.9.18 3.10.13 3.11.5
 ```
 
 Run the entire test suite:
@@ -91,12 +91,13 @@ stac_item = {
         "https://stac-extensions.github.io/eo/v1.0.0/schema.json"
     ],
     "geometry": { "type": "Point", "coordinates": [0, 0] },
+    "bbox": [0.0, 0.0, 0.0, 0.0],
     "properties": {
         "datetime": "2020-03-09T14:53:23.262208+00:00",
         "eo:cloud_cover": 25,
     },
     "links": [],
-    "assets": [],
+    "assets": {},
 }
 
 model = Item(**stac_item)
@@ -109,15 +110,65 @@ The complete list of current STAC Extensions can be found [here](https://stac-ex
 #### Vendor Extensions
 The same procedure described above works for any STAC Extension schema as long as it can be loaded from a public url.
 
+### STAC API
+The [STAC API Specs](https://github.com/radiantearth/stac-api-spec) extent the core STAC specification for implementing dynamic catalogs. STAC Objects used in an API context should always import models from the `api` subpackage. This package extends
+Catalog, Collection, and Item models with additional fields and validation rules and introduces Collections and ItemCollections models and Pagination/ Search Links.
+It also implements models for defining ItemSeach queries.
+
+```python
+from stac_pydantic.api import Item, ItemCollection
+
+stac_item = Item(**{
+    "id": "12345",
+    "type": "Feature",
+    "stac_extensions": [],
+    "geometry": { "type": "Point", "coordinates": [0, 0] },
+    "bbox": [0.0, 0.0, 0.0, 0.0],
+    "properties": {
+        "datetime": "2020-03-09T14:53:23.262208+00:00",
+    },
+    "collection": "CS3",
+    "links": [
+          {
+            "rel": "self",
+            "href": "http://stac.example.com/catalog/collections/CS3-20160503_132130_04/items/CS3-20160503_132130_04.json"
+          },
+          {
+            "rel": "collection",
+            "href": "http://stac.example.com/catalog/CS3-20160503_132130_04/catalog.json"
+          },
+          {
+            "rel": "root",
+            "href": "http://stac.example.com/catalog"
+          }],
+    "assets": {},
+    })
+
+stac_item_collection = ItemCollection(**{
+    "type": "FeatureCollection",
+    "features": [stac_item],
+    "links": [
+          {
+            "rel": "self",
+            "href": "http://stac.example.com/catalog/search?collection=CS3",
+            "type": "application/geo+json"
+          },
+          {
+            "rel": "root",
+            "href": "http://stac.example.com/catalog",
+            "type": "application/json"
+          }],
+    })
+```
+
 ### Exporting Models
 Most STAC extensions are namespaced with a colon (ex `eo:gsd`) to keep them distinct from other extensions.  Because
 Python doesn't support the use of colons in variable names, we use [Pydantic aliasing](https://pydantic-docs.helpmanual.io/usage/model_config/#alias-generator)
 to add the namespace upon model export.  This requires [exporting](https://pydantic-docs.helpmanual.io/usage/exporting_models/)
-the model with the `by_alias = True` parameter.  A convenience method (``to_dict()``) is provided to export models with
-extension namespaces:
+the model with the `by_alias = True` parameter. Export methods (`model_dump()` and `model_dump_json()`) for models in this library have `by_alias` and `exclude_unset` st to `True` by default:
 
 ```python
-item_dict = item.to_dict()
+item_dict = item.model_dump()
 assert item_dict['properties']['landsat:row'] == item.properties.row == 250
 ```
 
