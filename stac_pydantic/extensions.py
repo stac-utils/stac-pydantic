@@ -16,6 +16,8 @@ def validate_extensions(
     if isinstance(stac_obj, dict):
         stac_dict = stac_obj
     else:
+        # can't use `stac_obj.model_dump()` here
+        # b/c jsonschema expects pure string representations, not python types
         stac_dict = json.loads(stac_obj.model_dump_json())
 
     try:
