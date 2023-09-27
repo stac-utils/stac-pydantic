@@ -87,7 +87,7 @@ class StacBaseModel(BaseModel):
 
     def model_dump(
         self, *, by_alias: bool = True, exclude_unset: bool = True, **kwargs: Any
-    ) -> dict[str, Any]:
+    ) -> Dict[str, Any]:
         return super().model_dump(
             by_alias=by_alias, exclude_unset=exclude_unset, **kwargs
         )
