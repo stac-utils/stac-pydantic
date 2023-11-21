@@ -57,7 +57,6 @@ def test_landing_page_invalid_features(example_url):
         LandingPage(**example)
 
 
-# TODO: Not sure if this actually does anything??
 @pytest.mark.parametrize("example_url,schema_url", unique_combinations)
 def test_schema(example_url, schema_url):
     rsp_yaml = requests.get(schema_url).text
@@ -68,9 +67,6 @@ def test_schema(example_url, schema_url):
     )
     landing_page = LandingPage(**example).model_dump_json()
     jsonschema.validate(instance=landing_page, schema=schema)
-
-
-##############
 
 
 def test_api_landing_page():

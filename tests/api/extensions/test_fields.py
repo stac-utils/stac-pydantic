@@ -31,7 +31,7 @@ def test_fields_filter_item():
         bbox=[0, 0, 0, 0],
         type="Feature",
     )
-    print(fields.filter)
+
     d = item.model_dump(**fields.filter)
     assert d.pop("id") == item.id
     assert d.pop("geometry") == item.geometry.model_dump(exclude_unset=True)

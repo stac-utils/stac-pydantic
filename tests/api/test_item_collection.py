@@ -1,13 +1,29 @@
 import json
 
-from stac_pydantic import ItemCollection
+import pytest
+
+from stac_pydantic.api import ItemCollection
 from stac_pydantic.api.version import STAC_API_VERSION
 from stac_pydantic.version import STAC_VERSION
 
-from ..conftest import dict_match, request
+from ..conftest import compare_example, dict_match, request
 
 ITEM_COLLECTION = "itemcollection-sample-full.json"
 PATH = ["tests", "api", "examples", f"v{STAC_API_VERSION}"]
+
+
+@pytest.mark.parametrize(
+    "example_url",
+    [
+        f"https://raw.githubusercontent.com/radiantearth/stac-api-spec/v{STAC_API_VERSION}/fragments/itemcollection/examples/itemcollection-sample-full.json",
+        f"https://raw.githubusercontent.com/radiantearth/stac-api-spec/v{STAC_API_VERSION}/fragments/itemcollection/examples/itemcollection-sample-minimal.json",
+    ],
+)
+def test_item_collection_examples(example_url):
+    """
+    Testing the less strict version here, not enforcing required Links
+    """
+    compare_example(example_url, ItemCollection)
 
 
 def test_item_collection():
@@ -20,7 +36,6 @@ def test_item_collection():
         dict_match(feat, valid_item_coll["features"][idx])
 
 
-# TODO: REFACTOR
 def test_to_json():
     test_item = request(ITEM_COLLECTION, PATH)
     for feat in test_item["features"]:

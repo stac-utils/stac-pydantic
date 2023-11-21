@@ -1,27 +1,17 @@
 import json
 
 from stac_pydantic import ItemCollection
-from stac_pydantic.api.version import STAC_API_VERSION
 from stac_pydantic.version import STAC_VERSION
 
 from .conftest import dict_match, request
 
 ITEM_COLLECTION = "itemcollection-sample-full.json"
-PATH = ["tests", "api", "examples", f"v{STAC_API_VERSION}"]
-
-# TODO sort this out. has extra attributes but missing links
-# @pytest.mark.parametrize("example_url", [f"https://raw.githubusercontent.com/radiantearth/stac-api-spec/v{STAC_API_VERSION}/fragments/itemcollection/examples/itemcollection-sample-full.json",
-#                                          f"https://raw.githubusercontent.com/radiantearth/stac-api-spec/v{STAC_API_VERSION}/fragments/itemcollection/examples/itemcollection-sample-minimal.json"])
-# def test_item_collection_examples(example_url):
-#     """
-#     Testing the less strict version here, not enforcing required Links
-#     """
-#     compare_example(example_url, ItemCollection)
+PATH = ["tests", "example_stac"]
 
 
 def test_item_collection():
     test_item_coll = request(ITEM_COLLECTION, PATH)
-    # test_item_coll["stac_version"] = STAC_VERSION
+
     for feat in test_item_coll["features"]:
         feat["stac_version"] = STAC_VERSION
 
@@ -30,7 +20,6 @@ def test_item_collection():
         dict_match(feat, valid_item_coll["features"][idx])
 
 
-# TODO: REFACTOR
 def test_to_json():
     test_item = request(ITEM_COLLECTION, PATH)
     for feat in test_item["features"]:
