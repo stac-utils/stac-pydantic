@@ -1,30 +1,26 @@
-from typing import Any, Dict, List, Optional
+from typing import List, Literal, Optional
 
-from pydantic import AnyUrl, BaseModel, Field
+from pydantic import AnyUrl, ConfigDict, Field
 
 from stac_pydantic.links import Links
+from stac_pydantic.shared import SEMVER_REGEX, StacBaseModel
 from stac_pydantic.version import STAC_VERSION
 
 
-class Catalog(BaseModel):
+class _Catalog(StacBaseModel):
     """
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/catalog-spec/catalog-spec.md
     """
 
-    id: str = Field(..., alias="", min_length=1)
+    id: str = Field(..., alias="id", min_length=1)
     description: str = Field(..., alias="description", min_length=1)
-    stac_version: str = Field(STAC_VERSION, const=True, min_length=1)
+    stac_version: str = Field(STAC_VERSION, pattern=SEMVER_REGEX)
     links: Links
-    stac_extensions: Optional[List[AnyUrl]]
-    title: Optional[str]
-    type: str = Field("Catalog", const=True, min_length=1)
+    stac_extensions: Optional[List[AnyUrl]] = []
+    title: Optional[str] = None
+    type: str
+    model_config = ConfigDict(use_enum_values=True, extra="allow")
 
-    class Config:
-        use_enum_values = True
-        extra = "allow"
 
-    def to_dict(self: "Catalog", **kwargs: Any) -> Dict[str, Any]:
-        return self.dict(by_alias=True, exclude_unset=True, **kwargs)
-
-    def to_json(self: "Catalog", **kwargs: Any) -> str:
-        return self.json(by_alias=True, exclude_unset=True, **kwargs)
+class Catalog(_Catalog):
+    type: Literal["Catalog"] = "Catalog"

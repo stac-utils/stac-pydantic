@@ -1,21 +1,26 @@
 import json
 import operator
 import os
+from copy import deepcopy
+from typing import List, Optional, Type
 
 import arrow
-import dictdiffer  # type: ignore
+import dictdiffer
 import pytest
 import requests
 from click.testing import CliRunner
+from pydantic import BaseModel
 
 
-def request(url: str):
+def request(url: str, path: List[str] = ["tests", "example_stac"]):
     if url.startswith("http"):
         r = requests.get(url)
         r.raise_for_status()
         return r.json()
     else:
-        full_path = os.path.join(*["tests", "example_stac", url])
+        _full_path = deepcopy(path)
+        _full_path.append(url)
+        full_path = os.path.join(*_full_path)
         with open(full_path, "r") as local_file:
             lines = local_file.readlines()
         full_file = "".join(lines)
@@ -39,10 +44,31 @@ def dict_match(d1: dict, d2: dict):
                 if isinstance(date, str):
                     date = arrow.get(date)
                 dates.append(date)
+            dates.sort(reverse=True)
             assert operator.sub(*dates).days == 0
         # any other differences are errors
+        elif "stac_extensions" in diff[1]:
+            url1, url2 = map(str, diff[2])
+            assert url1 == url2
+
         else:
             raise AssertionError("Unexpected difference: ", diff)
+
+
+def compare_example(
+    example_url: str,
+    model: Type[BaseModel],
+    fields: Optional[List[str]] = None,
+    path: List[str] = ["tests", "example_stac"],
+) -> None:
+    example = request(example_url, path)
+    model_dict = json.loads(model(**example).model_dump_json())
+
+    if fields:
+        for field in fields:
+            assert model_dict.get(field) == example.get(field)
+    else:
+        dict_match(model_dict, example)
 
 
 @pytest.fixture
