@@ -1,2 +1,2 @@
-__version__ = "2.0.3"
+__version__ = "3.0.0"
 STAC_VERSION = "1.0.0"
