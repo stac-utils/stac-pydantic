@@ -1,5 +1,5 @@
 from datetime import datetime as dt
-from typing import Any, Dict, List, Optional, Self, Union
+from typing import Any, Dict, List, Optional
 
 from geojson_pydantic import Feature
 from pydantic import (
@@ -17,7 +17,6 @@ from stac_pydantic.shared import (
     StacBaseModel,
     StacCommonMetadata,
 )
-from stac_pydantic.utils import parse_datetime
 from stac_pydantic.version import STAC_VERSION
 
 
