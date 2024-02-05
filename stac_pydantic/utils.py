@@ -1,9 +1,5 @@
-import json
-from datetime import datetime
 from enum import Enum
-from typing import Any, Callable, List
-
-from pydantic import TypeAdapter
+from typing import Any, List
 
 
 class AutoValueEnum(Enum):
@@ -11,8 +7,3 @@ class AutoValueEnum(Enum):
         name: str, start: int, count: int, last_values: List[Any]
     ) -> Any:
         return name
-
-
-parse_datetime: Callable[[Any], datetime] = lambda x: TypeAdapter(
-    datetime
-).validate_json(json.dumps(x))
