@@ -1,6 +1,7 @@
 from datetime import datetime as dt
 from typing import Any, Dict, List, Optional, Union
 
+from ciso8601 import parse_rfc3339
 from geojson_pydantic import Feature
 from pydantic import (
     AnyUrl,
@@ -19,7 +20,6 @@ from stac_pydantic.shared import (
     StacBaseModel,
     StacCommonMetadata,
 )
-from stac_pydantic.utils import parse_datetime
 from stac_pydantic.version import STAC_VERSION
 
 
@@ -47,13 +47,13 @@ class ItemProperties(StacCommonMetadata):
                 )
 
         if isinstance(datetime, str):
-            data["datetime"] = parse_datetime(datetime)
+            data["datetime"] = parse_rfc3339(datetime)
 
         if isinstance(start_datetime, str):
-            data["start_datetime"] = parse_datetime(start_datetime)
+            data["start_datetime"] = parse_rfc3339(start_datetime)
 
         if isinstance(end_datetime, str):
-            data["end_datetime"] = parse_datetime(end_datetime)
+            data["end_datetime"] = parse_rfc3339(end_datetime)
 
         return data
 

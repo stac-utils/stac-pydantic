@@ -1,6 +1,7 @@
 from datetime import datetime as dt
 from typing import Any, Dict, List, Optional, Tuple, Union, cast
 
+from ciso8601 import parse_rfc3339
 from geojson_pydantic.geometries import (  # type: ignore
     GeometryCollection,
     LineString,
@@ -16,7 +17,6 @@ from stac_pydantic.api.extensions.fields import FieldsExtension
 from stac_pydantic.api.extensions.query import Operator
 from stac_pydantic.api.extensions.sort import SortExtension
 from stac_pydantic.shared import BBox
-from stac_pydantic.utils import parse_datetime
 
 Intersection = Union[
     Point,
@@ -50,16 +50,16 @@ class Search(BaseModel):
             return None
         if values[0] == ".." or values[0] == "":
             return None
-        return parse_datetime(values[0])
+        return parse_rfc3339(values[0])
 
     @property
     def end_date(self) -> Optional[dt]:
         values = (self.datetime or "").split("/")
         if len(values) == 1:
-            return parse_datetime(values[0])
+            return parse_rfc3339(values[0])
         if values[1] == ".." or values[1] == "":
             return None
-        return parse_datetime(values[1])
+        return parse_rfc3339(values[1])
 
     # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-validators for more information.
     @model_validator(mode="before")
@@ -109,17 +109,18 @@ class Search(BaseModel):
             # Single date is interpreted as end date
             values = ["..", v]
 
-        dates = []
+        dates: List[dt] = []
         for value in values:
             if value == ".." or value == "":
-                dates.append("..")
                 continue
 
-            parse_datetime(value)
-            dates.append(value)
+            dates.append(parse_rfc3339(value))
 
-        if ".." not in dates:
-            if parse_datetime(dates[0]) > parse_datetime(dates[1]):
+        if len(values) > 2:
+            raise ValueError("Invalid datetime range, must match format (begin_date, end_date)")
+
+        if not {"..", ""}.intersection(set(values)):
+            if dates[0] > dates[1]:
                 raise ValueError(
                     "Invalid datetime range, must match format (begin_date, end_date)"
                 )
