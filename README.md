@@ -1,22 +1,33 @@
-# stac-pydantic ![tests](https://github.com/arturo-ai/stac-pydantic/workflows/cicd/badge.svg)
-[Pydantic](https://pydantic-docs.helpmanual.io/) models for [STAC](https://github.com/radiantearth/stac-spec) Catalogs, Collections, Items, and the [STAC API](https://github.com/radiantearth/stac-api-spec) spec.  Initially developed by [arturo-ai](https://github.com/arturo-ai).
+# stac-pydantic
+
+[![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/stac-utils/stac-pydantic/cicd.yml?style=for-the-badge)](https://github.com/stac-utils/stac-pydantic/actions/workflows/cicd.yml)
+
+[Pydantic](https://pydantic-docs.helpmanual.io/) models for [STAC](https://github.com/radiantearth/stac-spec) Catalogs, Collections, Items, and the [STAC API](https://github.com/radiantearth/stac-api-spec) spec.
+Initially developed by [arturo-ai](https://github.com/arturo-ai).
+
+The main purpose of this library is to provide reusable request/response models for tools such as [fastapi](https://fastapi.tiangolo.com/).
+For more comprehensive schema validation and robust extension support, use [pystac](https://github.com/stac-utils/pystac).
 
 ## Installation
-```
+
+```shell
 pip install stac-pydantic
 ```
 
 For local development:
-```
-pip install -e ".[all]"
+
+```shell
+pip install -e '.[dev,lint]'
 ```
 
-| stac-pydantic | STAC Version |
-|---------------|--------------|
-| 1.1.x         | 0.9.0        |
-| 1.2.x         | 1.0.0-beta.1 |
-| 1.3.x         | 1.0.0-beta.2 |
-| 2.0.x         | 1.0.0        |
+| stac-pydantic | STAC Version | STAC API Version | Pydantic Version |
+|--------------|---------------|------------------|-----------------|
+| 1.2.x         | 1.0.0-beta.1 | <1* | ^1.6 |
+| 1.3.x         | 1.0.0-beta.2 | <1* | ^1.6 |
+| 2.0.x         | 1.0.0        | <1* | ^1.6 |
+| 3.0.x         | 1.0.0        | 1.0.0 | ^2.4 |
+
+\* various beta releases, specs not fully implemented
 
 ## Development
 
@@ -78,6 +89,7 @@ assert catalog.links[0].href == "item.json"
 ```
 
 ### Extensions
+
 STAC defines many extensions which let the user customize the data in their catalog. `stac-pydantic.extensions.validate_extensions` will validate a `dict`, `Item`, `Collection` or `Catalog` against the schema urls provided in the `stac_extensions` property:
 
 ```python
@@ -108,9 +120,11 @@ assert getattr(model.properties, "eo:cloud_cover") == 25
 The complete list of current STAC Extensions can be found [here](https://stac-extensions.github.io/).
 
 #### Vendor Extensions
+
 The same procedure described above works for any STAC Extension schema as long as it can be loaded from a public url.
 
 ### STAC API
+
 The [STAC API Specs](https://github.com/radiantearth/stac-api-spec) extent the core STAC specification for implementing dynamic catalogs. STAC Objects used in an API context should always import models from the `api` subpackage. This package extends
 Catalog, Collection, and Item models with additional fields and validation rules and introduces Collections and ItemCollections models and Pagination/ Search Links.
 It also implements models for defining ItemSeach queries.
@@ -162,6 +176,7 @@ stac_item_collection = ItemCollection(**{
 ```
 
 ### Exporting Models
+
 Most STAC extensions are namespaced with a colon (ex `eo:gsd`) to keep them distinct from other extensions.  Because
 Python doesn't support the use of colons in variable names, we use [Pydantic aliasing](https://pydantic-docs.helpmanual.io/usage/model_config/#alias-generator)
 to add the namespace upon model export.  This requires [exporting](https://pydantic-docs.helpmanual.io/usage/exporting_models/)
@@ -173,7 +188,8 @@ assert item_dict['properties']['landsat:row'] == item.properties.row == 250
 ```
 
 ### CLI
-```
+
+```text
 Usage: stac-pydantic [OPTIONS] COMMAND [ARGS]...
 
   stac-pydantic cli group
