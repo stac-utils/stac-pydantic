@@ -1,12 +1,11 @@
 import time
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta, timezone
 
 import pytest
 from pydantic import ValidationError
 from shapely.geometry import Polygon, shape
 
 from stac_pydantic.api.search import Search
-from stac_pydantic.shared import DATETIME_RFC339
 
 
 def test_search():
@@ -57,8 +56,8 @@ def test_invalid_spatial_search():
 
 def test_temporal_search_single_tailed():
     # Test single tailed
-    utcnow = datetime.utcnow().replace(microsecond=0, tzinfo=timezone.utc)
-    utcnow_str = utcnow.strftime(DATETIME_RFC339)
+    utcnow = datetime.now(timezone.utc).replace(microsecond=0, tzinfo=timezone.utc)
+    utcnow_str = utcnow.isoformat()
     search = Search(collections=["collection1"], datetime=utcnow_str)
     assert search.start_date is None
     assert search.end_date == utcnow
@@ -66,8 +65,8 @@ def test_temporal_search_single_tailed():
 
 def test_temporal_search_two_tailed():
     # Test two tailed
-    utcnow = datetime.utcnow().replace(microsecond=0, tzinfo=timezone.utc)
-    utcnow_str = utcnow.strftime(DATETIME_RFC339)
+    utcnow = datetime.now(timezone.utc).replace(microsecond=0, tzinfo=timezone.utc)
+    utcnow_str = utcnow.isoformat()
     search = Search(collections=["collection1"], datetime=f"{utcnow_str}/{utcnow_str}")
     assert search.start_date == search.end_date == utcnow
 
@@ -87,26 +86,34 @@ def test_temporal_search_open():
     assert search.end_date is None
 
 
-def test_invalid_temporal_search():
-    # Not RFC339
-    utcnow = datetime.utcnow().strftime("%Y-%m-%d")
+def test_invalid_temporal_search_date():
+    # Just a date, no time
+    utcnow = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     with pytest.raises(ValidationError):
         Search(collections=["collection1"], datetime=utcnow)
 
-    t1 = datetime.utcnow()
+
+def test_invalid_temporal_search_too_many():
+    # Too many dates
+    t1 = datetime.now(timezone.utc)
     t2 = t1 + timedelta(seconds=100)
     t3 = t2 + timedelta(seconds=100)
     with pytest.raises(ValidationError):
-        Search(collections=["collection1"], datetime=f"{t1.strftime(DATETIME_RFC339)}/{t2.strftime(DATETIME_RFC339)}/{t3.strftime(DATETIME_RFC339)}",)
+        Search(
+            collections=["collection1"],
+            datetime=f"{t1.isoformat()}/{t2.isoformat()}/{t3.isoformat()}",
+        )
 
+
+def test_invalid_temporal_search_date_wrong_order():
     # End date is before start date
-    start = datetime.utcnow()
+    start = datetime.now(timezone.utc)
     time.sleep(2)
-    end = datetime.utcnow()
+    end = datetime.now(timezone.utc)
     with pytest.raises(ValidationError):
         Search(
             collections=["collection1"],
-            datetime=f"{end.strftime(DATETIME_RFC339)}/{start.strftime(DATETIME_RFC339)}",
+            datetime=f"{end.isoformat()}/{start.isoformat()}",
         )
 
 

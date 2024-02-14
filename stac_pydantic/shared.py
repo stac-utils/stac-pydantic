@@ -1,9 +1,16 @@
-from datetime import datetime
+from datetime import timezone
 from enum import Enum, auto
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Annotated, Any, Dict, List, Optional, Tuple, Union
 from warnings import warn
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import (
+    AfterValidator,
+    AwareDatetime,
+    BaseModel,
+    ConfigDict,
+    Field,
+    PlainSerializer,
+)
 
 from stac_pydantic.utils import AutoValueEnum
 
@@ -15,9 +22,16 @@ BBox = Union[
 
 SEMVER_REGEX = r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$"
 
-# https://tools.ietf.org/html/rfc3339#section-5.6
-# Unused, but leaving it here since it's used by dependencies
-DATETIME_RFC339 = "%Y-%m-%dT%H:%M:%SZ"
+# Allows for some additional flexibility in the input datetime format. As long as
+# the input value has timezone information, it will be converted to UTC timezone.
+UtcDatetime = Annotated[
+    # Input value must be in a format which has timezone information
+    AwareDatetime,
+    # Convert the input value to UTC timezone
+    AfterValidator(lambda d: d.astimezone(timezone.utc)),
+    # Use `isoformat` to serialize the value in an RFC3339 compatible format
+    PlainSerializer(lambda d: d.isoformat()),
+]
 
 
 class MimeTypes(str, Enum):
@@ -118,10 +132,10 @@ class StacCommonMetadata(StacBaseModel):
 
     title: Optional[str] = Field(None, alias="title")
     description: Optional[str] = Field(None, alias="description")
-    start_datetime: Optional[datetime] = Field(None, alias="start_datetime")
-    end_datetime: Optional[datetime] = Field(None, alias="end_datetime")
-    created: Optional[datetime] = Field(None, alias="created")
-    updated: Optional[datetime] = Field(None, alias="updated")
+    start_datetime: Optional[UtcDatetime] = Field(None, alias="start_datetime")
+    end_datetime: Optional[UtcDatetime] = Field(None, alias="end_datetime")
+    created: Optional[UtcDatetime] = Field(None, alias="created")
+    updated: Optional[UtcDatetime] = Field(None, alias="updated")
     platform: Optional[str] = Field(None, alias="platform")
     instruments: Optional[List[str]] = Field(None, alias="instruments")
     constellation: Optional[str] = Field(None, alias="constellation")
