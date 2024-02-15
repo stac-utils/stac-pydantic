@@ -3,9 +3,9 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name="stac-pydantic"
-description="Pydantic data models for the STAC spec"
-classifiers=[
+name = "stac-pydantic"
+description = "Pydantic data models for the STAC spec"
+classifiers = [
         "Intended Audience :: Developers",
         "Intended Audience :: Information Technology",
         "Intended Audience :: Science/Research",
@@ -13,13 +13,17 @@ classifiers=[
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
-        "License :: OSI Approved :: MIT License",
-    ]
-keywords=["stac", "pydantic", "validation"]
-authors=[{ name = "Arturo Engineering", email = "engineering@arturo.ai"}]
-license= { text = "MIT" }
-requires-python=">=3.8"
-dependencies = ["click>=8.1.7", "pydantic>=2.4.1", "geojson-pydantic>=1.0.0", "ciso8601~=2.3"]
+        "Programming Language :: Python :: 3.12",
+        "License :: OSI Approved :: MIT License"]
+keywords = ["stac", "pydantic", "validation"]
+authors = [{ name = "Arturo Engineering", email = "engineering@arturo.ai" }]
+license = { text = "MIT" }
+requires-python = ">=3.8"
+dependencies = [
+        "click>=8.1.7",
+        "pydantic>=2.4.1",
+        "geojson-pydantic>=1.0.0",
+        "ciso8601~=2.3"]
 dynamic = ["version", "readme"]
 
 [project.scripts]
@@ -27,10 +31,11 @@ stac-pydantic = "stac_pydantic.scripts.cli:app"
 
 [project.urls]
 homepage = "https://github.com/stac-utils/stac-pydantic"
-repository ="https://github.com/stac-utils/stac-pydantic.git"
+repository = "https://github.com/stac-utils/stac-pydantic.git"
 
 [project.optional-dependencies]
-dev = ["arrow>=1.2.3",
+dev = [
+        "arrow>=1.2.3",
         "pytest>=7.4.2",
         "pytest-cov>=4.1.0",
         "pytest-icdiff>=0.8",
@@ -39,7 +44,8 @@ dev = ["arrow>=1.2.3",
         "dictdiffer>=0.9.0",
         "jsonschema>=4.19.1",
         "pyyaml>=6.0.1"]
-lint = ["types-requests>=2.31.0.5",
+lint = [
+        "types-requests>=2.31.0.5",
         "types-jsonschema>=4.19.0.3",
         "types-PyYAML>=6.0.12.12",
         "black>=23.9.1",
@@ -52,10 +58,10 @@ lint = ["types-requests>=2.31.0.5",
 
 [tool.setuptools.dynamic]
 version = { attr = "stac_pydantic.version.__version__" }
-readme = {file = ["README.md"], content-type = "text/markdown"}
+readme = { file = ["README.md"], content-type = "text/markdown" }
 
 [tool.setuptools.package-data]
-stac_pydantic= ["*.typed"]
+stac_pydantic = ["*.typed"]
 
 [tool.setuptools.packages.find]
 include = ["stac_pydantic*"]
@@ -81,6 +87,6 @@ exclude = ["tests", ".venv"]
 
 [tool.flake8]
 ignore = ["E203", "E501"]
-select = ["C","E","F","W","B","B950"]
+select = ["C", "E", "F", "W", "B", "B950"]
 exclude = ["tests", ".venv"]
 max-line-length = 88

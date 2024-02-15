@@ -1,3 +1,13 @@
+- Require `type` property to be set for Catalog and Collections
+- Fix validator for Item `datetime` and Common MetaData `start_datetime` and `end_datetime`
+- Make sure all `datetime` fields are correctly parsed
+- Include `datetime` and `license` to Common MetaData
+- Make sure default values for required but unset fields are correctly parsed
+- Add support from Python 3.12
+- Lint all files
+- Increase test coverage
+
+
 3.0.0 (2024-01-25)
 ------------------
 - Support pydantic>2.0 (@huard)

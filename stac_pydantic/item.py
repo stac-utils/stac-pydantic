@@ -1,6 +1,5 @@
 from typing import Any, Dict, List, Optional
 
-from ciso8601 import parse_rfc3339
 from geojson_pydantic import Feature
 from pydantic import AnyUrl, ConfigDict, Field, model_serializer, model_validator
 
@@ -33,9 +32,6 @@ class ItemProperties(StacCommonMetadata):
                         "start_datetime and end_datetime must be specified when datetime is null"
                     )
                 data["datetime"] = None
-            else:
-                if isinstance(datetime, str):
-                    data["datetime"] = parse_rfc3339(datetime)
 
         return data
 
