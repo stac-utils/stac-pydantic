@@ -15,7 +15,7 @@ class _Catalog(StacBaseModel):
     id: str = Field(..., alias="id", min_length=1)
     description: str = Field(..., alias="description", min_length=1)
     stac_version: str = Field(STAC_VERSION, pattern=SEMVER_REGEX)
-    links: Links
+    links: Links = Links(root=[])
     stac_extensions: Optional[List[AnyUrl]] = []
     title: Optional[str] = None
     type: str

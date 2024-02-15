@@ -1,9 +1,10 @@
-from datetime import datetime
+from datetime import datetime as dt
 from enum import Enum, auto
 from typing import Any, Dict, List, Optional, Tuple, Union
 from warnings import warn
 
-from pydantic import BaseModel, ConfigDict, Field
+from ciso8601 import parse_rfc3339
+from pydantic import BaseModel, ConfigDict, Field, field_serializer, model_validator
 
 from stac_pydantic.utils import AutoValueEnum
 
@@ -118,16 +119,62 @@ class StacCommonMetadata(StacBaseModel):
 
     title: Optional[str] = Field(None, alias="title")
     description: Optional[str] = Field(None, alias="description")
-    start_datetime: Optional[datetime] = Field(None, alias="start_datetime")
-    end_datetime: Optional[datetime] = Field(None, alias="end_datetime")
-    created: Optional[datetime] = Field(None, alias="created")
-    updated: Optional[datetime] = Field(None, alias="updated")
+    datetime: Optional[dt] = Field(None, alias="datetime")
+    start_datetime: Optional[dt] = Field(None, alias="start_datetime")
+    end_datetime: Optional[dt] = Field(None, alias="end_datetime")
+    created: Optional[dt] = Field(None, alias="created")
+    updated: Optional[dt] = Field(None, alias="updated")
+    license: Optional[str] = Field(None, alias="license")
     platform: Optional[str] = Field(None, alias="platform")
     instruments: Optional[List[str]] = Field(None, alias="instruments")
     constellation: Optional[str] = Field(None, alias="constellation")
     mission: Optional[str] = Field(None, alias="mission")
     providers: Optional[List[Provider]] = Field(None, alias="providers")
     gsd: Optional[float] = Field(None, alias="gsd", gt=0)
+
+    @model_validator(mode="before")
+    @classmethod
+    def validate_start_end_datetime(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+
+            start_datetime = data.get("start_datetime")
+            end_datetime = data.get("end_datetime")
+            datetime = data.get("datetime")
+            created = data.get("created")
+            updated = data.get("updated")
+
+            if not all([start_datetime, end_datetime]) and any(
+                [start_datetime, end_datetime]
+            ):
+                raise ValueError(
+                    "start_datetime and end_datetime must be specified together"
+                )
+
+            if isinstance(datetime, str):
+                data["datetime"] = parse_rfc3339(datetime)
+
+            if isinstance(start_datetime, str):
+                data["start_datetime"] = parse_rfc3339(start_datetime)
+
+            if isinstance(end_datetime, str):
+                data["end_datetime"] = parse_rfc3339(end_datetime)
+
+            if isinstance(created, str):
+                data["created"] = parse_rfc3339(created)
+
+            if isinstance(updated, str):
+                data["updated"] = parse_rfc3339(updated)
+
+        return data
+
+    @field_serializer(
+        "datetime", "start_datetime", "end_datetime", "created", "updated"
+    )
+    def serialize_datetime(self, v: dt, _info: Any) -> str:
+        if v is None:
+            return None
+        else:
+            return v.strftime(DATETIME_RFC339)
 
 
 class Asset(StacCommonMetadata):

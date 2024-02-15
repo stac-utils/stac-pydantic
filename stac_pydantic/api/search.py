@@ -117,7 +117,9 @@ class Search(BaseModel):
             dates.append(parse_rfc3339(value))
 
         if len(values) > 2:
-            raise ValueError("Invalid datetime range, must match format (begin_date, end_date)")
+            raise ValueError(
+                "Invalid datetime range, must match format (begin_date, end_date)"
+            )
 
         if not {"..", ""}.intersection(set(values)):
             if dates[0] > dates[1]:
