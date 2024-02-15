@@ -8,6 +8,7 @@
     ],
     "collections":[
        {
+         "type":"Collection",
           "id":"aster-l1t",
           "description":"The [ASTER](https://terra.nasa.gov/about/terra-instruments/aster) instrument, launched on-board NASA's [Terra](https://terra.nasa.gov/) satellite in 1999, provides multispectral images of the Earth at 15m-90m resolution.  ASTER images provide information about land surface temperature, color, elevation, and mineral composition.\n\nThis dataset represents ASTER [L1T](https://lpdaac.usgs.gov/products/ast_l1tv003/) data from 2000-2006.  L1T images have been terrain-corrected and rotated to a north-up UTM projection.  Images are in [cloud-optimized GeoTIFF](https://www.cogeo.org/) format.\n",
           "stac_version":"1.0.0",
@@ -400,7 +401,8 @@
           }
        },
        {
-          "id":"landsat-8-c2-l2",
+         "type":"Collection",
+         "id":"landsat-8-c2-l2",
           "description":"The [Landsat](https://landsat.gsfc.nasa.gov/) program has been imaging the Earth since 1972; it provides a comprehensive, continuous archive of the Earth's surface.  [Landsat 8](https://www.usgs.gov/core-science-systems/nli/landsat/landsat-8) is the most recent satellite in the Landsat series.  Launched in 2013, Landsat 8 captures data in eleven spectral bands: ten optical/IR bands from the [Operational Land Imager](https://landsat.gsfc.nasa.gov/landsat-8/operational-land-imager) (OLI) instrument, and two thermal bands from the [Thermal Infrared Sensor](https://landsat.gsfc.nasa.gov/landsat-8/thermal-infrared-sensor-tirs) (TIRS) instrument.\n\nThis dataset represents the global archive of Level-2 Landsat 8 data from [Landsat Collection 2](https://www.usgs.gov/core-science-systems/nli/landsat/landsat-collection-2).  Because there is some latency before Level-2 data is available, a rolling window of recent Level-1 data is available as well.  Images are stored in [cloud-optimized GeoTIFF](https://www.cogeo.org/) format.\n",
           "stac_version":"1.0.0",
           "links":[
@@ -866,7 +868,8 @@
           }
        },
        {
-          "id":"sentinel-2-l2a",
+         "type":"Collection",
+         "id":"sentinel-2-l2a",
           "description":"The [Sentinel-2](https://sentinel.esa.int/web/sentinel/missions/sentinel-2) program provides global imagery in thirteen spectral bands at 10m-60m resolution and a revisit time of approximately five days.  This dataset represents the global Sentinel-2 archive, from 2016 to the present, processed to L2A (bottom-of-atmosphere) using [Sen2Cor](https://step.esa.int/main/snap-supported-plugins/sen2cor/) and converted to [cloud-optimized GeoTIFF](https://www.cogeo.org/) format.",
           "stac_version":"1.0.0",
           "links":[
@@ -1491,7 +1494,8 @@
           }
        },
        {
-          "id":"naip",
+         "type":"Collection",
+         "id":"naip",
           "description":"The [National Agriculture Imagery Program](https://www.fsa.usda.gov/programs-and-services/aerial-photography/imagery-programs/naip-imagery/) (NAIP) provides US-wide, high-resolution aerial imagery, with four spectral bands (R, G, B, IR).  NAIP is administered by the [Aerial Field Photography Office](https://www.fsa.usda.gov/programs-and-services/aerial-photography/) (AFPO) within the [US Department of Agriculture](https://www.usda.gov/) (USDA).  Data are captured at least once every three years for each state.  This dataset represents NAIP data from 2010-present, in [cloud-optimized GeoTIFF](https://www.cogeo.org/) format.\n",
           "stac_version":"1.0.0",
           "links":[
