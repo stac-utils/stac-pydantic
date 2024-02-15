@@ -3,7 +3,7 @@ from enum import Enum, auto
 from typing import Any, Dict, List, Optional, Tuple, Union
 from warnings import warn
 
-from ciso8601 import parse_rfc3339
+import dateutil.parser
 from pydantic import BaseModel, ConfigDict, Field, field_serializer, model_validator
 
 from stac_pydantic.utils import AutoValueEnum
@@ -151,19 +151,19 @@ class StacCommonMetadata(StacBaseModel):
                 )
 
             if isinstance(datetime, str):
-                data["datetime"] = parse_rfc3339(datetime)
+                data["datetime"] = dateutil.parser.isoparse(datetime)
 
             if isinstance(start_datetime, str):
-                data["start_datetime"] = parse_rfc3339(start_datetime)
+                data["start_datetime"] = dateutil.parser.isoparse(start_datetime)
 
             if isinstance(end_datetime, str):
-                data["end_datetime"] = parse_rfc3339(end_datetime)
+                data["end_datetime"] = dateutil.parser.isoparse(end_datetime)
 
             if isinstance(created, str):
-                data["created"] = parse_rfc3339(created)
+                data["created"] = dateutil.parser.isoparse(created)
 
             if isinstance(updated, str):
-                data["updated"] = parse_rfc3339(updated)
+                data["updated"] = dateutil.parser.isoparse(updated)
 
         return data
 

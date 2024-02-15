@@ -56,6 +56,27 @@ def test_item_datetime_set_null():
     assert item_json["properties"]["end_datetime"] == "2022-12-01T00:00:00Z"
 
 
+@pytest.mark.parametrize(
+    "datetime", ["2022-01-01T00:00:00", "2022-01-01", "2022-01", "2022"]
+)
+def test_item_datetime_no_z(datetime):
+
+    item_data = {
+        "type": "Feature",
+        "id": "sample-item",
+        "stac_version": "1.0.0",
+        "geometry": {"type": "Point", "coordinates": [125.6, 10.1]},
+        "bbox": [125.6, 10.1, 125.6, 10.1],
+        "properties": {"datetime": datetime},
+    }
+    item = Item(**item_data)
+
+    item_json = item.model_dump(mode="json")
+
+    # The model should fix the date and timezone for us
+    assert item_json["properties"]["datetime"] == "2022-01-01T00:00:00Z"
+
+
 def test_item_bbox_missing():
 
     item_data = {

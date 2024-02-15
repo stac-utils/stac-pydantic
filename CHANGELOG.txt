@@ -2,6 +2,7 @@
 - Fix validator for Item `datetime` and Common MetaData `start_datetime` and `end_datetime`
 - Make sure all `datetime` fields are correctly parsed
 - Include `datetime` and `license` to Common MetaData
+- Be more permissive about date format
 - Make sure default values for required but unset fields are correctly parsed
 - Add support from Python 3.12
 - Lint all files
