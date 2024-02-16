@@ -166,6 +166,37 @@ def test_api_context_extension() -> None:
     ContextExtension(**context)
 
 
+@pytest.mark.parametrize(
+    "args",
+    [
+        {"datetime": "2024-01-01T00:00:00Z"},
+        {
+            "datetime": None,
+            "start_datetime": "2024-01-01T00:00:00Z",
+            "end_datetime": "2024-01-02T00:00:00Z",
+        },
+    ],
+)
+def test_item_properties_dates(args) -> None:
+    ItemProperties(**args)
+
+
+@pytest.mark.parametrize(
+    "args",
+    [
+        {"datetime": None},
+        {"datetime": None, "start_datetime": "2024-01-01T00:00:00Z"},
+        {"datetime": None, "end_datetime": "2024-01-01T00:00:00Z"},
+    ],
+)
+def test_item_properties_no_dates(args) -> None:
+    with pytest.raises(
+        ValueError,
+        match="start_datetime and end_datetime must be specified when datetime is null",
+    ):
+        ItemProperties(**args)
+
+
 def test_declared_model() -> None:
     class TestProperties(ItemProperties):
         foo: str

@@ -1,4 +1,3 @@
-import time
 from datetime import datetime, timedelta, timezone
 
 import pytest
@@ -56,7 +55,7 @@ def test_invalid_spatial_search():
 
 def test_temporal_search_single_tailed():
     # Test single tailed
-    utcnow = datetime.now(timezone.utc).replace(microsecond=0, tzinfo=timezone.utc)
+    utcnow = datetime.now(timezone.utc)
     utcnow_str = utcnow.isoformat()
     search = Search(collections=["collection1"], datetime=utcnow_str)
     assert search.start_date is None
@@ -65,7 +64,7 @@ def test_temporal_search_single_tailed():
 
 def test_temporal_search_two_tailed():
     # Test two tailed
-    utcnow = datetime.now(timezone.utc).replace(microsecond=0, tzinfo=timezone.utc)
+    utcnow = datetime.now(timezone.utc)
     utcnow_str = utcnow.isoformat()
     search = Search(collections=["collection1"], datetime=f"{utcnow_str}/{utcnow_str}")
     assert search.start_date == search.end_date == utcnow
@@ -108,12 +107,11 @@ def test_invalid_temporal_search_too_many():
 def test_invalid_temporal_search_date_wrong_order():
     # End date is before start date
     start = datetime.now(timezone.utc)
-    time.sleep(2)
-    end = datetime.now(timezone.utc)
+    end = start - timedelta(seconds=100)
     with pytest.raises(ValidationError):
         Search(
             collections=["collection1"],
-            datetime=f"{end.isoformat()}/{start.isoformat()}",
+            datetime=f"{start.isoformat()}/{end.isoformat()}",
         )
 
 
