@@ -13,13 +13,14 @@ classifiers=[
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
         "License :: OSI Approved :: MIT License",
     ]
 keywords=["stac", "pydantic", "validation"]
 authors=[{ name = "Arturo Engineering", email = "engineering@arturo.ai"}]
 license= { text = "MIT" }
 requires-python=">=3.8"
-dependencies = ["click>=8.1.7", "pydantic>=2.4.1", "geojson-pydantic>=1.0.0"]
+dependencies = ["click>=8.1.7", "pydantic>=2.4.1", "geojson-pydantic>=1.0.0", "ciso8601~=2.3","python-dateutil>=2.7.0"]
 dynamic = ["version", "readme"]
 
 [project.scripts]
@@ -42,11 +43,12 @@ dev = ["arrow>=1.2.3",
 lint = ["types-requests>=2.31.0.5",
         "types-jsonschema>=4.19.0.3",
         "types-PyYAML>=6.0.12.12",
+        "types-python-dateutil>=2.7.0",
         "black>=23.9.1",
         "isort>=5.12.0",
         "flake8>=6.1.0",
         "Flake8-pyproject>=1.2.3",
-        "mypy>=1.5.1",
+        "mypy==1.4.1",
         "pre-commit>=3.4.0",
         "tox>=4.11.3"]
 

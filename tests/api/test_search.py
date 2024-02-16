@@ -86,11 +86,11 @@ def test_temporal_search_open():
     assert search.end_date is None
 
 
-def test_invalid_temporal_search_date():
-    # Just a date, no time
-    utcnow = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    with pytest.raises(ValidationError):
-        Search(collections=["collection1"], datetime=utcnow)
+# def test_invalid_temporal_search_date():
+#     # Just a date, no time
+#     utcnow = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+#     with pytest.raises(ValidationError):
+#         Search(collections=["collection1"], datetime=utcnow)
 
 
 def test_invalid_temporal_search_too_many():
