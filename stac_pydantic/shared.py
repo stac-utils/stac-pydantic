@@ -1,7 +1,7 @@
 from datetime import datetime as dt
 from datetime import timezone
 from enum import Enum, auto
-from typing import Annotated, Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 from warnings import warn
 
 import dateutil.parser
@@ -13,6 +13,7 @@ from pydantic import (
     PlainSerializer,
     model_validator,
 )
+from typing_extensions import Annotated
 
 from stac_pydantic.utils import AutoValueEnum
 

@@ -1,7 +1,8 @@
-from typing import Annotated, Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 from geojson_pydantic import Feature
 from pydantic import AnyUrl, ConfigDict, Field, model_serializer, model_validator
+from typing_extensions import Annotated
 
 from stac_pydantic.links import Links
 from stac_pydantic.shared import SEMVER_REGEX, Asset, StacBaseModel, StacCommonMetadata
