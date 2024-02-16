@@ -1,9 +1,17 @@
-from datetime import datetime
+from datetime import timezone
 from enum import Enum, auto
 from typing import Any, Dict, List, Optional, Tuple, Union
 from warnings import warn
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import (
+    AfterValidator,
+    AwareDatetime,
+    BaseModel,
+    ConfigDict,
+    Field,
+    PlainSerializer,
+)
+from typing_extensions import Annotated
 
 from stac_pydantic.utils import AutoValueEnum
 
@@ -15,9 +23,17 @@ BBox = Union[
 
 SEMVER_REGEX = r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$"
 
-# https://tools.ietf.org/html/rfc3339#section-5.6
-# Unused, but leaving it here since it's used by dependencies
-DATETIME_RFC339 = "%Y-%m-%dT%H:%M:%SZ"
+# Allows for some additional flexibility in the input datetime format. As long as
+# the input value has timezone information, it will be converted to UTC timezone.
+UtcDatetime = Annotated[
+    # Input value must be in a format which has timezone information
+    AwareDatetime,
+    # Convert the input value to UTC timezone
+    AfterValidator(lambda d: d.astimezone(timezone.utc)),
+    # Use `isoformat` to serialize the value in an RFC3339 compatible format
+    # for example: "2024-01-01T00:00:00+00:00"
+    PlainSerializer(lambda d: d.isoformat()),
+]
 
 
 class MimeTypes(str, Enum):
@@ -105,7 +121,7 @@ class Provider(StacBaseModel):
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md#provider-object
     """
 
-    name: str = Field(..., alias="name", min_length=1)
+    name: str = Field(..., min_length=1)
     description: Optional[str] = None
     roles: Optional[List[str]] = None
     url: Optional[str] = None
@@ -116,18 +132,18 @@ class StacCommonMetadata(StacBaseModel):
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/item-spec/common-metadata.md#date-and-time-range
     """
 
-    title: Optional[str] = Field(None, alias="title")
-    description: Optional[str] = Field(None, alias="description")
-    start_datetime: Optional[datetime] = Field(None, alias="start_datetime")
-    end_datetime: Optional[datetime] = Field(None, alias="end_datetime")
-    created: Optional[datetime] = Field(None, alias="created")
-    updated: Optional[datetime] = Field(None, alias="updated")
-    platform: Optional[str] = Field(None, alias="platform")
-    instruments: Optional[List[str]] = Field(None, alias="instruments")
-    constellation: Optional[str] = Field(None, alias="constellation")
-    mission: Optional[str] = Field(None, alias="mission")
-    providers: Optional[List[Provider]] = Field(None, alias="providers")
-    gsd: Optional[float] = Field(None, alias="gsd", gt=0)
+    title: Optional[str] = None
+    description: Optional[str] = None
+    start_datetime: Optional[UtcDatetime] = None
+    end_datetime: Optional[UtcDatetime] = None
+    created: Optional[UtcDatetime] = None
+    updated: Optional[UtcDatetime] = None
+    platform: Optional[str] = None
+    instruments: Optional[List[str]] = None
+    constellation: Optional[str] = None
+    mission: Optional[str] = None
+    providers: Optional[List[Provider]] = None
+    gsd: Optional[float] = Field(None, gt=0)
 
 
 class Asset(StacCommonMetadata):
@@ -135,11 +151,12 @@ class Asset(StacCommonMetadata):
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/item-spec/item-spec.md#asset-object
     """
 
-    href: str = Field(..., alias="href", min_length=1)
+    href: str = Field(..., min_length=1)
     type: Optional[str] = None
     title: Optional[str] = None
     description: Optional[str] = None
     roles: Optional[List[str]] = None
+
     model_config = ConfigDict(
         populate_by_name=True, use_enum_values=True, extra="allow"
     )
