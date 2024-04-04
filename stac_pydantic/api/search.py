@@ -2,8 +2,8 @@ from datetime import datetime as dt
 from typing import Any, Dict, List, Optional, Tuple, Union, cast
 
 from ciso8601 import parse_rfc3339
-from geojson_pydantic.geometries import (  # type: ignore
-    GeometryCollection,
+from geojson_pydantic.geometries import GeometryCollection  # type: ignore
+from geojson_pydantic.geometries import (
     LineString,
     MultiLineString,
     MultiPoint,
@@ -117,7 +117,9 @@ class Search(BaseModel):
             dates.append(parse_rfc3339(value))
 
         if len(values) > 2:
-            raise ValueError("Invalid datetime range, must match format (begin_date, end_date)")
+            raise ValueError(
+                "Invalid datetime range, must match format (begin_date, end_date)"
+            )
 
         if not {"..", ""}.intersection(set(values)):
             if dates[0] > dates[1]:
