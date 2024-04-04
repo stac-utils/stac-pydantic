@@ -97,7 +97,10 @@ def test_invalid_temporal_search():
     t2 = t1 + timedelta(seconds=100)
     t3 = t2 + timedelta(seconds=100)
     with pytest.raises(ValidationError):
-        Search(collections=["collection1"], datetime=f"{t1.strftime(DATETIME_RFC339)}/{t2.strftime(DATETIME_RFC339)}/{t3.strftime(DATETIME_RFC339)}",)
+        Search(
+            collections=["collection1"],
+            datetime=f"{t1.strftime(DATETIME_RFC339)}/{t2.strftime(DATETIME_RFC339)}/{t3.strftime(DATETIME_RFC339)}",
+        )
 
     # End date is before start date
     start = datetime.utcnow()
