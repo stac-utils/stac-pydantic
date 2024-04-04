@@ -1,3 +1,8 @@
+
+3.1.0 (TBD)
+-----------------
+- Remove the deprecated `Context` extension (#138, @vincentsarago)
+
 3.0.0 (2024-01-25)
 ------------------
 - Support pydantic>2.0 (@huard)
