@@ -12,7 +12,10 @@ from click.testing import CliRunner
 from pydantic import BaseModel
 
 
-def request(url: str, path: List[str] = ["tests", "example_stac"]):
+def request(url: str, path: Optional[List[str]] = None):
+    if path is None:
+        path = ["tests", "example_stac"]
+
     if url.startswith("http"):
         r = requests.get(url)
         r.raise_for_status()
@@ -59,8 +62,11 @@ def compare_example(
     example_url: str,
     model: Type[BaseModel],
     fields: Optional[List[str]] = None,
-    path: List[str] = ["tests", "example_stac"],
+    path: Optional[List[str]] = None,
 ) -> None:
+    if path is None:
+        path = ["tests", "example_stac"]
+
     example = request(example_url, path)
     model_dict = json.loads(model(**example).model_dump_json())
 
