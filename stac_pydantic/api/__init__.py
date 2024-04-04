@@ -7,5 +7,6 @@ from .item_collection import ItemCollection
 from .landing import LandingPage
 from .search import Search
 
+# TODO: remove in 4.0
 # For compatibility
 ConformanceClasses = Conformance
