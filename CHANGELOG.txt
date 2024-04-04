@@ -1,6 +1,7 @@
-Unreleased
-----------
-- rename `stac_pydantic.api.conformance.ConformanceClasses` to `stac_pydantic.api.conformance.Conformance`
+3.1.0 (TBD)
+-----------------
+- Remove the deprecated `Context` extension (#138, @vincentsarago)
+- Rename `stac_pydantic.api.conformance.ConformanceClasses` to `stac_pydantic.api.conformance.Conformance`
 
 3.0.0 (2024-01-25)
 ------------------
