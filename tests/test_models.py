@@ -6,7 +6,6 @@ from pydantic import ConfigDict, ValidationError
 from shapely.geometry import shape
 
 from stac_pydantic import Collection, Item, ItemProperties
-from stac_pydantic.api.extensions.context import ContextExtension
 from stac_pydantic.extensions import validate_extensions
 from stac_pydantic.links import Link, Links
 from stac_pydantic.shared import MimeTypes
@@ -159,11 +158,6 @@ def test_geo_interface() -> None:
     geom = shape(item.geometry)
     test_item["geometry"] = geom
     Item(**test_item)
-
-
-def test_api_context_extension() -> None:
-    context = {"returned": 10, "limit": 10, "matched": 100}
-    ContextExtension(**context)
 
 
 def test_declared_model() -> None:
