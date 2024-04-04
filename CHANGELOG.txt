@@ -2,6 +2,8 @@
 3.1.0 (TBD)
 -----------------
 - Remove the deprecated `Context` extension (#138, @vincentsarago)
+- Update pre-commit configuration and switch to astral-sh/ruff for linter and formater
+- Add official support for python 3.12
 
 3.0.0 (2024-01-25)
 ------------------
