@@ -52,4 +52,4 @@ class Collection(_Catalog):
     keywords: Optional[List[str]] = None
     providers: Optional[List[Provider]] = None
     summaries: Optional[Dict[str, Union[Range, List[Any], Dict[str, Any]]]] = None
-    type: Literal["Collection"] = "Collection"
+    type: Literal["Collection"]
