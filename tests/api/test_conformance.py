@@ -1,15 +1,20 @@
 import pytest
 from pydantic import ValidationError
 
-from stac_pydantic.api.conformance import ConformanceClasses
+from stac_pydantic.api.conformance import Conformance
+
+
+def test_deprecation():
+    with pytest.warns(DeprecationWarning):
+        from stac_pydantic.api import ConformanceClasses  # noqa
 
 
 def test_api_conformance():
-    ConformanceClasses(
+    Conformance(
         conformsTo=["https://conformance-class-1", "http://conformance-class-2"]
     )
 
 
 def test_api_conformance_invalid_url():
     with pytest.raises(ValidationError):
-        ConformanceClasses(conformsTo=["s3://conformance-class"])
+        Conformance(conformsTo=["s3://conformance-class"])
