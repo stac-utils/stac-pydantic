@@ -4,6 +4,11 @@ from pydantic import ValidationError
 from stac_pydantic.api.conformance import Conformance
 
 
+def test_deprecation():
+    with pytest.warns(DeprecationWarning):
+        from stac_pydantic.api import ConformanceClasses  # noqa
+
+
 def test_api_conformance():
     Conformance(
         conformsTo=["https://conformance-class-1", "http://conformance-class-2"]
