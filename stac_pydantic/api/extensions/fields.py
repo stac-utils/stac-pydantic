@@ -8,8 +8,8 @@ class FieldsExtension(BaseModel):
     https://github.com/radiantearth/stac-api-spec/tree/master/extensions/fields#fields-api-extension
     """
 
-    includes: Optional[Set[str]]
-    excludes: Optional[Set[str]]
+    includes: Optional[Set[str]] = None
+    excludes: Optional[Set[str]] = None
 
     def _get_field_dict(self, fields: Set[str]) -> Dict[str, Set[str]]:
         """Internal method to create a dictionary for advanced include or exclude of pydantic fields on model export

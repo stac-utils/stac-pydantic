@@ -1,6 +1,4 @@
 {
-    "stac_version": "1.0.0",
-    "stac_extensions": [],
     "type": "FeatureCollection",
     "features": [
       {
@@ -60,11 +58,15 @@
         "links": [
           {
             "rel": "self",
-            "href": "http://cool-sat.com/catalog/CS3-20160503_132130_04/CS3-20160503_132130_04.json"
+            "href": "http://cool-sat.com/catalog/collections/CS3-20160503_132130_04/items/CS3-20160503_132130_04.json"
           },
           {
             "rel": "collection",
             "href": "http://cool-sat.com/catalog/CS3-20160503_132130_04/catalog.json"
+          },
+          {
+            "rel": "root",
+            "href": "http://cool-sat.com/catalog/"
           }
         ],
         "assets": {
@@ -83,7 +85,13 @@
     "links": [
       {
         "rel": "self",
-        "href": "http://stac.example.com/search?collection=CS3"
+        "href": "http://stac.example.com/search?collection=CS3",
+        "type": "application/geo+json"
+      },
+      {
+        "rel": "root",
+        "href": "http://stac.example.com/",
+        "type": "application/json"
       }
     ]
   }

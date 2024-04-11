@@ -1,8 +1,9 @@
 from datetime import datetime
 from enum import Enum, auto
-from typing import List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
+from warnings import warn
 
-from pydantic import BaseModel, Extra, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from stac_pydantic.utils import AutoValueEnum
 
@@ -11,6 +12,8 @@ BBox = Union[
     Tuple[NumType, NumType, NumType, NumType],  # 2D bbox
     Tuple[NumType, NumType, NumType, NumType, NumType, NumType],  # 3D bbox
 ]
+
+SEMVER_REGEX = r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$"
 
 # https://tools.ietf.org/html/rfc3339#section-5.6
 # Unused, but leaving it here since it's used by dependencies
@@ -62,18 +65,54 @@ class ProviderRoles(str, AutoValueEnum):
     host = auto()
 
 
-class Provider(BaseModel):
+class StacBaseModel(BaseModel):
+    def to_dict(
+        self, by_alias: bool = True, exclude_unset: bool = True, **kwargs: Any
+    ) -> Dict[str, Any]:
+        warn(
+            "`to_dict` method is deprecated. Use `model_dump` instead",
+            DeprecationWarning,
+        )
+        return self.model_dump(by_alias=by_alias, exclude_unset=exclude_unset, **kwargs)
+
+    def to_json(
+        self, by_alias: bool = True, exclude_unset: bool = True, **kwargs: Any
+    ) -> str:
+        warn(
+            "`to_json` method is deprecated. Use `model_dump_json` instead",
+            DeprecationWarning,
+        )
+        return self.model_dump_json(
+            by_alias=by_alias, exclude_unset=exclude_unset, **kwargs
+        )
+
+    def model_dump(
+        self, *, by_alias: bool = True, exclude_unset: bool = True, **kwargs: Any
+    ) -> Dict[str, Any]:
+        return super().model_dump(
+            by_alias=by_alias, exclude_unset=exclude_unset, **kwargs
+        )
+
+    def model_dump_json(
+        self, *, by_alias: bool = True, exclude_unset: bool = True, **kwargs: Any
+    ) -> str:
+        return super().model_dump_json(
+            by_alias=by_alias, exclude_unset=exclude_unset, **kwargs
+        )
+
+
+class Provider(StacBaseModel):
     """
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md#provider-object
     """
 
     name: str = Field(..., alias="name", min_length=1)
-    description: Optional[str]
-    roles: Optional[List[str]]
-    url: Optional[str]
+    description: Optional[str] = None
+    roles: Optional[List[str]] = None
+    url: Optional[str] = None
 
 
-class StacCommonMetadata(BaseModel):
+class StacCommonMetadata(StacBaseModel):
     """
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/item-spec/common-metadata.md#date-and-time-range
     """
@@ -91,9 +130,6 @@ class StacCommonMetadata(BaseModel):
     providers: Optional[List[Provider]] = Field(None, alias="providers")
     gsd: Optional[float] = Field(None, alias="gsd", gt=0)
 
-    class Config:
-        json_encoders = {datetime: lambda v: v.strftime(DATETIME_RFC339)}
-
 
 class Asset(StacCommonMetadata):
     """
@@ -101,12 +137,10 @@ class Asset(StacCommonMetadata):
     """
 
     href: str = Field(..., alias="href", min_length=1)
-    type: Optional[str]
-    title: Optional[str]
-    description: Optional[str]
-    roles: Optional[List[str]]
-
-    class Config:
-        allow_population_by_field_name = True
-        use_enum_values = True
-        extra = Extra.allow
+    type: Optional[str] = None
+    title: Optional[str] = None
+    description: Optional[str] = None
+    roles: Optional[List[str]] = None
+    model_config = ConfigDict(
+        populate_by_name=True, use_enum_values=True, extra="allow"
+    )
