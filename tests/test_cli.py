@@ -9,5 +9,8 @@ def test_valid_stac_item(cli_runner):
             "https://raw.githubusercontent.com/radiantearth/stac-spec/v1.0.0/examples/extended-item.json",
         ],
     )
-    assert not result.exception
+
+    if result.exception:
+        raise result.exception
+
     assert result.exit_code == 0

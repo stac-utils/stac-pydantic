@@ -1,18 +1,17 @@
 from datetime import datetime as dt
 from typing import Any, Dict, List, Optional, Tuple, Union, cast
 
-from geojson_pydantic.geometries import (  # type: ignore
-    GeometryCollection,
+from ciso8601 import parse_rfc3339
+from geojson_pydantic.geometries import GeometryCollection  # type: ignore
+from geojson_pydantic.geometries import (
     LineString,
     MultiLineString,
     MultiPoint,
     MultiPolygon,
     Point,
     Polygon,
-    _GeometryBase,
 )
-from pydantic import BaseModel, Field, validator
-from pydantic.datetime_parse import parse_datetime
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 from stac_pydantic.api.extensions.fields import FieldsExtension
 from stac_pydantic.api.extensions.query import Operator
@@ -34,14 +33,14 @@ class Search(BaseModel):
     """
     The base class for STAC API searches.
 
-    https://github.com/radiantearth/stac-api-spec/blob/master/api-spec.md#filter-parameters-and-fields
+    https://github.com/radiantearth/stac-api-spec/blob/v1.0.0/item-search/README.md#query-parameter-table
     """
 
-    collections: Optional[List[str]]
-    ids: Optional[List[str]]
-    bbox: Optional[BBox]
-    intersects: Optional[Intersection]
-    datetime: Optional[str]
+    collections: Optional[List[str]] = None
+    ids: Optional[List[str]] = None
+    bbox: Optional[BBox] = None
+    intersects: Optional[Intersection] = None
+    datetime: Optional[str] = None
     limit: int = 10
 
     @property
@@ -51,28 +50,26 @@ class Search(BaseModel):
             return None
         if values[0] == ".." or values[0] == "":
             return None
-        return parse_datetime(values[0])
+        return parse_rfc3339(values[0])
 
     @property
     def end_date(self) -> Optional[dt]:
         values = (self.datetime or "").split("/")
         if len(values) == 1:
-            return parse_datetime(values[0])
+            return parse_rfc3339(values[0])
         if values[1] == ".." or values[1] == "":
             return None
-        return parse_datetime(values[1])
+        return parse_rfc3339(values[1])
 
-    @validator("intersects")
-    def validate_spatial(
-        cls,
-        v: Intersection,
-        values: Dict[str, Any],
-    ) -> Intersection:
-        if v and values["bbox"] is not None:
+    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-validators for more information.
+    @model_validator(mode="before")
+    def validate_spatial(cls, values: Dict[str, Any]) -> Dict[str, Any]:
+        if values.get("intersects") and values.get("bbox") is not None:
             raise ValueError("intersects and bbox parameters are mutually exclusive")
-        return v
+        return values
 
-    @validator("bbox")
+    @field_validator("bbox")
+    @classmethod
     def validate_bbox(cls, v: BBox) -> BBox:
         if v:
             # Validate order
@@ -103,7 +100,8 @@ class Search(BaseModel):
 
         return v
 
-    @validator("datetime")
+    @field_validator("datetime")
+    @classmethod
     def validate_datetime(cls, v: str) -> str:
         if "/" in v:
             values = v.split("/")
@@ -111,17 +109,20 @@ class Search(BaseModel):
             # Single date is interpreted as end date
             values = ["..", v]
 
-        dates = []
+        dates: List[dt] = []
         for value in values:
             if value == ".." or value == "":
-                dates.append("..")
                 continue
 
-            parse_datetime(value)
-            dates.append(value)
+            dates.append(parse_rfc3339(value))
 
-        if ".." not in dates:
-            if parse_datetime(dates[0]) > parse_datetime(dates[1]):
+        if len(values) > 2:
+            raise ValueError(
+                "Invalid datetime range, must match format (begin_date, end_date)"
+            )
+
+        if not {"..", ""}.intersection(set(values)):
+            if dates[0] > dates[1]:
                 raise ValueError(
                     "Invalid datetime range, must match format (begin_date, end_date)"
                 )
@@ -129,7 +130,7 @@ class Search(BaseModel):
         return v
 
     @property
-    def spatial_filter(self) -> Optional[_GeometryBase]:
+    def spatial_filter(self) -> Optional[Intersection]:
         """Return a geojson-pydantic object representing the spatial filter for the search request.
 
         Check for both because the ``bbox`` and ``intersects`` parameters are mutually exclusive.
@@ -148,5 +149,5 @@ class ExtendedSearch(Search):
     """
 
     field: Optional[FieldsExtension] = Field(None, alias="fields")
-    query: Optional[Dict[str, Dict[Operator, Any]]]
-    sortby: Optional[List[SortExtension]]
+    query: Optional[Dict[str, Dict[Operator, Any]]] = None
+    sortby: Optional[List[SortExtension]] = None

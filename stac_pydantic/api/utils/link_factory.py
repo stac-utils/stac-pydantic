@@ -21,7 +21,7 @@ class BaseLinks:
 
     def create_links(self) -> Links:
         """Create inferred links"""
-        return Links.parse_obj(
+        return Links.model_validate(
             [getattr(self, member)() for member in self._link_members]
         )
 
@@ -31,7 +31,7 @@ class CollectionLinks(BaseLinks):
     """Create inferred links specific to collections."""
 
     collection_id: str
-    _link_members: ClassVar[Tuple[str, ...]] = ("root", "self", "parent", "item")
+    _link_members: ClassVar[Tuple[str, ...]] = ("root", "self", "parent", "items")
 
     def self(self) -> Link:
         """Create the `self` link."""
@@ -47,10 +47,10 @@ class CollectionLinks(BaseLinks):
             rel=Relations.parent, type=MimeTypes.json, href=urljoin(self.base_url, "/")
         )
 
-    def item(self) -> Link:
+    def items(self) -> Link:
         """Create the `item` link."""
         return Link(
-            rel=Relations.item,
+            rel=Relations.items,
             type=MimeTypes.geojson,
             href=urljoin(self.base_url, f"/collections/{self.collection_id}/items"),
         )

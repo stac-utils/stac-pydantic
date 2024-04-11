@@ -1,0 +1,1674 @@
+{
+    "links":[
+       {
+          "href":"https://planetarycomputer.microsoft.com/api/stac/v1/collections",
+          "rel":"self",
+          "type":"application/json"
+       },
+       {
+         "href":"https://planetarycomputer.microsoft.com/api/stac/v1/",
+         "rel":"root",
+         "type":"application/json"
+      }
+    ],
+    "collections":[
+       {
+          "id":"aster-l1t",
+          "description":"The [ASTER](https://terra.nasa.gov/about/terra-instruments/aster) instrument, launched on-board NASA's [Terra](https://terra.nasa.gov/) satellite in 1999, provides multispectral images of the Earth at 15m-90m resolution.  ASTER images provide information about land surface temperature, color, elevation, and mineral composition.\n\nThis dataset represents ASTER [L1T](https://lpdaac.usgs.gov/products/ast_l1tv003/) data from 2000-2006.  L1T images have been terrain-corrected and rotated to a north-up UTM projection.  Images are in [cloud-optimized GeoTIFF](https://www.cogeo.org/) format.\n",
+          "stac_version":"1.0.0",
+          "type": "Collection",
+          "links":[
+             {
+                "href":"https://planetarycomputer.microsoft.com/api/stac/v1/collections/aster-l1t",
+                "rel":"self",
+                "type":"application/json"
+             },
+             {
+                "href":"https://planetarycomputer.microsoft.com/",
+                "rel":"parent",
+                "type":"application/json"
+             },
+             {
+                "href":"https://planetarycomputer.microsoft.com/api/stac/v1/collections/aster-l1t/items",
+                "rel":"item",
+                "type":"application/geo+json"
+             },
+             {
+                "href":"https://planetarycomputer.microsoft.com/api/stac/v1/",
+                "rel":"root",
+                "type":"application/json"
+             },
+             {
+                "href":"https://www.usgs.gov/core-science-systems/hdds/data-policy",
+                "rel":"license",
+                "title":"public domain"
+             }
+          ],
+          "stac_extensions":[
+             "https://raw.githubusercontent.com/stac-extensions/item-assets/v1.0.0/json-schema/schema.json"
+          ],
+          "title":"ASTER L1T",
+          "license":"proprietary",
+          "extent":{
+             "spatial":{
+                "bbox":[
+                   [
+                      -180.0,
+                      -90.0,
+                      180.0,
+                      90.0
+                   ]
+                ]
+             },
+             "temporal":{
+                "interval":[
+                   [
+                      "2000-03-04T12:00:00.000000Z",
+                      "2006-12-31T12:00:00.000000Z"
+                   ]
+                ]
+             }
+          },
+          "keywords":[
+             "aster",
+             "usgs",
+             "nasa",
+             "satellite",
+             "global"
+          ],
+          "providers":[
+             {
+                "name":"NASA",
+                "roles":[
+                   "producer",
+                   "licensor"
+                ],
+                "url":"https://terra.nasa.gov/about/terra-instruments/aster"
+             },
+             {
+                "name":"USGS",
+                "roles":[
+                   "processor",
+                   "producer",
+                   "licensor"
+                ],
+                "url":"https://lpdaac.usgs.gov/data/get-started-data/collection-overview/missions/aster-overview/"
+             },
+             {
+                "name":"Microsoft",
+                "roles":[
+                   "host",
+                   "processor"
+                ],
+                "url":"https://planetarycomputer.microsoft.com"
+             }
+          ],
+          "summaries":{
+             "gsd":[
+                15,
+                30,
+                90
+             ],
+             "eo:bands":[
+                {
+                   "gsd":15,
+                   "name":"VNIR_Band1",
+                   "common_name":"yellow/green",
+                   "description":"visible yellow/green",
+                   "center_wavelength":0.56,
+                   "full_width_half_max":0.08
+                },
+                {
+                   "gsd":15,
+                   "name":"VNIR_Band2",
+                   "common_name":"red",
+                   "description":"visible red",
+                   "center_wavelength":0.66,
+                   "full_width_half_max":0.06
+                },
+                {
+                   "gsd":15,
+                   "name":"VNIR_Band3N",
+                   "common_name":"near infrared",
+                   "description":"near infrared",
+                   "center_wavelength":0.82,
+                   "full_width_half_max":0.08
+                },
+                {
+                   "gsd":30,
+                   "name":"SWIR_Band4",
+                   "common_name":"swir",
+                   "description":"short-wave infrared",
+                   "center_wavelength":1.65,
+                   "full_width_half_max":0.1
+                },
+                {
+                   "gsd":30,
+                   "name":"SWIR_Band5",
+                   "common_name":"swir",
+                   "description":"short-wave infrared",
+                   "center_wavelength":2.165,
+                   "full_width_half_max":0.04
+                },
+                {
+                   "gsd":30,
+                   "name":"SWIR_Band6",
+                   "common_name":"swir",
+                   "description":"short-wave infrared",
+                   "center_wavelength":2.205,
+                   "full_width_half_max":0.04
+                },
+                {
+                   "gsd":30,
+                   "name":"SWIR_Band7",
+                   "common_name":"swir",
+                   "description":"short-wave infrared",
+                   "center_wavelength":2.26,
+                   "full_width_half_max":0.05
+                },
+                {
+                   "gsd":30,
+                   "name":"SWIR_Band8",
+                   "common_name":"swir",
+                   "description":"short-wave infrared",
+                   "center_wavelength":2.339,
+                   "full_width_half_max":0.07
+                },
+                {
+                   "gsd":30,
+                   "name":"SWIR_Band9",
+                   "common_name":"swir",
+                   "description":"short-wave infrared",
+                   "center_wavelength":2.395,
+                   "full_width_half_max":0.07
+                },
+                {
+                   "gsd":90,
+                   "name":"TIR_Band10",
+                   "common_name":"lwir",
+                   "description":"thermal infrared",
+                   "center_wavelength":8.3,
+                   "full_width_half_max":0.35
+                },
+                {
+                   "gsd":90,
+                   "name":"TIR_Band11",
+                   "common_name":"lwir",
+                   "description":"thermal infrared",
+                   "center_wavelength":8.65,
+                   "full_width_half_max":0.35
+                },
+                {
+                   "gsd":90,
+                   "name":"TIR_Band12",
+                   "common_name":"lwir",
+                   "description":"thermal infrared",
+                   "center_wavelength":9.11,
+                   "full_width_half_max":0.35
+                },
+                {
+                   "gsd":90,
+                   "name":"TIR_Band13",
+                   "common_name":"lwir",
+                   "description":"thermal infrared",
+                   "center_wavelength":10.6,
+                   "full_width_half_max":0.7
+                },
+                {
+                   "gsd":90,
+                   "name":"TIR_Band14",
+                   "common_name":"lwir",
+                   "description":"thermal infrared",
+                   "center_wavelength":11.3,
+                   "full_width_half_max":0.7
+                }
+             ],
+             "platform":[
+                "terra"
+             ],
+             "instruments":[
+                "aster"
+             ]
+          },
+          "msft:storage_account":"astersa",
+          "msft:container":"aster",
+          "msft:short_description":"The ASTER instrument, launched on-board NASA's Terra satellite in 1999, provides multispectral images of the Earth at 15m-90m resolution.  This dataset contains ASTER data from 2000-2006.",
+          "item_assets":{
+             "TIR":{
+                "title":"TIR Swath data",
+                "roles":[
+                   "data"
+                ],
+                "eo:bands":[
+                   {
+                      "name":"TIR_Band10",
+                      "common_name":"lwir",
+                      "center_wavelength":8.3,
+                      "full_width_half_max":0.35,
+                      "description":"thermal infrared"
+                   },
+                   {
+                      "name":"TIR_Band11",
+                      "common_name":"lwir",
+                      "center_wavelength":8.65,
+                      "full_width_half_max":0.35,
+                      "description":"thermal infrared"
+                   },
+                   {
+                      "name":"TIR_Band12",
+                      "common_name":"lwir",
+                      "center_wavelength":9.11,
+                      "full_width_half_max":0.35,
+                      "description":"thermal infrared"
+                   },
+                   {
+                      "name":"TIR_Band13",
+                      "common_name":"lwir",
+                      "center_wavelength":10.6,
+                      "full_width_half_max":0.7,
+                      "description":"thermal infrared"
+                   },
+                   {
+                      "name":"TIR_Band14",
+                      "common_name":"lwir",
+                      "center_wavelength":11.3,
+                      "full_width_half_max":0.7,
+                      "description":"thermal infrared"
+                   }
+                ]
+             },
+             "xml":{
+                "title":"XML metadata",
+                "type":"application/xml",
+                "roles":[
+                   "metadata"
+                ]
+             },
+             "SWIR":{
+                "title":"SWIR Swath data",
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "roles":[
+                   "data"
+                ],
+                "eo:bands":[
+                   {
+                      "name":"SWIR_Band4",
+                      "common_name":"swir",
+                      "center_wavelength":1.65,
+                      "full_width_half_max":0.1,
+                      "description":"short-wave infrared"
+                   },
+                   {
+                      "name":"SWIR_Band5",
+                      "common_name":"swir",
+                      "center_wavelength":2.165,
+                      "full_width_half_max":0.04,
+                      "description":"short-wave infrared"
+                   },
+                   {
+                      "name":"SWIR_Band6",
+                      "common_name":"swir",
+                      "center_wavelength":2.205,
+                      "full_width_half_max":0.04,
+                      "description":"short-wave infrared"
+                   },
+                   {
+                      "name":"SWIR_Band7",
+                      "common_name":"swir",
+                      "center_wavelength":2.26,
+                      "full_width_half_max":0.05,
+                      "description":"short-wave infrared"
+                   },
+                   {
+                      "name":"SWIR_Band8",
+                      "common_name":"swir",
+                      "center_wavelength":2.339,
+                      "full_width_half_max":0.07,
+                      "description":"short-wave infrared"
+                   },
+                   {
+                      "name":"SWIR_Band9",
+                      "common_name":"swir",
+                      "center_wavelength":2.395,
+                      "full_width_half_max":0.07,
+                      "description":"short-wave infrared"
+                   }
+                ]
+             },
+             "VNIR":{
+                "title":"VNIR Swath data",
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "roles":[
+                   "data"
+                ],
+                "eo:bands":[
+                   {
+                      "name":"VNIR_Band1",
+                      "common_name":"yellow/green",
+                      "center_wavelength":0.56,
+                      "full_width_half_max":0.08,
+                      "description":"visible yellow/green"
+                   },
+                   {
+                      "name":"VNIR_Band2",
+                      "common_name":"red",
+                      "center_wavelength":0.66,
+                      "full_width_half_max":0.06,
+                      "description":"visible red"
+                   },
+                   {
+                      "name":"VNIR_Band3N",
+                      "common_name":"near infrared",
+                      "center_wavelength":0.82,
+                      "full_width_half_max":0.08,
+                      "description":"near infrared"
+                   }
+                ]
+             },
+             "qa-txt":{
+                "title":"QA browse file",
+                "description":"Geometric quality assessment report.",
+                "type":"text/plain",
+                "roles":[
+                   "metadata"
+                ]
+             },
+             "qa-browse":{
+                "title":"QA browse file",
+                "description":"Single-band black and white reduced resolution browse overlaid with red, green, and blue (RGB) markers for GCPs used during the geometric verification quality check.",
+                "type":"image/jpeg",
+                "roles":[
+                   "thumbnail"
+                ]
+             },
+             "tir-browse":{
+                "title":"Standalone reduced resolution TIR",
+                "type":"image/jpeg",
+                "roles":[
+                   "thumbnail"
+                ]
+             },
+             "vnir-browse":{
+                "title":"VNIR browse file",
+                "description":"Standalone reduced resolution VNIR",
+                "type":"image/jpeg",
+                "roles":[
+                   "thumbnail"
+                ]
+             }
+          },
+          "assets":{
+             "thumbnail":{
+                "title":"ASTER L1T",
+                "href":"https://ai4edatasetspublicassets.blob.core.windows.net/assets/pc_thumbnails/aster.png",
+                "media_type":"image/png"
+             }
+          }
+       },
+       {
+          "id":"landsat-8-c2-l2",
+          "description":"The [Landsat](https://landsat.gsfc.nasa.gov/) program has been imaging the Earth since 1972; it provides a comprehensive, continuous archive of the Earth's surface.  [Landsat 8](https://www.usgs.gov/core-science-systems/nli/landsat/landsat-8) is the most recent satellite in the Landsat series.  Launched in 2013, Landsat 8 captures data in eleven spectral bands: ten optical/IR bands from the [Operational Land Imager](https://landsat.gsfc.nasa.gov/landsat-8/operational-land-imager) (OLI) instrument, and two thermal bands from the [Thermal Infrared Sensor](https://landsat.gsfc.nasa.gov/landsat-8/thermal-infrared-sensor-tirs) (TIRS) instrument.\n\nThis dataset represents the global archive of Level-2 Landsat 8 data from [Landsat Collection 2](https://www.usgs.gov/core-science-systems/nli/landsat/landsat-collection-2).  Because there is some latency before Level-2 data is available, a rolling window of recent Level-1 data is available as well.  Images are stored in [cloud-optimized GeoTIFF](https://www.cogeo.org/) format.\n",
+          "stac_version":"1.0.0",
+          "type": "Collection",
+          "links":[
+             {
+                "href":"https://planetarycomputer.microsoft.com/api/stac/v1/collections/landsat-8-c2-l2",
+                "rel":"self",
+                "type":"application/json"
+             },
+             {
+                "href":"https://planetarycomputer.microsoft.com/",
+                "rel":"parent",
+                "type":"application/json"
+             },
+             {
+                "href":"https://planetarycomputer.microsoft.com/api/stac/v1/collections/landsat-8-c2-l2/items",
+                "rel":"item",
+                "type":"application/geo+json"
+             },
+             {
+                "href":"https://planetarycomputer.microsoft.com/api/stac/v1/",
+                "rel":"root",
+                "type":"application/json"
+             },
+             {
+                "href":"https://www.usgs.gov/core-science-systems/hdds/data-policy",
+                "rel":"license",
+                "title":"public domain"
+             }
+          ],
+          "stac_extensions":[
+             "https://raw.githubusercontent.com/stac-extensions/item-assets/v1.0.0/json-schema/schema.json"
+          ],
+          "title":"Landsat 8 Collection 2 Level-2",
+          "license":"proprietary",
+          "extent":{
+             "spatial":{
+                "bbox":[
+                   [
+                      -180.0,
+                      -90.0,
+                      180.0,
+                      90.0
+                   ]
+                ]
+             },
+             "temporal":{
+                "interval":[
+                   [
+                      "2013-04-11T00:00:00Z",
+                      null
+                   ]
+                ]
+             }
+          },
+          "keywords":[
+             "landsat",
+             "usgs",
+             "nasa",
+             "satellite",
+             "global",
+             "reflectance"
+          ],
+          "providers":[
+             {
+                "name":"NASA",
+                "roles":[
+                   "producer",
+                   "licensor"
+                ],
+                "url":"https://landsat.gsfc.nasa.gov/"
+             },
+             {
+                "name":"USGS",
+                "roles":[
+                   "producer",
+                   "processor",
+                   "licensor"
+                ],
+                "url":"https://www.usgs.gov/core-science-systems/nli/landsat/landsat-collection-2-level-2-science-products"
+             },
+             {
+                "name":"Microsoft",
+                "roles":[
+                   "host"
+                ],
+                "url":"https://planetarycomputer.microsoft.com"
+             }
+          ],
+          "summaries":{
+             "gsd":[
+                15,
+                30,
+                100
+             ],
+             "eo:bands":[
+                {
+                   "gsd":30,
+                   "name":"SR_B1",
+                   "common_name":"coastal",
+                   "description":"coastal",
+                   "center_wavelength":0.44,
+                   "full_width_half_max":0.02
+                },
+                {
+                   "gsd":30,
+                   "name":"SR_B2",
+                   "common_name":"blue",
+                   "description":"visible blue",
+                   "center_wavelength":0.48,
+                   "full_width_half_max":0.06
+                },
+                {
+                   "gsd":30,
+                   "name":"SR_B3",
+                   "common_name":"green",
+                   "description":"visible green",
+                   "center_wavelength":0.56,
+                   "full_width_half_max":0.06
+                },
+                {
+                   "gsd":30,
+                   "name":"SR_B4",
+                   "common_name":"red",
+                   "description":"visible red",
+                   "center_wavelength":0.65,
+                   "full_width_half_max":0.04
+                },
+                {
+                   "gsd":30,
+                   "name":"SR_B5",
+                   "common_name":"nir",
+                   "description":"near-infrared",
+                   "center_wavelength":0.86,
+                   "full_width_half_max":0.03
+                },
+                {
+                   "gsd":30,
+                   "name":"SR_B6",
+                   "common_name":"swir16",
+                   "description":"short-wave infrared",
+                   "center_wavelength":1.6,
+                   "full_width_half_max":0.08
+                },
+                {
+                   "gsd":30,
+                   "name":"SR_B7",
+                   "common_name":"swir22",
+                   "description":"short-wave infrared",
+                   "center_wavelength":2.2,
+                   "full_width_half_max":0.2
+                },
+                {
+                   "gsd":100,
+                   "name":"ST_B10",
+                   "common_name":"lwir11",
+                   "description":"long-wave infrared",
+                   "center_wavelength":10.9,
+                   "full_width_half_max":0.8
+                },
+                {
+                   "gsd":30,
+                   "name":"ST_TRAD",
+                   "description":"thermal radiance"
+                },
+                {
+                   "gsd":30,
+                   "name":"ST_URAD",
+                   "description":"upwelled radiance"
+                },
+                {
+                   "gsd":30,
+                   "name":"ST_ATRAN",
+                   "description":"atmospheric transmission"
+                },
+                {
+                   "gsd":30,
+                   "name":"ST_CDIST",
+                   "description":"distance to nearest cloud"
+                },
+                {
+                   "gsd":30,
+                   "name":"ST_DRAD",
+                   "description":"downwelled radiance"
+                },
+                {
+                   "gsd":30,
+                   "name":"ST_EMIS",
+                   "description":"emissivity"
+                },
+                {
+                   "gsd":30,
+                   "name":"ST_EMSD",
+                   "description":"emissivity standard deviation"
+                }
+             ],
+             "platform":[
+                "landsat-8"
+             ],
+             "instruments":[
+                "oli",
+                "tirs"
+             ]
+          },
+          "msft:storage_account":"landsateuwest",
+          "msft:container":"landsat-c2",
+          "msft:short_description":"Landsat 8 has captured 30m-resolution imagery of the Earth since 2013.  This dataset contains global, atmospherically-corrected imagery from Landsat Collection 2",
+          "item_assets":{
+             "ANG":{
+                "title":"Angle Coefficients File",
+                "description":"Collection 2 Level-1 Angle Coefficients File (ANG)",
+                "type":"text/plain"
+             },
+             "SR_B1":{
+                "title":"Coastal/Aerosol Band (B1)",
+                "description":"Collection 2 Level-2 Coastal/Aerosol Band (B1) Surface Reflectance",
+                "gsd":30.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "eo:bands":[
+                   {
+                      "name":"SR_B1",
+                      "common_name":"coastal",
+                      "center_wavelength":0.44,
+                      "full_width_half_max":0.02
+                   }
+                ]
+             },
+             "SR_B2":{
+                "title":"Blue Band (B2)",
+                "description":"Collection 2 Level-2 Blue Band (B2) Surface Reflectance",
+                "gsd":30.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "eo:bands":[
+                   {
+                      "name":"SR_B2",
+                      "common_name":"blue",
+                      "center_wavelength":0.48,
+                      "full_width_half_max":0.06
+                   }
+                ]
+             },
+             "SR_B3":{
+                "title":"Green Band (B3)",
+                "description":"Collection 2 Level-2 Green Band (B3) Surface Reflectance",
+                "gsd":30.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "eo:bands":[
+                   {
+                      "name":"SR_B3",
+                      "common_name":"green",
+                      "center_wavelength":0.56,
+                      "full_width_half_max":0.06
+                   }
+                ]
+             },
+             "SR_B4":{
+                "title":"Red Band (B4)",
+                "description":"Collection 2 Level-2 Red Band (B4) Surface Reflectance",
+                "gsd":30.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "eo:bands":[
+                   {
+                      "name":"SR_B4",
+                      "common_name":"red",
+                      "center_wavelength":0.65,
+                      "full_width_half_max":0.04
+                   }
+                ]
+             },
+             "SR_B5":{
+                "title":"Near Infrared Band 0.8 (B5)",
+                "description":"Collection 2 Level-2 Near Infrared Band 0.8 (B5) Surface Reflectance",
+                "gsd":30.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "eo:bands":[
+                   {
+                      "name":"SR_B5",
+                      "common_name":"nir08",
+                      "center_wavelength":0.86,
+                      "full_width_half_max":0.03
+                   }
+                ]
+             },
+             "SR_B6":{
+                "title":"Short-wave Infrared Band 1.6 (B6)",
+                "description":"Collection 2 Level-2 Short-wave Infrared Band 1.6 (B6) Surface Reflectance",
+                "gsd":30.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "eo:bands":[
+                   {
+                      "name":"SR_B6",
+                      "common_name":"swir16",
+                      "center_wavelength":1.6,
+                      "full_width_half_max":0.08
+                   }
+                ]
+             },
+             "SR_B7":{
+                "title":"Short-wave Infrared Band 2.2 (B7)",
+                "description":"Collection 2 Level-2 Short-wave Infrared Band 2.2 (B7) Surface Reflectance",
+                "gsd":30.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "eo:bands":[
+                   {
+                      "name":"SR_B7",
+                      "common_name":"swir22",
+                      "center_wavelength":2.2,
+                      "full_width_half_max":0.2
+                   }
+                ]
+             },
+             "SR_B8":{
+                "title":"Aerosol Quality Analysis Band",
+                "description":"Collection 2 Level-2 Aerosol Quality Analysis Band (ANG) Surface Reflectance",
+                "gsd":30.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized"
+             },
+             "ST_QA":{
+                "title":"Surface Temperature Quality Assessment Band",
+                "description":"Landsat Collection 2 Level-2 Surface Temperature Band Surface Temperature Product",
+                "gsd":30.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized"
+             },
+             "ST_B10":{
+                "title":"Surface Temperature Band (B10)",
+                "description":"Landsat Collection 2 Level-2 Surface Temperature Band (B10) Surface Temperature Product",
+                "gsd":100.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "eo:bands":[
+                   {
+                      "name":"ST_B10",
+                      "common_name":"lwir11",
+                      "center_wavelength":10.9,
+                      "full_width_half_max":0.8
+                   }
+                ]
+             },
+             "MTL.txt":{
+                "title":"Product Metadata File",
+                "description":"Collection 2 Level-1 Product Metadata File (MTL)",
+                "type":"text/plain"
+             },
+             "MTL.xml":{
+                "title":"Product Metadata File (xml)",
+                "description":"Collection 2 Level-1 Product Metadata File (xml)",
+                "type":"application/xml"
+             },
+             "ST_DRAD":{
+                "title":"Downwelled Radiance Band",
+                "description":"Landsat Collection 2 Level-2 Downwelled Radiance Band Surface Temperature Product",
+                "gsd":30.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "eo:bands":[
+                   {
+                      "name":"ST_DRAD",
+                      "description":"downwelled radiance"
+                   }
+                ]
+             },
+             "ST_EMIS":{
+                "title":"Emissivity Band",
+                "description":"Landsat Collection 2 Level-2 Emissivity Band Surface Temperature Product",
+                "gsd":30.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "eo:bands":[
+                   {
+                      "name":"ST_EMIS",
+                      "description":"emissivity"
+                   }
+                ]
+             },
+             "ST_EMSD":{
+                "title":"Emissivity Standard Deviation Band",
+                "description":"Landsat Collection 2 Level-2 Emissivity Standard Deviation Band Surface Temperature Product",
+                "gsd":30.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "eo:bands":[
+                   {
+                      "name":"ST_EMSD",
+                      "description":"emissivity standard deviation"
+                   }
+                ]
+             },
+             "ST_TRAD":{
+                "title":"Thermal Radiance Band",
+                "description":"Landsat Collection 2 Level-2 Thermal Radiance Band Surface Temperature Product",
+                "gsd":30.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "eo:bands":[
+                   {
+                      "name":"ST_TRAD",
+                      "description":"thermal radiance"
+                   }
+                ]
+             },
+             "ST_URAD":{
+                "title":"Upwelled Radiance Band",
+                "description":"Landsat Collection 2 Level-2 Upwelled Radiance Band Surface Temperature Product",
+                "gsd":30.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "eo:bands":[
+                   {
+                      "name":"ST_URAD",
+                      "description":"upwelled radiance"
+                   }
+                ]
+             },
+             "MTL.json":{
+                "title":"Product Metadata File (json)",
+                "description":"Collection 2 Level-1 Product Metadata File (json)",
+                "type":"application/json"
+             },
+             "QA_PIXEL":{
+                "title":"Pixel Quality Assessment Band",
+                "description":"Collection 2 Level-1 Pixel Quality Assessment Band",
+                "gsd":30.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized"
+             },
+             "ST_ATRAN":{
+                "title":"Atmospheric Transmittance Band",
+                "description":"Landsat Collection 2 Level-2 Atmospheric Transmittance Band Surface Temperature Product",
+                "gsd":30.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "eo:bands":[
+                   {
+                      "name":"ST_ATRAN",
+                      "description":"atmospheric transmission"
+                   }
+                ]
+             },
+             "ST_CDIST":{
+                "title":"Cloud Distance Band",
+                "description":"Landsat Collection 2 Level-2 Cloud Distance Band Surface Temperature Product",
+                "gsd":30.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "eo:bands":[
+                   {
+                      "name":"ST_CDIST",
+                      "description":"distance to nearest cloud"
+                   }
+                ]
+             },
+             "QA_RADSAT":{
+                "title":"Radiometric Saturation Quality Assessment Band",
+                "description":"Collection 2 Level-1 Radiometric Saturation Quality Assessment Band",
+                "gsd":30.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized"
+             },
+             "thumbnail":{
+                "title":"Thumbnail image",
+                "type":"image/jpeg"
+             },
+             "reduced_resolution_browse":{
+                "title":"Reduced resolution browse image",
+                "type":"image/jpeg"
+             }
+          },
+          "assets":{
+             "thumbnail":{
+                "title":"Landsat 8 C2",
+                "href":"https://ai4edatasetspublicassets.blob.core.windows.net/assets/pc_thumbnails/landsat.png",
+                "media_type":"image/png"
+             }
+          }
+       },
+       {
+          "id":"sentinel-2-l2a",
+          "description":"The [Sentinel-2](https://sentinel.esa.int/web/sentinel/missions/sentinel-2) program provides global imagery in thirteen spectral bands at 10m-60m resolution and a revisit time of approximately five days.  This dataset represents the global Sentinel-2 archive, from 2016 to the present, processed to L2A (bottom-of-atmosphere) using [Sen2Cor](https://step.esa.int/main/snap-supported-plugins/sen2cor/) and converted to [cloud-optimized GeoTIFF](https://www.cogeo.org/) format.",
+          "stac_version":"1.0.0",
+          "type": "Collection",
+          "links":[
+             {
+                "href":"https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a",
+                "rel":"self",
+                "type":"application/json"
+             },
+             {
+                "href":"https://planetarycomputer.microsoft.com/",
+                "rel":"parent",
+                "type":"application/json"
+             },
+             {
+                "href":"https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items",
+                "rel":"item",
+                "type":"application/geo+json"
+             },
+             {
+                "href":"https://planetarycomputer.microsoft.com/api/stac/v1/",
+                "rel":"root",
+                "type":"application/json"
+             },
+             {
+                "href":"https://scihub.copernicus.eu/twiki/pub/SciHubWebPortal/TermsConditions/Sentinel_Data_Terms_and_Conditions.pdf",
+                "rel":"license",
+                "title":"Copernicus Sentinel data terms"
+             }
+          ],
+          "stac_extensions": [
+             "https://raw.githubusercontent.com/stac-extensions/item-assets/v1.0.0/json-schema/schema.json"
+          ],
+          "title":"Sentinel-2 Level-2A",
+          "license":"proprietary",
+          "extent":{
+             "spatial":{
+                "bbox":[
+                   [
+                      -180.0,
+                      -90.0,
+                      180.0,
+                      90.0
+                   ]
+                ]
+             },
+             "temporal":{
+                "interval":[
+                   [
+                      "2015-06-27T10:25:31.456000Z",
+                      null
+                   ]
+                ]
+             }
+          },
+          "keywords":[
+             "sentinel",
+             "copernicus",
+             "esa",
+             "satellite",
+             "global",
+             "reflectance"
+          ],
+          "providers":[
+             {
+                "name":"ESA",
+                "roles":[
+                   "producer",
+                   "licensor"
+                ],
+                "url":"https://sentinel.esa.int/web/sentinel/missions/sentinel-2"
+             },
+             {
+                "name":"Esri",
+                "roles":[
+                   "processor"
+                ],
+                "url":"https://www.esri.com/"
+             },
+             {
+                "name":"Microsoft",
+                "roles":[
+                   "host",
+                   "processor"
+                ],
+                "url":"https://planetarycomputer.microsoft.com"
+             }
+          ],
+          "summaries":{
+             "gsd":[
+                10,
+                20,
+                60
+             ],
+             "eo:bands":[
+                {
+                   "name":"AOT",
+                   "description":"aerosol optical thickness"
+                },
+                {
+                   "gsd":60,
+                   "name":"B01",
+                   "common_name":"coastal",
+                   "description":"coastal aerosol",
+                   "center_wavelength":0.443,
+                   "full_width_half_max":0.027
+                },
+                {
+                   "gsd":10,
+                   "name":"B02",
+                   "common_name":"blue",
+                   "description":"visible blue",
+                   "center_wavelength":0.49,
+                   "full_width_half_max":0.098
+                },
+                {
+                   "gsd":10,
+                   "name":"B03",
+                   "common_name":"green",
+                   "description":"visible green",
+                   "center_wavelength":0.56,
+                   "full_width_half_max":0.045
+                },
+                {
+                   "gsd":10,
+                   "name":"B04",
+                   "common_name":"red",
+                   "description":"visible red",
+                   "center_wavelength":0.665,
+                   "full_width_half_max":0.038
+                },
+                {
+                   "gsd":20,
+                   "name":"B05",
+                   "common_name":"rededge",
+                   "description":"vegetation classification red edge",
+                   "center_wavelength":0.704,
+                   "full_width_half_max":0.019
+                },
+                {
+                   "gsd":20,
+                   "name":"B06",
+                   "common_name":"rededge",
+                   "description":"vegetation classification red edge",
+                   "center_wavelength":0.74,
+                   "full_width_half_max":0.018
+                },
+                {
+                   "gsd":20,
+                   "name":"B07",
+                   "common_name":"rededge",
+                   "description":"vegetation classification red edge",
+                   "center_wavelength":0.783,
+                   "full_width_half_max":0.028
+                },
+                {
+                   "gsd":10,
+                   "name":"B08",
+                   "common_name":"nir",
+                   "description":"near infrared",
+                   "center_wavelength":0.842,
+                   "full_width_half_max":0.145
+                },
+                {
+                   "gsd":20,
+                   "name":"B8A",
+                   "common_name":"rededge",
+                   "description":"vegetation classification red edge",
+                   "center_wavelength":0.865,
+                   "full_width_half_max":0.033
+                },
+                {
+                   "gsd":60,
+                   "name":"B09",
+                   "description":"water vapor",
+                   "center_wavelength":0.945,
+                   "full_width_half_max":0.026
+                },
+                {
+                   "gsd":20,
+                   "name":"B11",
+                   "common_name":"swir16",
+                   "description":"short-wave infrared, snow/ice/cloud classification",
+                   "center_wavelength":1.61,
+                   "full_width_half_max":0.143
+                },
+                {
+                   "gsd":20,
+                   "name":"B12",
+                   "common_name":"swir22",
+                   "description":"short-wave infrared, snow/ice/cloud classification",
+                   "center_wavelength":2.19,
+                   "full_width_half_max":0.242
+                }
+             ],
+             "platform":[
+                "Sentinel-2A",
+                "Sentinel-2B"
+             ],
+             "instruments":[
+                "msi"
+             ],
+             "constellation":[
+                "sentinel-2"
+             ],
+             "view:off_nadir":[
+                0
+             ]
+          },
+          "msft:storage_account":"sentinel2l2a01",
+          "msft:container":"sentinel2-l2",
+          "msft:short_description":"The Sentinel-2 program provides global imagery in thirteen spectral bands at 10m-60m resolution and a revisit time of approximately five days.  This dataset contains the global Sentinel-2 archive, from 2016 to the present, processed to L2A (bottom-of-atmosphere).",
+          "item_assets":{
+             "B01":{
+                "title":"Band 1 - Coastal aerosol",
+                "gsd":60.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "roles":[
+                   "data"
+                ],
+                "eo:bands":[
+                   {
+                      "name":"B01",
+                      "common_name":"coastal",
+                      "center_wavelength":0.443,
+                      "full_width_half_max":0.027,
+                      "description":"Band 1 - Coastal aerosol"
+                   }
+                ]
+             },
+             "B02":{
+                "title":"Band 2 - Blue",
+                "gsd":10.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "roles":[
+                   "data"
+                ],
+                "eo:bands":[
+                   {
+                      "name":"B02",
+                      "common_name":"blue",
+                      "center_wavelength":0.49,
+                      "full_width_half_max":0.098,
+                      "description":"Band 2 - Blue"
+                   }
+                ]
+             },
+             "B03":{
+                "title":"Band 3 - Green",
+                "gsd":10.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "roles":[
+                   "data"
+                ],
+                "eo:bands":[
+                   {
+                      "name":"B03",
+                      "common_name":"green",
+                      "center_wavelength":0.56,
+                      "full_width_half_max":0.045,
+                      "description":"Band 3 - Green"
+                   }
+                ]
+             },
+             "B04":{
+                "title":"Band 4 - Red",
+                "gsd":10.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "roles":[
+                   "data"
+                ],
+                "eo:bands":[
+                   {
+                      "name":"B04",
+                      "common_name":"red",
+                      "center_wavelength":0.665,
+                      "full_width_half_max":0.038,
+                      "description":"Band 4 - Red"
+                   }
+                ]
+             },
+             "B05":{
+                "title":"Band 5 - Vegetation red edge 1",
+                "gsd":60.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "roles":[
+                   "data"
+                ],
+                "eo:bands":[
+                   {
+                      "name":"B05",
+                      "common_name":"rededge",
+                      "center_wavelength":0.704,
+                      "full_width_half_max":0.019,
+                      "description":"Band 5 - Vegetation red edge 1"
+                   }
+                ]
+             },
+             "B06":{
+                "title":"Band 6 - Vegetation red edge 2",
+                "gsd":60.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "roles":[
+                   "data"
+                ],
+                "eo:bands":[
+                   {
+                      "name":"B06",
+                      "common_name":"rededge",
+                      "center_wavelength":0.74,
+                      "full_width_half_max":0.018,
+                      "description":"Band 6 - Vegetation red edge 2"
+                   }
+                ]
+             },
+             "B07":{
+                "title":"Band 7 - Vegetation red edge 3",
+                "gsd":60.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "roles":[
+                   "data"
+                ],
+                "eo:bands":[
+                   {
+                      "name":"B07",
+                      "common_name":"rededge",
+                      "center_wavelength":0.783,
+                      "full_width_half_max":0.028,
+                      "description":"Band 7 - Vegetation red edge 3"
+                   }
+                ]
+             },
+             "B08":{
+                "title":"Band 8 - NIR",
+                "gsd":10.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "roles":[
+                   "data"
+                ],
+                "eo:bands":[
+                   {
+                      "name":"B08",
+                      "common_name":"nir",
+                      "center_wavelength":0.842,
+                      "full_width_half_max":0.145,
+                      "description":"Band 8 - NIR"
+                   }
+                ]
+             },
+             "B09":{
+                "title":"Band 9 - Water vapor",
+                "gsd":60.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "roles":[
+                   "data"
+                ],
+                "eo:bands":[
+                   {
+                      "name":"B09",
+                      "center_wavelength":0.945,
+                      "full_width_half_max":0.026,
+                      "description":"Band 9 - Water vapor"
+                   }
+                ]
+             },
+             "B11":{
+                "title":"Band 11 - SWIR (1.6)",
+                "gsd":60.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "roles":[
+                   "data"
+                ],
+                "eo:bands":[
+                   {
+                      "name":"B11",
+                      "common_name":"swir16",
+                      "center_wavelength":1.61,
+                      "full_width_half_max":0.143,
+                      "description":"Band 11 - SWIR (1.6)"
+                   }
+                ]
+             },
+             "B12":{
+                "title":"Band 12 - SWIR (2.2)",
+                "gsd":60.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "roles":[
+                   "data"
+                ],
+                "eo:bands":[
+                   {
+                      "name":"B12",
+                      "common_name":"swir22",
+                      "center_wavelength":2.19,
+                      "full_width_half_max":0.242,
+                      "description":"Band 12 - SWIR (2.2)"
+                   }
+                ]
+             },
+             "B8A":{
+                "title":"Band 8A - Vegetation red edge 4",
+                "gsd":60.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "roles":[
+                   "data"
+                ],
+                "eo:bands":[
+                   {
+                      "name":"B8A",
+                      "common_name":"rededge",
+                      "center_wavelength":0.865,
+                      "full_width_half_max":0.033,
+                      "description":"Band 8A - Vegetation red edge 4"
+                   }
+                ]
+             },
+             "AOT-10m":{
+                "title":"Aerosol optical thickness (AOT)",
+                "gsd":10.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "roles":[
+                   "data"
+                ]
+             },
+             "AOT-20m":{
+                "title":"Aerosol optical thickness (AOT)",
+                "gsd":20.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "roles":[
+                   "data"
+                ]
+             },
+             "AOT-60m":{
+                "title":"Aerosol optical thickness (AOT)",
+                "gsd":60.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "roles":[
+                   "data"
+                ]
+             },
+             "SCL-20m":{
+                "title":"Scene classfication map (SCL)",
+                "gsd":20.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "roles":[
+                   "data"
+                ]
+             },
+             "SCL-60m":{
+                "title":"Scene classfication map (SCL)",
+                "gsd":60.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "roles":[
+                   "data"
+                ]
+             },
+             "WVP-10m":{
+                "title":"Water vapour (WVP)",
+                "gsd":10.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "roles":[
+                   "data"
+                ]
+             },
+             "WVP-20m":{
+                "title":"Water vapour (WVP)",
+                "gsd":20.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "roles":[
+                   "data"
+                ]
+             },
+             "WVP-60m":{
+                "title":"Water vapour (WVP)",
+                "gsd":60.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "roles":[
+                   "data"
+                ]
+             },
+             "preview":{
+                "title":"Thumbnail",
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "roles":[
+                   "thumbnail"
+                ]
+             },
+             "visual-10m":{
+                "title":"True color image",
+                "gsd":10.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "roles":[
+                   "data"
+                ],
+                "eo:bands":[
+                   {
+                      "name":"B04",
+                      "common_name":"red",
+                      "center_wavelength":0.665,
+                      "full_width_half_max":0.038,
+                      "description":"Band 4 - Red"
+                   },
+                   {
+                      "name":"B03",
+                      "common_name":"green",
+                      "center_wavelength":0.56,
+                      "full_width_half_max":0.045,
+                      "description":"Band 3 - Green"
+                   },
+                   {
+                      "name":"B02",
+                      "common_name":"blue",
+                      "center_wavelength":0.49,
+                      "full_width_half_max":0.098,
+                      "description":"Band 2 - Blue"
+                   }
+                ]
+             },
+             "visual-20m":{
+                "title":"True color image",
+                "gsd":20.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "roles":[
+                   "data"
+                ],
+                "eo:bands":[
+                   {
+                      "name":"B04",
+                      "common_name":"red",
+                      "center_wavelength":0.665,
+                      "full_width_half_max":0.038,
+                      "description":"Band 4 - Red"
+                   },
+                   {
+                      "name":"B03",
+                      "common_name":"green",
+                      "center_wavelength":0.56,
+                      "full_width_half_max":0.045,
+                      "description":"Band 3 - Green"
+                   },
+                   {
+                      "name":"B02",
+                      "common_name":"blue",
+                      "center_wavelength":0.49,
+                      "full_width_half_max":0.098,
+                      "description":"Band 2 - Blue"
+                   }
+                ]
+             },
+             "visual-60m":{
+                "title":"True color image",
+                "gsd":60.0,
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "roles":[
+                   "data"
+                ],
+                "eo:bands":[
+                   {
+                      "name":"B04",
+                      "common_name":"red",
+                      "center_wavelength":0.665,
+                      "full_width_half_max":0.038,
+                      "description":"Band 4 - Red"
+                   },
+                   {
+                      "name":"B03",
+                      "common_name":"green",
+                      "center_wavelength":0.56,
+                      "full_width_half_max":0.045,
+                      "description":"Band 3 - Green"
+                   },
+                   {
+                      "name":"B02",
+                      "common_name":"blue",
+                      "center_wavelength":0.49,
+                      "full_width_half_max":0.098,
+                      "description":"Band 2 - Blue"
+                   }
+                ]
+             },
+             "safe-manifest":{
+                "title":"SAFE manifest",
+                "type":"application/xml",
+                "roles":[
+                   "metadata"
+                ]
+             },
+             "granule-metadata":{
+                "title":"Granule metadata",
+                "type":"application/xml",
+                "roles":[
+                   "metadata"
+                ]
+             },
+             "inspire-metadata":{
+                "title":"INSPIRE metadata",
+                "type":"application/xml",
+                "roles":[
+                   "metadata"
+                ]
+             },
+             "product-metadata":{
+                "title":"Product metadata",
+                "type":"application/xml",
+                "roles":[
+                   "metadata"
+                ]
+             },
+             "datastrip-metadata":{
+                "title":"Datastrip metadata",
+                "type":"application/xml",
+                "roles":[
+                   "metadata"
+                ]
+             }
+          },
+          "assets":{
+             "thumbnail":{
+                "title":"Sentinel 2 L2A",
+                "href":"https://ai4edatasetspublicassets.blob.core.windows.net/assets/pc_thumbnails/sentinel-2.png",
+                "media_type":"image/png"
+             }
+          }
+       },
+       {
+          "id":"naip",
+          "description":"The [National Agriculture Imagery Program](https://www.fsa.usda.gov/programs-and-services/aerial-photography/imagery-programs/naip-imagery/) (NAIP) provides US-wide, high-resolution aerial imagery, with four spectral bands (R, G, B, IR).  NAIP is administered by the [Aerial Field Photography Office](https://www.fsa.usda.gov/programs-and-services/aerial-photography/) (AFPO) within the [US Department of Agriculture](https://www.usda.gov/) (USDA).  Data are captured at least once every three years for each state.  This dataset represents NAIP data from 2010-present, in [cloud-optimized GeoTIFF](https://www.cogeo.org/) format.\n",
+          "stac_version":"1.0.0",
+          "type": "Collection",
+          "links":[
+             {
+                "href":"https://planetarycomputer.microsoft.com/api/stac/v1/collections/naip",
+                "rel":"self",
+                "type":"application/json"
+             },
+             {
+                "href":"https://planetarycomputer.microsoft.com/",
+                "rel":"parent",
+                "type":"application/json"
+             },
+             {
+                "href":"https://planetarycomputer.microsoft.com/api/stac/v1/collections/naip/items",
+                "rel":"item",
+                "type":"application/geo+json"
+             },
+             {
+                "href":"https://planetarycomputer.microsoft.com/api/stac/v1/",
+                "rel":"root",
+                "type":"application/json"
+             },
+             {
+                "href":"https://www.fsa.usda.gov/help/policies-and-links/",
+                "rel":"license",
+                "title":"public domain"
+             }
+          ],
+          "stac_extensions":[
+             "https://raw.githubusercontent.com/stac-extensions/item-assets/v1.0.0/json-schema/schema.json"
+          ],
+          "title":"NAIP: National Agriculture Imagery Program",
+          "license":"proprietary",
+          "extent":{
+             "spatial":{
+                "bbox":[
+                   [
+                      -124.784,
+                      24.744,
+                      -66.951,
+                      49.346
+                   ]
+                ]
+             },
+             "temporal":{
+                "interval":[
+                   [
+                      "2010-01-01T00:00:00Z",
+                      "2019-12-31T00:00:00Z"
+                   ]
+                ]
+             }
+          },
+          "keywords":[
+             "naip",
+             "aerial",
+             "imagery",
+             "usda",
+             "afpo",
+             "agriculture",
+             "united states"
+          ],
+          "providers":[
+             {
+                "name":"USDA Farm Service Agency",
+                "roles":[
+                   "producer",
+                   "licensor"
+                ],
+                "url":"https://www.fsa.usda.gov/programs-and-services/aerial-photography/imagery-programs/naip-imagery/"
+             },
+             {
+                "name":"Esri",
+                "roles":[
+                   "processor"
+                ],
+                "url":"https://www.esri.com/"
+             },
+             {
+                "name":"Microsoft",
+                "roles":[
+                   "host",
+                   "processor"
+                ],
+                "url":"https://planetarycomputer.microsoft.com"
+             }
+          ],
+          "summaries":{
+             "gsd":[
+                0.6,
+                1.0
+             ],
+             "eo:bands":[
+                {
+                   "name":"Red",
+                   "common_name":"red",
+                   "description":"visible red"
+                },
+                {
+                   "name":"Green",
+                   "common_name":"green",
+                   "description":"visible green"
+                },
+                {
+                   "name":"Blue",
+                   "common_name":"blue",
+                   "description":"visible blue"
+                },
+                {
+                   "name":"NIR",
+                   "common_name":"nir",
+                   "description":"near-infrared"
+                }
+             ]
+          },
+          "msft:storage_account":"naipeuwest",
+          "msft:container":"naip",
+          "msft:short_description":"NAIP provides US-wide, high-resolution aerial imagery.  This dataset includes NAIP images from 2010 to the present.",
+          "item_assets":{
+             "image":{
+                "title":"RGBIR COG tile",
+                "type":"image/tiff; application=geotiff; profile=cloud-optimized",
+                "roles":[
+                   "data"
+                ],
+                "eo:bands":[
+                   {
+                      "name":"Red",
+                      "common_name":"red"
+                   },
+                   {
+                      "name":"Green",
+                      "common_name":"green"
+                   },
+                   {
+                      "name":"Blue",
+                      "common_name":"blue"
+                   },
+                   {
+                      "name":"NIR",
+                      "common_name":"nir",
+                      "description":"near-infrared"
+                   }
+                ]
+             },
+             "metadata":{
+                "title":"FGDC Metdata",
+                "type":"text/plain",
+                "roles":[
+                   "metadata"
+                ]
+             },
+             "thumbnail":{
+                "title":"Thumbnail",
+                "type":"image/jpeg",
+                "roles":[
+                   "thumbnail"
+                ]
+             }
+          },
+          "assets":{
+             "thumbnail":{
+                "title":"Landsat 8 C2",
+                "href":"https://ai4edatasetspublicassets.blob.core.windows.net/assets/pc_thumbnails/naip.png",
+                "media_type":"image/png"
+             }
+          }
+       }
+    ]
+ }

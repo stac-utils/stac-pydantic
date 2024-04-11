@@ -1,6 +1,16 @@
-Unreleased
+3.1.0 (TBD)
+-----------------
+- Remove the deprecated `Context` extension (#138, @vincentsarago)
+- Rename `stac_pydantic.api.conformance.ConformanceClasses` to `stac_pydantic.api.conformance.Conformance`
+- Update pre-commit configuration and switch to astral-sh/ruff for linter and formater
+- Add official support for python 3.12
+- Enforce required `type` key for `Collection` and `Catalog` models
+- Add queryables link relation type (#123, @constantinius)
+- Fix STAC API Query Extension operator names from ne->neq, le->lte, and ge->gte (#120, @philvarner)
+
+3.0.0 (2024-01-25)
 ------------------
-- Fix STAC API Query Extension operator names from ne->neq, le->lte, and ge->gte
+- Support pydantic>2.0 (@huard)
 
 2.0.3 (2022-5-3)
 ------------------
