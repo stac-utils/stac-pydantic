@@ -5,6 +5,7 @@
 - Update pre-commit configuration and switch to astral-sh/ruff for linter and formater
 - Add official support for python 3.12
 - Enforce required `type` key for `Collection` and `Catalog` models
+- Add queryables link relation type (#123, @constantinius)
 
 3.0.0 (2024-01-25)
 ------------------
