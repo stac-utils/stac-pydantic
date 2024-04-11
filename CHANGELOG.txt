@@ -6,6 +6,7 @@
 - Add official support for python 3.12
 - Enforce required `type` key for `Collection` and `Catalog` models
 - Add queryables link relation type (#123, @constantinius)
+- Fix STAC API Query Extension operator names from ne->neq, le->lte, and ge->gte (#120, @philvarner)
 
 3.0.0 (2024-01-25)
 ------------------

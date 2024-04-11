@@ -87,6 +87,8 @@ exclude = ["tests", ".venv"]
 
 [tool.ruff]
 line-length = 88
+
+[tool.ruff.lint]
 select = [
         "C",
         "E",
