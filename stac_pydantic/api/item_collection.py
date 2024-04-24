@@ -3,7 +3,6 @@ from urllib.parse import urlparse
 
 from pydantic import model_validator
 
-from stac_pydantic.api.extensions.context import ContextExtension
 from stac_pydantic.api.item import Item
 from stac_pydantic.api.links import Links
 from stac_pydantic.item_collection import ItemCollection as BaseItemCollection
@@ -20,9 +19,6 @@ class ItemCollection(BaseItemCollection):
     links: Optional[Links] = None
     numberMatched: Optional[int] = None
     numberReturned: Optional[int] = None
-
-    # Context Extension
-    context: Optional[ContextExtension] = None
 
     @model_validator(mode="after")
     def required_links(self) -> "ItemCollection":

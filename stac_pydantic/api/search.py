@@ -101,14 +101,17 @@ class Search(BaseModel):
     def validate_datetime(cls, value: str) -> str:
         # Split on "/" and replace no value or ".." with None
         values = [v if v and v != ".." else None for v in value.split("/")]
+
         # If there are more than 2 dates, it's invalid
         if len(values) > 2:
             raise ValueError(
                 "Invalid datetime range. Too many values. Must match format: {begin_date}/{end_date}"
             )
+
         # If there is only one date, insert a None for the start date
         if len(values) == 1:
             values.insert(0, None)
+
         # Cast because pylance gets confused by the type adapter and annotated type
         dates = cast(
             List[Optional[dt]],
@@ -119,12 +122,14 @@ class Search(BaseModel):
                 for v in values
             ],
         )
+
         # If there is a start and end date, check that the start date is before the end date
         if dates[0] and dates[1] and dates[0] > dates[1]:
             raise ValueError(
                 "Invalid datetime range. Begin date after end date. "
                 "Must match format: {begin_date}/{end_date}"
             )
+
         # Store the parsed dates
         cls._start_date = dates[0]
         cls._end_date = dates[1]

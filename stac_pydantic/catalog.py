@@ -23,4 +23,4 @@ class _Catalog(StacBaseModel):
 
 
 class Catalog(_Catalog):
-    type: Literal["Catalog"] = "Catalog"
+    type: Literal["Catalog"]

@@ -6,7 +6,6 @@ from pydantic import ConfigDict, ValidationError
 from shapely.geometry import shape
 
 from stac_pydantic import Collection, Item, ItemProperties
-from stac_pydantic.api.extensions.context import ContextExtension
 from stac_pydantic.extensions import validate_extensions
 from stac_pydantic.links import Link, Links
 from stac_pydantic.shared import MimeTypes
@@ -65,9 +64,9 @@ def test_sar_extensions() -> None:
 def test_proj_extension() -> None:
     # The example item uses an invalid band name
     test_item = request(PROJ_EXTENSION)
-    test_item["stac_extensions"][
-        1
-    ] = "https://raw.githubusercontent.com/stac-extensions/projection/v1.0.0/json-schema/schema.json"
+    test_item["stac_extensions"][1] = (
+        "https://raw.githubusercontent.com/stac-extensions/projection/v1.0.0/json-schema/schema.json"
+    )
     test_item["assets"]["B8"]["eo:bands"][0]["common_name"] = "pan"
 
     valid_item = Item.model_validate(test_item).model_dump()
@@ -149,7 +148,7 @@ def test_asset_extras() -> None:
         test_item["assets"][asset]["foo"] = "bar"
 
     item = Item(**test_item)
-    for asset_name, asset in item.assets.items():
+    for _, asset in item.assets.items():
         assert asset.foo == "bar"
 
 
@@ -159,11 +158,6 @@ def test_geo_interface() -> None:
     geom = shape(item.geometry)
     test_item["geometry"] = geom
     Item(**test_item)
-
-
-def test_api_context_extension() -> None:
-    context = {"returned": 10, "limit": 10, "matched": 100}
-    ContextExtension(**context)
 
 
 @pytest.mark.parametrize(

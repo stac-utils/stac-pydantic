@@ -1,6 +1,11 @@
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
 repos:
+  - repo: https://github.com/abravalheri/validate-pyproject
+    rev: v0.16
+    hooks:
+      - id: validate-pyproject
+
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.5.0
     hooks:
@@ -10,28 +15,25 @@ repos:
       - id: check-added-large-files
         args: ["--maxkb=40960"]
 
-  - repo: local
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.13.2
     hooks:
-      - id: black
-        name: Black Formatting
-        language: system
-        types: [python]
-        entry: black
-
       - id: isort
-        name: iSort Import Sorting
-        language: system
-        types: [python]
-        entry: isort
+        language_version: python
 
-      - id: flake8
-        name: Flake8 Formatting
-        language: system
-        types: [python]
-        entry: flake8 --config=./pyproject.toml
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.3.5
+    hooks:
+      - id: ruff
+        args: ["--fix"]
+      - id: ruff-format
 
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.9.0
+    hooks:
       - id: mypy
-        name: MyPy Typecheck
-        language: system
-        types: [python]
-        entry: mypy --config-file=./pyproject.toml
+        language_version: python
+        # No reason to run if only tests have changed. They intentionally break typing.
+        exclude: tests/.*
+        additional_dependencies:
+        - types-requests
