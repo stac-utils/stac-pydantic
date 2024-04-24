@@ -1,13 +1,7 @@
 from typing import Any, Dict, List, Optional
 
 from geojson_pydantic import Feature
-from pydantic import (
-    AnyUrl,
-    ConfigDict,
-    Field,
-    model_serializer,
-    model_validator,
-)
+from pydantic import AnyUrl, ConfigDict, Field, model_serializer, model_validator
 from typing_extensions import Self
 
 from stac_pydantic.links import Links
