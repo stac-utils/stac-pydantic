@@ -2,7 +2,6 @@ from typing import Any, Dict, List, Optional
 
 from geojson_pydantic import Feature
 from pydantic import AnyUrl, ConfigDict, Field, model_serializer, model_validator
-from typing_extensions import Self
 
 from stac_pydantic.links import Links
 from stac_pydantic.shared import (
@@ -20,19 +19,11 @@ class ItemProperties(StacCommonMetadata):
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/item-spec/item-spec.md#properties-object
     """
 
+    # Overide the datetime field to be required
     datetime: Optional[UtcDatetime]
 
     # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-config for more information.
     model_config = ConfigDict(extra="allow")
-
-    @model_validator(mode="after")
-    def validate_datetime(self) -> Self:
-        if not self.datetime and (not self.start_datetime or not self.end_datetime):
-            raise ValueError(
-                "start_datetime and end_datetime must be specified when datetime is null"
-            )
-
-        return self
 
 
 class Item(Feature, StacBaseModel):

@@ -8,7 +8,7 @@ from shapely.geometry import shape
 from stac_pydantic import Collection, Item, ItemProperties
 from stac_pydantic.extensions import validate_extensions
 from stac_pydantic.links import Link, Links
-from stac_pydantic.shared import MimeTypes
+from stac_pydantic.shared import MimeTypes, StacCommonMetadata
 
 from .conftest import dict_match, request
 
@@ -169,10 +169,15 @@ def test_geo_interface() -> None:
             "start_datetime": "2024-01-01T00:00:00Z",
             "end_datetime": "2024-01-02T00:00:00Z",
         },
+        {
+            "datetime": "2024-01-01T00:00:00Z",
+            "start_datetime": "2024-01-01T00:00:00Z",
+            "end_datetime": "2024-01-02T00:00:00Z",
+        },
     ],
 )
-def test_item_properties_dates(args) -> None:
-    ItemProperties(**args)
+def test_stac_common_dates(args) -> None:
+    StacCommonMetadata(**args)
 
 
 @pytest.mark.parametrize(
@@ -183,12 +188,27 @@ def test_item_properties_dates(args) -> None:
         {"datetime": None, "end_datetime": "2024-01-01T00:00:00Z"},
     ],
 )
-def test_item_properties_no_dates(args) -> None:
+def test_stac_common_no_dates(args) -> None:
     with pytest.raises(
         ValueError,
         match="start_datetime and end_datetime must be specified when datetime is null",
     ):
-        ItemProperties(**args)
+        StacCommonMetadata(**args)
+
+
+@pytest.mark.parametrize(
+    "args",
+    [
+        {"datetime": "2024-01-01T00:00:00Z", "start_datetime": "2024-01-01T00:00:00Z"},
+        {"datetime": "2024-01-01T00:00:00Z", "end_datetime": "2024-01-01T00:00:00Z"},
+    ],
+)
+def test_stac_common_start_and_end(args) -> None:
+    with pytest.raises(
+        ValueError,
+        match="use of start_datetime or end_datetime requires the use of the other",
+    ):
+        StacCommonMetadata(**args)
 
 
 def test_declared_model() -> None:
