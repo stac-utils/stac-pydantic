@@ -32,7 +32,6 @@ repository ="https://github.com/stac-utils/stac-pydantic.git"
 
 [project.optional-dependencies]
 dev = [
-        "arrow>=1.2.3",
         "pytest>=7.4.2",
         "pytest-cov>=4.1.0",
         "pytest-icdiff>=0.8",
