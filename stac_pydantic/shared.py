@@ -9,7 +9,6 @@ from pydantic import (
     BaseModel,
     ConfigDict,
     Field,
-    PlainSerializer,
 )
 from typing_extensions import Annotated
 
@@ -30,9 +29,6 @@ UtcDatetime = Annotated[
     AwareDatetime,
     # Convert the input value to UTC timezone
     AfterValidator(lambda d: d.astimezone(timezone.utc)),
-    # Use `isoformat` to serialize the value in an RFC3339 compatible format
-    # for example: "2024-01-01T00:00:00+00:00"
-    PlainSerializer(lambda d: d.isoformat()),
 ]
 
 
