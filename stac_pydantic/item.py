@@ -20,7 +20,7 @@ class ItemProperties(StacCommonMetadata):
     """
 
     # Overide the datetime field to be required
-    datetime: Optional[UtcDatetime]
+    datetime: Optional[UtcDatetime] = Field(...)
 
     # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-config for more information.
     model_config = ConfigDict(extra="allow")
