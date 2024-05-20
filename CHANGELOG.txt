@@ -10,6 +10,7 @@
 - Fix STAC API Query Extension operator names from ne->neq, le->lte, and ge->gte (#120, @philvarner)
 - Better **datetime** parsing/validation by using Pydantic native types and remove `ciso8601` requirement (#131, @eseglem)
 - move datetime validation in `StacCommonMetadata` model definition (#131, @eseglem)
+- use `StacBaseModel` as base model for `Asset` model (#148, @vincentsarago)
 
 3.0.0 (2024-01-25)
 ------------------
