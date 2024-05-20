@@ -173,7 +173,7 @@ class StacCommonMetadata(StacBaseModel):
         return self
 
 
-class Asset(StacCommonMetadata):
+class Asset(StacBaseModel):
     """
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/item-spec/item-spec.md#asset-object
     """
@@ -187,10 +187,3 @@ class Asset(StacCommonMetadata):
     model_config = ConfigDict(
         populate_by_name=True, use_enum_values=True, extra="allow"
     )
-
-    @model_validator(mode="after")
-    def validate_datetime_or_start_end(self) -> Self:
-        # Overriding the parent method to avoid requiring datetime or start/end_datetime
-        # Additional fields MAY be added on the Asset object, but are not required.
-        # https://github.com/radiantearth/stac-spec/blob/v1.0.0/item-spec/item-spec.md#additional-fields-for-assets
-        return self
