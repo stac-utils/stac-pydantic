@@ -140,6 +140,8 @@ class StacCommonMetadata(StacBaseModel):
     # Date and Time Range
     start_datetime: Optional[UtcDatetime] = None
     end_datetime: Optional[UtcDatetime] = None
+    # Licensing
+    license: Optional[str] = None
     # Provider
     providers: Optional[List[Provider]] = None
     # Instrument
