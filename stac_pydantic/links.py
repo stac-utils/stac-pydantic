@@ -20,7 +20,7 @@ class Link(StacBaseModel):
 
     # Label extension
     label: Optional[str] = Field(default=None, alias="label:assets")
-    model_config = ConfigDict(use_enum_values=True, extra="forbid")
+    model_config = ConfigDict(use_enum_values=True, extra="allow")
 
     def resolve(self, base_url: str) -> None:
         """resolve a link to the given base URL"""
