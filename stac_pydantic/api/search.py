@@ -42,7 +42,7 @@ class Search(BaseModel):
     bbox: Optional[BBox] = None
     intersects: Optional[Intersection] = None
     datetime: Optional[str] = None
-    limit: int = 10
+    limit: Optional[int] = 10
 
     # Private properties to store the parsed datetime values. Not part of the model schema.
     _start_date: Optional[dt] = None
