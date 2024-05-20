@@ -1,24 +1,15 @@
-from datetime import datetime as dt
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional
 
-from ciso8601 import parse_rfc3339
 from geojson_pydantic import Feature
-from pydantic import (
-    AnyUrl,
-    ConfigDict,
-    Field,
-    field_serializer,
-    model_serializer,
-    model_validator,
-)
+from pydantic import AnyUrl, ConfigDict, Field, model_serializer, model_validator
 
 from stac_pydantic.links import Links
 from stac_pydantic.shared import (
-    DATETIME_RFC339,
     SEMVER_REGEX,
     Asset,
     StacBaseModel,
     StacCommonMetadata,
+    UtcDatetime,
 )
 from stac_pydantic.version import STAC_VERSION
 
@@ -28,38 +19,11 @@ class ItemProperties(StacCommonMetadata):
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/item-spec/item-spec.md#properties-object
     """
 
-    datetime: Union[dt, str] = Field(..., alias="datetime")
+    # Overide the datetime field to be required
+    datetime: Optional[UtcDatetime]
 
     # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-config for more information.
     model_config = ConfigDict(extra="allow")
-
-    @model_validator(mode="before")
-    @classmethod
-    def validate_datetime(cls, data: Dict[str, Any]) -> Dict[str, Any]:
-        datetime = data.get("datetime")
-        start_datetime = data.get("start_datetime")
-        end_datetime = data.get("end_datetime")
-
-        if not datetime or datetime == "null":
-            if not start_datetime and not end_datetime:
-                raise ValueError(
-                    "start_datetime and end_datetime must be specified when datetime is null"
-                )
-
-        if isinstance(datetime, str):
-            data["datetime"] = parse_rfc3339(datetime)
-
-        if isinstance(start_datetime, str):
-            data["start_datetime"] = parse_rfc3339(start_datetime)
-
-        if isinstance(end_datetime, str):
-            data["end_datetime"] = parse_rfc3339(end_datetime)
-
-        return data
-
-    @field_serializer("datetime")
-    def serialize_datetime(self, v: dt, _info: Any) -> str:
-        return v.strftime(DATETIME_RFC339)
 
 
 class Item(Feature, StacBaseModel):

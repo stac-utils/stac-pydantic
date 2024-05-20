@@ -1,15 +1,15 @@
 import json
-import operator
 import os
 from copy import deepcopy
 from typing import List, Optional, Type
 
-import arrow
 import dictdiffer
 import pytest
 import requests
 from click.testing import CliRunner
-from pydantic import BaseModel
+from pydantic import BaseModel, TypeAdapter
+
+from stac_pydantic.shared import UtcDatetime
 
 
 def request(url: str, path: Optional[List[str]] = None):
@@ -30,6 +30,10 @@ def request(url: str, path: Optional[List[str]] = None):
         return json.loads(full_file)
 
 
+# Use a TypeAdapter to parse any datetime strings in a consistent manner
+UtcDatetimeAdapter = TypeAdapter(UtcDatetime)
+
+
 def dict_match(d1: dict, d2: dict):
     test = dictdiffer.diff(d1, d2)
     for diff in test:
@@ -39,16 +43,17 @@ def dict_match(d1: dict, d2: dict):
         # same for bbox
         elif "bbox" in diff[1]:
             assert list(diff[2][0]) == list(diff[2][1])
-        # test data is pretty variable with how it represents datetime, RFC3339 is quite flexible
-        # but stac-pydantic only supports a single datetime format, so just validate to the day.
+        # RFC3339 is quite flexible and the test data uses various options to represent datetimes.
+        # The datetime string stac-pydantic outputs may not be identical to the input. So we need
+        # to compare the values as datetime objects.
         elif "datetime" in diff[1]:
-            dates = []
-            for date in diff[2]:
-                if isinstance(date, str):
-                    date = arrow.get(date)
-                dates.append(date)
-            dates.sort(reverse=True)
-            assert operator.sub(*dates).days == 0
+            dates = [
+                UtcDatetimeAdapter.validate_strings(date)
+                if isinstance(date, str)
+                else date
+                for date in diff[2]
+            ]
+            assert dates[0] == dates[1]
         # any other differences are errors
         elif "stac_extensions" in diff[1]:
             url1, url2 = map(str, diff[2])

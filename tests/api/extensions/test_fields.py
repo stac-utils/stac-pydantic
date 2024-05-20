@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from shapely.geometry import Polygon
 
@@ -15,7 +15,7 @@ def test_fields_filter_item():
     item = Item(
         id="test-fields-filter",
         geometry=Polygon.from_bounds(0, 0, 0, 0),
-        properties={"datetime": datetime.utcnow(), "foo": "foo", "bar": "bar"},
+        properties={"datetime": datetime.now(timezone.utc), "foo": "foo", "bar": "bar"},
         assets={},
         links=[
             {"href": "http://link", "rel": "self"},

@@ -1,9 +1,8 @@
 from datetime import datetime as dt
 from typing import Any, Dict, List, Optional, Tuple, Union, cast
 
-from ciso8601 import parse_rfc3339
-from geojson_pydantic.geometries import GeometryCollection  # type: ignore
 from geojson_pydantic.geometries import (
+    GeometryCollection,
     LineString,
     MultiLineString,
     MultiPoint,
@@ -11,12 +10,12 @@ from geojson_pydantic.geometries import (
     Point,
     Polygon,
 )
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import BaseModel, Field, TypeAdapter, field_validator, model_validator
 
 from stac_pydantic.api.extensions.fields import FieldsExtension
 from stac_pydantic.api.extensions.query import Operator
 from stac_pydantic.api.extensions.sort import SortExtension
-from stac_pydantic.shared import BBox
+from stac_pydantic.shared import BBox, UtcDatetime
 
 Intersection = Union[
     Point,
@@ -27,6 +26,8 @@ Intersection = Union[
     MultiPolygon,
     GeometryCollection,
 ]
+
+SearchDatetime = TypeAdapter(Optional[UtcDatetime])
 
 
 class Search(BaseModel):
@@ -43,23 +44,18 @@ class Search(BaseModel):
     datetime: Optional[str] = None
     limit: int = 10
 
+    # Private properties to store the parsed datetime values. Not part of the model schema.
+    _start_date: Optional[dt] = None
+    _end_date: Optional[dt] = None
+
+    # Properties to return the private values
     @property
     def start_date(self) -> Optional[dt]:
-        values = (self.datetime or "").split("/")
-        if len(values) == 1:
-            return None
-        if values[0] == ".." or values[0] == "":
-            return None
-        return parse_rfc3339(values[0])
+        return self._start_date
 
     @property
     def end_date(self) -> Optional[dt]:
-        values = (self.datetime or "").split("/")
-        if len(values) == 1:
-            return parse_rfc3339(values[0])
-        if values[1] == ".." or values[1] == "":
-            return None
-        return parse_rfc3339(values[1])
+        return self._end_date
 
     # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-validators for more information.
     @model_validator(mode="before")
@@ -102,32 +98,43 @@ class Search(BaseModel):
 
     @field_validator("datetime")
     @classmethod
-    def validate_datetime(cls, v: str) -> str:
-        if "/" in v:
-            values = v.split("/")
-        else:
-            # Single date is interpreted as end date
-            values = ["..", v]
+    def validate_datetime(cls, value: str) -> str:
+        # Split on "/" and replace no value or ".." with None
+        values = [v if v and v != ".." else None for v in value.split("/")]
 
-        dates: List[dt] = []
-        for value in values:
-            if value == ".." or value == "":
-                continue
-
-            dates.append(parse_rfc3339(value))
-
+        # If there are more than 2 dates, it's invalid
         if len(values) > 2:
             raise ValueError(
-                "Invalid datetime range, must match format (begin_date, end_date)"
+                "Invalid datetime range. Too many values. Must match format: {begin_date}/{end_date}"
             )
 
-        if not {"..", ""}.intersection(set(values)):
-            if dates[0] > dates[1]:
-                raise ValueError(
-                    "Invalid datetime range, must match format (begin_date, end_date)"
-                )
+        # If there is only one date, insert a None for the start date
+        if len(values) == 1:
+            values.insert(0, None)
 
-        return v
+        # Cast because pylance gets confused by the type adapter and annotated type
+        dates = cast(
+            List[Optional[dt]],
+            [
+                # Use the type adapter to validate the datetime strings, strict is necessary
+                # due to pydantic issues #8736 and #8762
+                SearchDatetime.validate_strings(v, strict=True) if v else None
+                for v in values
+            ],
+        )
+
+        # If there is a start and end date, check that the start date is before the end date
+        if dates[0] and dates[1] and dates[0] > dates[1]:
+            raise ValueError(
+                "Invalid datetime range. Begin date after end date. "
+                "Must match format: {begin_date}/{end_date}"
+            )
+
+        # Store the parsed dates
+        cls._start_date = dates[0]
+        cls._end_date = dates[1]
+        # Return the original string value
+        return value
 
     @property
     def spatial_filter(self) -> Optional[Intersection]:

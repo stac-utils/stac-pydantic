@@ -1,9 +1,17 @@
-from datetime import datetime
+from datetime import timezone
 from enum import Enum, auto
 from typing import Any, Dict, List, Optional, Tuple, Union
 from warnings import warn
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import (
+    AfterValidator,
+    AwareDatetime,
+    BaseModel,
+    ConfigDict,
+    Field,
+    model_validator,
+)
+from typing_extensions import Annotated, Self
 
 from stac_pydantic.utils import AutoValueEnum
 
@@ -15,9 +23,14 @@ BBox = Union[
 
 SEMVER_REGEX = r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$"
 
-# https://tools.ietf.org/html/rfc3339#section-5.6
-# Unused, but leaving it here since it's used by dependencies
-DATETIME_RFC339 = "%Y-%m-%dT%H:%M:%SZ"
+# Allows for some additional flexibility in the input datetime format. As long as
+# the input value has timezone information, it will be converted to UTC timezone.
+UtcDatetime = Annotated[
+    # Input value must be in a format which has timezone information
+    AwareDatetime,
+    # Convert the input value to UTC timezone
+    AfterValidator(lambda d: d.astimezone(timezone.utc)),
+]
 
 
 class MimeTypes(str, Enum):
@@ -106,7 +119,7 @@ class Provider(StacBaseModel):
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md#provider-object
     """
 
-    name: str = Field(..., alias="name", min_length=1)
+    name: str = Field(..., min_length=1)
     description: Optional[str] = None
     roles: Optional[List[str]] = None
     url: Optional[str] = None
@@ -114,21 +127,48 @@ class Provider(StacBaseModel):
 
 class StacCommonMetadata(StacBaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v1.0.0/item-spec/common-metadata.md#date-and-time-range
+    https://github.com/radiantearth/stac-spec/blob/v1.0.0/item-spec/common-metadata.md
     """
 
-    title: Optional[str] = Field(None, alias="title")
-    description: Optional[str] = Field(None, alias="description")
-    start_datetime: Optional[datetime] = Field(None, alias="start_datetime")
-    end_datetime: Optional[datetime] = Field(None, alias="end_datetime")
-    created: Optional[datetime] = Field(None, alias="created")
-    updated: Optional[datetime] = Field(None, alias="updated")
-    platform: Optional[str] = Field(None, alias="platform")
-    instruments: Optional[List[str]] = Field(None, alias="instruments")
-    constellation: Optional[str] = Field(None, alias="constellation")
-    mission: Optional[str] = Field(None, alias="mission")
-    providers: Optional[List[Provider]] = Field(None, alias="providers")
-    gsd: Optional[float] = Field(None, alias="gsd", gt=0)
+    # Basic
+    title: Optional[str] = None
+    description: Optional[str] = None
+    # Date and Time
+    datetime: Optional[UtcDatetime] = None
+    created: Optional[UtcDatetime] = None
+    updated: Optional[UtcDatetime] = None
+    # Date and Time Range
+    start_datetime: Optional[UtcDatetime] = None
+    end_datetime: Optional[UtcDatetime] = None
+    # Provider
+    providers: Optional[List[Provider]] = None
+    # Instrument
+    platform: Optional[str] = None
+    instruments: Optional[List[str]] = None
+    constellation: Optional[str] = None
+    mission: Optional[str] = None
+    gsd: Optional[float] = Field(None, gt=0)
+
+    @model_validator(mode="after")
+    def validate_datetime_or_start_end(self) -> Self:
+        # When datetime is null, start_datetime and end_datetime must be specified
+        if not self.datetime and (not self.start_datetime or not self.end_datetime):
+            raise ValueError(
+                "start_datetime and end_datetime must be specified when datetime is null"
+            )
+
+        return self
+
+    @model_validator(mode="after")
+    def validate_start_end(self) -> Self:
+        # Using one of start_datetime or end_datetime requires the use of the other
+        if (self.start_datetime and not self.end_datetime) or (
+            not self.start_datetime and self.end_datetime
+        ):
+            raise ValueError(
+                "use of start_datetime or end_datetime requires the use of the other"
+            )
+        return self
 
 
 class Asset(StacCommonMetadata):
@@ -136,11 +176,19 @@ class Asset(StacCommonMetadata):
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/item-spec/item-spec.md#asset-object
     """
 
-    href: str = Field(..., alias="href", min_length=1)
+    href: str = Field(..., min_length=1)
     type: Optional[str] = None
     title: Optional[str] = None
     description: Optional[str] = None
     roles: Optional[List[str]] = None
+
     model_config = ConfigDict(
         populate_by_name=True, use_enum_values=True, extra="allow"
     )
+
+    @model_validator(mode="after")
+    def validate_datetime_or_start_end(self) -> Self:
+        # Overriding the parent method to avoid requiring datetime or start/end_datetime
+        # Additional fields MAY be added on the Asset object, but are not required.
+        # https://github.com/radiantearth/stac-spec/blob/v1.0.0/item-spec/item-spec.md#additional-fields-for-assets
+        return self
