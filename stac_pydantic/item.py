@@ -4,13 +4,7 @@ from geojson_pydantic import Feature
 from pydantic import AnyUrl, ConfigDict, Field, model_serializer, model_validator
 
 from stac_pydantic.links import Links
-from stac_pydantic.shared import (
-    SEMVER_REGEX,
-    Asset,
-    StacBaseModel,
-    StacCommonMetadata,
-    UtcDatetime,
-)
+from stac_pydantic.shared import SEMVER_REGEX, Asset, StacBaseModel, StacCommonMetadata
 from stac_pydantic.version import STAC_VERSION
 
 
@@ -19,10 +13,6 @@ class ItemProperties(StacCommonMetadata):
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/item-spec/item-spec.md#properties-object
     """
 
-    # Overide the datetime field to be required
-    datetime: Optional[UtcDatetime] = Field(...)
-
-    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-config for more information.
     model_config = ConfigDict(extra="allow")
 
 

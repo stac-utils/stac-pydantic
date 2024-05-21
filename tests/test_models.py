@@ -180,6 +180,16 @@ def test_stac_common_dates(args) -> None:
     StacCommonMetadata(**args)
 
 
+def test_stac_null_datetime_required() -> None:
+    with pytest.raises(ValidationError):
+        StacCommonMetadata(
+            **{
+                "start_datetime": "2024-01-01T00:00:00Z",
+                "end_datetime": "2024-01-02T00:00:00Z",
+            }
+        )
+
+
 @pytest.mark.parametrize(
     "args",
     [
