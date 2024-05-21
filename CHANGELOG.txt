@@ -13,7 +13,7 @@
 - use `StacBaseModel` as base model for `Asset` model (#148, @vincentsarago)
 - add `license` in `StacCommonMetadata` model (#147, @vincentsarago)
 - make `limit` optional in `api.Search` model (#150, @vincentsarago)
-- set `start/end datetime` to the datetime value when passing only one value in `api.Search`
+- set `start/end datetime` to the datetime value when passing only one value in `api.Search` (#152, @vincentsarago)
 
 3.0.0 (2024-01-25)
 ------------------
