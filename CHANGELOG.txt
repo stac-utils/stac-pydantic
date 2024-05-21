@@ -1,4 +1,4 @@
-3.1.0 (TBD)
+3.1.0 (2024-05-21)
 -----------------
 - Allow extra fields in Links (#144, @jonhealy1)
 - Remove the deprecated `Context` extension (#138, @vincentsarago)
