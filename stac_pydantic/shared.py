@@ -134,7 +134,7 @@ class StacCommonMetadata(StacBaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
     # Date and Time
-    datetime: Optional[UtcDatetime] = None
+    datetime: Optional[UtcDatetime] = Field(...)
     created: Optional[UtcDatetime] = None
     updated: Optional[UtcDatetime] = None
     # Date and Time Range
