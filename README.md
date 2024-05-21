@@ -11,13 +11,13 @@ For more comprehensive schema validation and robust extension support, use [pyst
 ## Installation
 
 ```shell
-pip install stac-pydantic
+python -m pip install stac-pydantic
 ```
 
 For local development:
 
 ```shell
-pip install -e '.[dev,lint]'
+python -m pip install -e '.[dev,lint]'
 ```
 
 | stac-pydantic | STAC Version | STAC API Version | Pydantic Version |
@@ -26,6 +26,7 @@ pip install -e '.[dev,lint]'
 | 1.3.x         | 1.0.0-beta.2 | <1* | ^1.6 |
 | 2.0.x         | 1.0.0        | <1* | ^1.6 |
 | 3.0.x         | 1.0.0        | 1.0.0 | ^2.4 |
+| 3.1.x         | 1.0.0        | 1.0.0 | ^2.4 |
 
 \* various beta releases, specs not fully implemented
 
@@ -58,7 +59,7 @@ tox
 Run a single test case using the standard pytest convention:
 
 ```shell
-pytest -v tests/test_models.py::test_item_extensions
+python -m pytest -v tests/test_models.py::test_item_extensions
 ```
 
 ## Usage
