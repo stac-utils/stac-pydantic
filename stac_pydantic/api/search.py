@@ -108,9 +108,9 @@ class Search(BaseModel):
                 "Invalid datetime range. Too many values. Must match format: {begin_date}/{end_date}"
             )
 
-        # If there is only one date, insert a None for the start date
+        # If there is only one date, duplicate to use for both start and end dates
         if len(values) == 1:
-            values.insert(0, None)
+            values = [values[0], values[0]]
 
         # Cast because pylance gets confused by the type adapter and annotated type
         dates = cast(

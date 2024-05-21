@@ -58,7 +58,7 @@ def test_temporal_search_single_tailed():
     utcnow = datetime.now(timezone.utc)
     utcnow_str = utcnow.isoformat()
     search = Search(collections=["collection1"], datetime=utcnow_str)
-    assert search.start_date is None
+    assert search.start_date == utcnow
     assert search.end_date == utcnow
 
 
