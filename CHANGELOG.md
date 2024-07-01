@@ -1,5 +1,5 @@
-3.1.0 (2024-05-21)
------------------
+## 3.1.0 (2024-05-21)
+
 - Allow extra fields in Links (#144, @jonhealy1)
 - Remove the deprecated `Context` extension (#138, @vincentsarago)
 - Rename `stac_pydantic.api.conformance.ConformanceClasses` to `stac_pydantic.api.conformance.Conformance`
@@ -15,36 +15,35 @@
 - make `limit` optional in `api.Search` model (#150, @vincentsarago)
 - set `start/end datetime` to the datetime value when passing only one value in `api.Search` (#152, @vincentsarago)
 
-3.0.0 (2024-01-25)
-------------------
+## 3.0.0 (2024-01-25)
+
 - Support pydantic>2.0 (@huard)
 
-2.0.3 (2022-5-3)
-------------------
+## 2.0.3 (2022-5-3)
+
 - Allow item bbox to be null if item geometry is null (#108, @yellowcap)
 - Include 'children' link relation (#112, @moradology)
 
-2.0.2 (2021-11-22)
-------------------
+## 2.0.2 (2021-11-22)
+
 - Remove fields added by STAC API search extensions (#100, @rsmith013 & @moradology)
 - Add ExtendedSearch class with fields from STAC API search extensions (#100, @rsmith013 & @moradology)
 - Allow for non-ellipsis open temporal windows (#103, @moradology)
 - Add the canonical and service-doc relation types (#104, @moradology)
 
-2.0.1 (2021-07-08)
-------------------
+## 2.0.1 (2021-07-08)
+
 - Add bbox validator to STAC search (#95, @geospatialjeff)
 - Fix LandPage to make valid STAC 1.0 catalog (#96, @lossyrob)
 
-2.0.0 (2020-06-29)
-------------------
+## 2.0.0 (2020-06-29)
+
 - Add Collections model (#81, @moradology)
 - Update to stac version 1.0.0 (#86, @moradology)
 - Remove models for STAC spec extensions (#86, @moradology)
 - Add conformsTo to LandingPage (#90, @moradology)
 
-1.3.9 (2021-03-02)
-------------------
+## 1.3.9 (2021-03-02)
 
 - Add id to landing page, making it a valid catalog (#43, @lossyrob)
 - Make `item_assets` (item assets extension) a dictionary of assets (#47, @kylebarron)
@@ -55,8 +54,8 @@
 - Switch from relative to absolute imports (#61)
 - Serialize date type fields to `datetime.datetime` upon model creation (#62)
 
-1.3.9 (2020-03-02)
-------------------
+## 1.3.9 (2020-03-02)
+
 - Add id to landing page, making it a valid catalog (#43, @lossyrob)
 - Make `item_assets` (item assets extension) a dictionary of assets (#47, @kylebarron)
 - Add pre-commit to CI (#48, @kylebarron)
@@ -66,40 +65,40 @@
 - Switch from relative to absolute imports (#61)
 - Serialize date type fields to `datetime.datetime` upon model creation (#62)
 
-1.3.8 (2020-11-21)
-------------------
+## 1.3.8 (2020-11-21)
+
 - Remove enum restriction for asset roles (#39).
 - Remove enum restriction for band common name (#40).
 
-1.3.7 (2020-11-15)
-------------------
+## 1.3.7 (2020-11-15)
+
 - Rename `proj` extension to `projection` (#34).
 - Remove `stac_extensions` enum requirement (#35).
 
-1.3.6 (2020-09-11)
-------------------
+## 1.3.6 (2020-09-11)
+
 - Publish mypy type hints (#30)
 - Correct Cloud Optimized GeoTiff mime type (#31)
 
-1.3.5 (2020-09-09)
-------------------
+## 1.3.5 (2020-09-09)
+
 - Add `created` and `updated` to stac common metadata, fix aliases. (#28)
 
-1.3.4 (2020-09-09)
-------------------
+## 1.3.4 (2020-09-09)
+
 - Update to stac version 1.0.0-beta.2 (#26)
 
-1.2.4 (2020-09-08)
-------------------
+## 1.2.4 (2020-09-08)
+
 - Update to stac version 1.0.0-beta.1 (#24)
 
-1.1.4 (2020-08-18)
-------------------
+## 1.1.4 (2020-08-18)
+
 - Fix multiple inheritance of stac extensions (#20)
 - Properly instantiate lru_cache (found by @francbartoli, #21)
 
-1.1.3 (2020-08-10)
-------------------
+## 1.1.3 (2020-08-10)
+
 - Add item model factory (#13)
 - Add pre-commit hooks (#14)
 - Add CLI for validating items (#15)
@@ -107,19 +106,19 @@
 - Add helper function for item validation (#17)
 
 
-1.0.3 (2020-06-03)
-------------------
+## 1.0.3 (2020-06-03)
+
 - Bugfixes (#10)
 - Add rel types enum (#11)
 
 
-1.0.2 (2020-06-02)
-------------------
+## 1.0.2 (2020-06-02)
+
 - Add models for the STAC API spec (#7)
 
 
-1.0.1 (2020-05-21)
-------------------
+## 1.0.1 (2020-05-21)
+
 - Allow extra asset-level fields (#1)
 - Fix population by field name model config, allowing model creation without extension namespaces (#2)
 - Add enum of commonly used asset media types (#3)
