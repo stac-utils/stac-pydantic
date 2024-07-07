@@ -11,7 +11,7 @@ from stac_pydantic.item import Item
 
 
 @lru_cache(maxsize=128)
-def _fetch_schema(url: str) -> dict:
+def _fetch_and_cache_schema(url: str) -> dict:
     """Fetch the remote JSON schema, if not already cached."""
     req = requests.get(url)
     return req.json()
@@ -35,7 +35,7 @@ def validate_extensions(
     try:
         if stac_dict["stac_extensions"]:
             for ext in stac_dict["stac_extensions"]:
-                schema = _fetch_schema(ext)
+                schema = _fetch_and_cache_schema(ext)
                 jsonschema.validate(instance=stac_dict, schema=schema)
     except Exception:
         if reraise_exception:

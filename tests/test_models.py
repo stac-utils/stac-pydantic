@@ -6,7 +6,7 @@ from pydantic import ConfigDict, ValidationError
 from shapely.geometry import shape
 
 from stac_pydantic import Collection, Item, ItemProperties
-from stac_pydantic.extensions import _fetch_schema, validate_extensions
+from stac_pydantic.extensions import _fetch_and_cache_schema, validate_extensions
 from stac_pydantic.links import Link, Links
 from stac_pydantic.shared import MimeTypes, StacCommonMetadata
 
@@ -120,16 +120,16 @@ def test_extension_validation_schema_cache() -> None:
     # Defines 3 extensions, but one is a non-existing URL
     test_item = request(EO_EXTENSION)
 
-    _fetch_schema.cache_clear()
+    _fetch_and_cache_schema.cache_clear()
 
     assert not validate_extensions(test_item)
-    assert _fetch_schema.cache_info().hits == 0
-    assert _fetch_schema.cache_info().misses == 3
+    assert _fetch_and_cache_schema.cache_info().hits == 0
+    assert _fetch_and_cache_schema.cache_info().misses == 3
 
     assert not validate_extensions(test_item)
-    assert _fetch_schema.cache_info().hits == 2
+    assert _fetch_and_cache_schema.cache_info().hits == 2
     # The non-existing URL will have failed, hence retried
-    assert _fetch_schema.cache_info().misses == 4
+    assert _fetch_and_cache_schema.cache_info().misses == 4
 
 
 @pytest.mark.parametrize(
