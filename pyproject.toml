@@ -20,7 +20,12 @@ keywords=["stac", "pydantic", "validation"]
 authors=[{ name = "Arturo Engineering", email = "engineering@arturo.ai"}]
 license= { text = "MIT" }
 requires-python=">=3.8"
-dependencies = ["click>=8.1.7", "pydantic>=2.4.1", "geojson-pydantic>=1.0.0"]
+dependencies = [
+        "click>=8.1.7",
+        "pydantic>=2.4.1",
+        "geojson-pydantic>=1.0.0",
+        "requests",
+]
 dynamic = ["version", "readme"]
 
 [project.scripts]
@@ -31,6 +36,8 @@ homepage = "https://github.com/stac-utils/stac-pydantic"
 repository ="https://github.com/stac-utils/stac-pydantic.git"
 
 [project.optional-dependencies]
+validation = ["jsonschema>=4.19.1", "requests>=2.31.0"]
+
 dev = [
         "pytest>=7.4.2",
         "pytest-cov>=4.1.0",

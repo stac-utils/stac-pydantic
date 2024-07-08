@@ -12,6 +12,10 @@ For more comprehensive schema validation and robust extension support, use [pyst
 
 ```shell
 python -m pip install stac-pydantic
+
+# or
+
+python -m pip install stac-pydantic["validation"]
 ```
 
 For local development:
