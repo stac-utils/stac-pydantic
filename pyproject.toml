@@ -24,7 +24,6 @@ dependencies = [
         "click>=8.1.7",
         "pydantic>=2.4.1",
         "geojson-pydantic>=1.0.0",
-        "requests",
 ]
 dynamic = ["version", "readme"]
 
