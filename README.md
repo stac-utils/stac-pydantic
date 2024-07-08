@@ -91,7 +91,7 @@ assert catalog.links[0].href == "item.json"
 
 ### Extensions
 
-STAC defines many extensions which let the user customize the data in their catalog. `stac-pydantic.extensions.validate_extensions` will validate a `dict`, `Item`, `Collection` or `Catalog` against the schema urls provided in the `stac_extensions` property:
+STAC defines many extensions which let the user customize the data in their catalog. `stac-pydantic.extensions.validate_extensions` gets the JSON schemas from the URLs provided in the `stac_extensions` property (caching the last fetched ones), and will validate a `dict`, `Item`, `Collection` or `Catalog` against those fetched schemas:
 
 ```python
 from stac_pydantic import Item

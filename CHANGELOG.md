@@ -1,3 +1,7 @@
+## Unreleased
+
+- Cache remote JSON schemas for extensions (#155, @avbentem)
+
 ## 3.1.0 (2024-05-21)
 
 - Allow extra fields in Links (#144, @jonhealy1)
