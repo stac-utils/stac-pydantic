@@ -1,4 +1,4 @@
-## Unreleased
+## 3.1.1 (2024-07-09)
 
 - Cache remote JSON schemas for extensions (#155, @avbentem)
 - add `requests` and `jsonschema` in a **validation** optional dependencies (#156, @vincentsarago)
