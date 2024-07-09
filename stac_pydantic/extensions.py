@@ -1,13 +1,19 @@
-import json
 from functools import lru_cache
 from typing import Any, Dict, Union
-
-import jsonschema
-import requests
 
 from stac_pydantic.catalog import Catalog
 from stac_pydantic.collection import Collection
 from stac_pydantic.item import Item
+
+try:
+    import requests
+except ImportError:  # pragma: nocover
+    requests = None  # type: ignore
+
+try:
+    import jsonschema
+except ImportError:  # pragma: nocover
+    jsonschema = None  # type: ignore
 
 
 @lru_cache(maxsize=128)
@@ -25,12 +31,13 @@ def validate_extensions(
     Fetch the remote JSON schema, if not already cached, and validate the STAC
     object against that schema.
     """
+    assert requests is not None, "requests must be installed to validate extensions"
+    assert jsonschema is not None, "jsonschema must be installed to validate extensions"
+
     if isinstance(stac_obj, dict):
         stac_dict = stac_obj
     else:
-        # can't use `stac_obj.model_dump()` here
-        # b/c jsonschema expects pure string representations, not python types
-        stac_dict = json.loads(stac_obj.model_dump_json())
+        stac_dict = stac_obj.model_dump(mode="json")
 
     try:
         if stac_dict["stac_extensions"]:
