@@ -1,3 +1,7 @@
+## 3.1.2 (2024-08-20)
+
+- Add more **MimeTypes** (geojsonseq, pbf, mvt, ndjson, openapi_yaml, pdf, csv, parquet)
+
 ## 3.1.1 (2024-07-09)
 
 - Cache remote JSON schemas for extensions (#155, @avbentem)

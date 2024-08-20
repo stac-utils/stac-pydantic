@@ -46,18 +46,26 @@ class MimeTypes(str, Enum):
     jpeg = "image/jpeg"
     # Vector
     geojson = "application/geo+json"
+    geojsonseq = "application/geo+json-seq"
     geopackage = "application/geopackage+sqlite3"
     kml = "application/vnd.google-earth.kml+xml"
     kmz = "application/vnd.google-earth.kmz"
+    pbf = "application/x-protobuf"
+    mvt = "application/vnd.mapbox-vector-tile"
     # Others
     hdf = "application/x-hdf"
     hdf5 = "application/x-hdf5"
     xml = "application/xml"
     json = "application/json"
+    ndjson = "application/ndjson"
     html = "text/html"
     text = "text/plain"
     openapi = "application/vnd.oai.openapi+json;version=3.0"
+    openapi_yaml = "application/vnd.oai.openapi;version=3.0"
     jsonschema = "application/schema+json"
+    pdf = "application/pdf"
+    csv = "text/csv"
+    parquet = "application/vnd.apache.parquet"
 
 
 class AssetRoles(str, AutoValueEnum):
