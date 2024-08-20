@@ -1,5 +1,5 @@
 """stac-pydantic and STAC spec versions."""
 
-__version__ = "3.1.1"
+__version__ = "3.1.2"
 
 STAC_VERSION = "1.0.0"
