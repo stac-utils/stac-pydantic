@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from pydantic import model_validator
 
@@ -16,6 +16,8 @@ class Collections(StacBaseModel):
 
     links: Links
     collections: List[Collection]
+    numberMatched: Optional[int] = None
+    numberReturned: Optional[int] = None
 
     @model_validator(mode="after")
     def required_links(self) -> "Collections":

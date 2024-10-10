@@ -1,3 +1,8 @@
+
+## Unreleased
+
+- Add optional `numberMatched` and `numberReturned` to `api.collections.Collections` model to match the OGC Common part2 specification
+
 ## 3.1.2 (2024-08-20)
 
 - Add more **MimeTypes** (geojsonseq, pbf, mvt, ndjson, openapi_yaml, pdf, csv, parquet)
