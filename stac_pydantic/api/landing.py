@@ -35,7 +35,7 @@ class LandingPage(Catalog):
             ), f"STAC API conform Landing pages must include a `{rel}` link."
 
         if (
-            HttpUrl(f"https://api.stacspec.org/v{STAC_API_VERSION}/collections")
+            AnyUrl(f"https://api.stacspec.org/v{STAC_API_VERSION}/collections")
             in self.conformsTo
         ):
             required_collections_rels = [Relations.data]
