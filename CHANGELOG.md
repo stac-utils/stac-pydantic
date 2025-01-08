@@ -1,6 +1,10 @@
 
 ## Unreleased
 
+## 3.1.4 (2025-01-08)
+
+- Fix URL comparison for Landing page conformance (author @gadomski, https://github.com/stac-utils/stac-pydantic/pull/163)
+
 ## 3.1.3 (2024-10-14)
 
 - Add optional `numberMatched` and `numberReturned` to `api.collections.Collections` model to match the OGC Common part2 specification
