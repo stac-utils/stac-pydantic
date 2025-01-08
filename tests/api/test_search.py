@@ -149,3 +149,7 @@ def test_search_geometry_bbox():
 def test_search_invalid_bbox(bbox):
     with pytest.raises(ValidationError):
         Search(collections=["foo"], bbox=bbox)
+
+
+def test_search_none_datetime() -> None:
+    Search(datetime=None)
