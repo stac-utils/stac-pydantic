@@ -1,6 +1,9 @@
 
 ## Unreleased
 
+## 3.1.4 (2025-01-08)
+
+- Fix URL comparison for Landing page conformance (#163, @gadomski)
 - Fix `Search` validation when `datetime` is `None` (#165, @gadomski)
 
 ## 3.1.3 (2024-10-14)
