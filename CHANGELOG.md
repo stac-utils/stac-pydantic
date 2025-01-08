@@ -1,6 +1,8 @@
 
 ## Unreleased
 
+- Fix `Search` validation when `datetime` is `None` (#165, @gadomski)
+
 ## 3.1.3 (2024-10-14)
 
 - Add optional `numberMatched` and `numberReturned` to `api.collections.Collections` model to match the OGC Common part2 specification
@@ -121,17 +123,14 @@
 - Add option to skip validation of remote extensions (#16)
 - Add helper function for item validation (#17)
 
-
 ## 1.0.3 (2020-06-03)
 
 - Bugfixes (#10)
 - Add rel types enum (#11)
 
-
 ## 1.0.2 (2020-06-02)
 
 - Add models for the STAC API spec (#7)
-
 
 ## 1.0.1 (2020-05-21)
 
