@@ -98,8 +98,10 @@ class Search(BaseModel):
 
     @field_validator("datetime")
     @classmethod
-    def validate_datetime(cls, value: str) -> str:
+    def validate_datetime(cls, value: Optional[str]) -> Optional[str]:
         # Split on "/" and replace no value or ".." with None
+        if value is None:
+            return value
         values = [v if v and v != ".." else None for v in value.split("/")]
 
         # If there are more than 2 dates, it's invalid
