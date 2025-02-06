@@ -79,11 +79,14 @@ class Search(BaseModel):
                     raise ValueError(
                         "Maximum elevation must greater than minimum elevation"
                     )
+            # Validate against WGS84
+            if xmin < -180 or ymin < -90 or xmax > 180 or ymax > 90:
+                raise ValueError("Bounding box must be within (-180, -90, 180, 90)")
 
             if xmax < xmin:
                 # xmin > xmax is permitted when crossing the antimeridian
                 # https://datatracker.ietf.org/doc/html/rfc7946#section-5.2
-                if not ((xmin < 0) and (xmax > 0)):
+                if not ((xmax < 0) and (xmin > 0)):
                     raise ValueError(
                         "Maximum longitude must be greater than minimum longitude"
                     )
@@ -92,10 +95,6 @@ class Search(BaseModel):
                 raise ValueError(
                     "Maximum longitude must be greater than minimum longitude"
                 )
-
-            # Validate against WGS84
-            if xmin < -180 or ymin < -90 or xmax > 180 or ymax > 90:
-                raise ValueError("Bounding box must be within (-180, -90, 180, 90)")
 
         return v
 
