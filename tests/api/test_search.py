@@ -151,5 +151,20 @@ def test_search_invalid_bbox(bbox):
         Search(collections=["foo"], bbox=bbox)
 
 
+@pytest.mark.parametrize(
+    "bbox",
+    [
+        (
+            100.0,
+            0.0,
+            -95.0,
+            1.0,
+        ),  # xmin greater than xmax allowed when xmin > 0 and xmax < 0
+    ],
+)
+def test_search_valid_bbox(bbox):
+    Search(collections=["foo"], bbox=bbox)
+
+
 def test_search_none_datetime() -> None:
     Search(datetime=None)
