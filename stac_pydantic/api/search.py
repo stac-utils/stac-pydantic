@@ -83,7 +83,7 @@ class Search(BaseModel):
             if xmax < xmin:
                 # xmin > xmax is permitted when crossing the antimeridian
                 # https://datatracker.ietf.org/doc/html/rfc7946#section-5.2
-                if not (xmin > 0 > xmax):
+                if not ((xmin < 0) and (xmax > 0)):
                     raise ValueError(
                         "Maximum longitude must be greater than minimum longitude"
                     )
