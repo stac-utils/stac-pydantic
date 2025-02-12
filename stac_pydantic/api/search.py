@@ -83,14 +83,6 @@ class Search(BaseModel):
             if xmin < -180 or ymin < -90 or xmax > 180 or ymax > 90:
                 raise ValueError("Bounding box must be within (-180, -90, 180, 90)")
 
-            if xmax < xmin:
-                # xmin > xmax is permitted when crossing the antimeridian
-                # https://datatracker.ietf.org/doc/html/rfc7946#section-5.2
-                if not ((xmax < 0) and (xmin > 0)):
-                    raise ValueError(
-                        "Maximum longitude must be greater than minimum longitude"
-                    )
-
             if ymax < ymin:
                 raise ValueError(
                     "Maximum longitude must be greater than minimum longitude"
