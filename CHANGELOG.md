@@ -1,6 +1,10 @@
 
 ## Unreleased
 
+## 3.1.5 (2025-02-25)
+
+- Fix `Search` model to make sure `_start_date` and `_end_date` privateAttr are cleared on model initialization
+
 ## 3.1.4 (2025-01-08)
 
 - Fix URL comparison for Landing page conformance (#163, @gadomski)
