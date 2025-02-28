@@ -10,7 +10,15 @@ from geojson_pydantic.geometries import (
     Point,
     Polygon,
 )
-from pydantic import BaseModel, Field, TypeAdapter, field_validator, model_validator
+from pydantic import (
+    BaseModel,
+    Field,
+    PrivateAttr,
+    TypeAdapter,
+    ValidationInfo,
+    field_validator,
+    model_validator,
+)
 
 from stac_pydantic.api.extensions.fields import FieldsExtension
 from stac_pydantic.api.extensions.query import Operator
@@ -45,8 +53,8 @@ class Search(BaseModel):
     limit: Optional[int] = 10
 
     # Private properties to store the parsed datetime values. Not part of the model schema.
-    _start_date: Optional[dt] = None
-    _end_date: Optional[dt] = None
+    _start_date: Optional[dt] = PrivateAttr(default=None)
+    _end_date: Optional[dt] = PrivateAttr(default=None)
 
     # Properties to return the private values
     @property
@@ -96,9 +104,11 @@ class Search(BaseModel):
 
         return v
 
-    @field_validator("datetime")
+    @field_validator("datetime", mode="after")
     @classmethod
-    def validate_datetime(cls, value: Optional[str]) -> Optional[str]:
+    def validate_datetime(
+        cls, value: Optional[str], info: ValidationInfo
+    ) -> Optional[str]:
         # Split on "/" and replace no value or ".." with None
         if value is None:
             return value
@@ -133,8 +143,9 @@ class Search(BaseModel):
             )
 
         # Store the parsed dates
-        cls._start_date = dates[0]
-        cls._end_date = dates[1]
+        info.data["_start_date"] = dates[0]
+        info.data["_end_date"] = dates[1]
+
         # Return the original string value
         return value
 

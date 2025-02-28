@@ -62,6 +62,19 @@ def test_temporal_search_single_tailed():
     assert search.end_date == utcnow
 
 
+def test_datetime_clean():
+    # ref: https://github.com/stac-utils/stac-pydantic/issues/170
+    utcnow = datetime.now(timezone.utc)
+    utcnow_str = utcnow.isoformat()
+    search = Search(datetime=utcnow_str)
+    assert search.start_date == utcnow
+    assert search.end_date == utcnow
+
+    search = Search()
+    assert not search.start_date
+    assert not search.end_date
+
+
 def test_temporal_search_two_tailed():
     # Test two tailed
     utcnow = datetime.now(timezone.utc)
