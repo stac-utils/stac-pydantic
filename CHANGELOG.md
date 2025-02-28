@@ -4,6 +4,7 @@
 ## 3.1.5 (2025-02-28)
 
 - Fix `Search` model to make sure `_start_date` and `_end_date` privateAttr are cleared on model initialization (#72, @sbrunato and @vincentsarago)
+- Fix bbox validation to allow anti-meridian crossing (#167, @ujjwal360)
 - Add `octet_stream=application/octet-stream` to MimeTypes (#169, @tjellicoe-tpzuk)
 
 ## 3.1.4 (2025-01-08)
