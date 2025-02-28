@@ -1,7 +1,7 @@
 
 ## Unreleased
 
-## 3.1.5 (2025-02-25)
+## 3.1.5 (2025-02-28)
 
 - Fix `Search` model to make sure `_start_date` and `_end_date` privateAttr are cleared on model initialization
 
