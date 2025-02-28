@@ -66,6 +66,7 @@ class MimeTypes(str, Enum):
     pdf = "application/pdf"
     csv = "text/csv"
     parquet = "application/vnd.apache.parquet"
+    octet_stream = "application/octet-stream"
 
 
 class AssetRoles(str, AutoValueEnum):
