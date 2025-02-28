@@ -87,20 +87,14 @@ class Search(BaseModel):
                     raise ValueError(
                         "Maximum elevation must greater than minimum elevation"
                     )
-
-            if xmax < xmin:
-                raise ValueError(
-                    "Maximum longitude must be greater than minimum longitude"
-                )
+            # Validate against WGS84
+            if xmin < -180 or ymin < -90 or xmax > 180 or ymax > 90:
+                raise ValueError("Bounding box must be within (-180, -90, 180, 90)")
 
             if ymax < ymin:
                 raise ValueError(
                     "Maximum longitude must be greater than minimum longitude"
                 )
-
-            # Validate against WGS84
-            if xmin < -180 or ymin < -90 or xmax > 180 or ymax > 90:
-                raise ValueError("Bounding box must be within (-180, -90, 180, 90)")
 
         return v
 
