@@ -54,7 +54,7 @@ def validate_bbox(v: Optional[BBox]) -> Optional[BBox]:
             raise ValueError("Bounding box must be within (-180, -90, 180, 90)")
 
         if ymax < ymin:
-            raise ValueError("Maximum longitude must be greater than minimum longitude")
+            raise ValueError("Maximum latitude must be greater than minimum latitude")
 
     return v
 
