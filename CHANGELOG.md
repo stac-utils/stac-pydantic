@@ -1,7 +1,7 @@
 
 ## Unreleased
 
-## 3.2.0 (TBD)
+## 3.2.0 (2025-03-20)
 
 - Move `validate_bbox` and `validate_datetime` field validation functions outside the Search class (to enable re-utilization)
 - Remove `Search()._start_date` and ``Search()._end_date` private attributes
