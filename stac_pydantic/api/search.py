@@ -10,15 +10,8 @@ from geojson_pydantic.geometries import (
     Point,
     Polygon,
 )
-from pydantic import (
-    BaseModel,
-    Field,
-    PrivateAttr,
-    TypeAdapter,
-    ValidationInfo,
-    field_validator,
-    model_validator,
-)
+from pydantic import AfterValidator, BaseModel, Field, TypeAdapter, model_validator
+from typing_extensions import Annotated
 
 from stac_pydantic.api.extensions.fields import FieldsExtension
 from stac_pydantic.api.extensions.query import Operator
@@ -38,6 +31,76 @@ Intersection = Union[
 SearchDatetime = TypeAdapter(Optional[UtcDatetime])
 
 
+def validate_bbox(v: Optional[BBox]) -> Optional[BBox]:
+    """Validate BBOX value."""
+    if v:
+        # Validate order
+        if len(v) == 4:
+            xmin, ymin, xmax, ymax = cast(Tuple[int, int, int, int], v)
+
+        elif len(v) == 6:
+            xmin, ymin, min_elev, xmax, ymax, max_elev = cast(
+                Tuple[int, int, int, int, int, int], v
+            )
+            if max_elev < min_elev:
+                raise ValueError(
+                    "Maximum elevation must greater than minimum elevation"
+                )
+        else:
+            raise ValueError("Bounding box must have 4 or 6 coordinates")
+
+        # Validate against WGS84
+        if xmin < -180 or ymin < -90 or xmax > 180 or ymax > 90:
+            raise ValueError("Bounding box must be within (-180, -90, 180, 90)")
+
+        if ymax < ymin:
+            raise ValueError("Maximum latitude must be greater than minimum latitude")
+
+    return v
+
+
+def str_to_datetimes(value: str) -> List[Optional[dt]]:
+    # Split on "/" and replace no value or ".." with None
+    values = [v if v and v != ".." else None for v in value.split("/")]
+
+    # Cast because pylance gets confused by the type adapter and annotated type
+    dates = cast(
+        List[Optional[dt]],
+        [
+            # Use the type adapter to validate the datetime strings, strict is necessary
+            # due to pydantic issues #8736 and #8762
+            SearchDatetime.validate_strings(v, strict=True) if v else None
+            for v in values
+        ],
+    )
+    return dates
+
+
+def validate_datetime(v: Optional[str]) -> Optional[str]:
+    """Validate Datetime value."""
+    if v is not None:
+        dates = str_to_datetimes(v)
+
+        # If there are more than 2 dates, it's invalid
+        if len(dates) > 2:
+            raise ValueError(
+                "Invalid datetime range. Too many values. Must match format: {begin_date}/{end_date}"
+            )
+
+        # If there is only one date, duplicate to use for both start and end dates
+        if len(dates) == 1:
+            dates = [dates[0], dates[0]]
+
+        # If there is a start and end date, check that the start date is before the end date
+        if dates[0] and dates[1] and dates[0] > dates[1]:
+            raise ValueError(
+                "Invalid datetime range. Begin date after end date. "
+                "Must match format: {begin_date}/{end_date}"
+            )
+
+    return v
+
+
 class Search(BaseModel):
     """
     The base class for STAC API searches.
@@ -47,23 +110,25 @@ class Search(BaseModel):
 
     collections: Optional[List[str]] = None
     ids: Optional[List[str]] = None
-    bbox: Optional[BBox] = None
+    bbox: Annotated[Optional[BBox], AfterValidator(validate_bbox)] = None
     intersects: Optional[Intersection] = None
-    datetime: Optional[str] = None
+    datetime: Annotated[Optional[str], AfterValidator(validate_datetime)] = None
     limit: Optional[int] = 10
 
-    # Private properties to store the parsed datetime values. Not part of the model schema.
-    _start_date: Optional[dt] = PrivateAttr(default=None)
-    _end_date: Optional[dt] = PrivateAttr(default=None)
-
-    # Properties to return the private values
     @property
     def start_date(self) -> Optional[dt]:
-        return self._start_date
+        start_date: Optional[dt] = None
+        if self.datetime:
+            start_date = str_to_datetimes(self.datetime)[0]
+        return start_date
 
     @property
     def end_date(self) -> Optional[dt]:
-        return self._end_date
+        end_date: Optional[dt] = None
+        if self.datetime:
+            dates = str_to_datetimes(self.datetime)
+            end_date = dates[0] if len(dates) == 1 else dates[1]
+        return end_date
 
     # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-validators for more information.
     @model_validator(mode="before")
@@ -71,77 +136,6 @@ class Search(BaseModel):
         if values.get("intersects") and values.get("bbox") is not None:
             raise ValueError("intersects and bbox parameters are mutually exclusive")
         return values
-
-    @field_validator("bbox")
-    @classmethod
-    def validate_bbox(cls, v: BBox) -> BBox:
-        if v:
-            # Validate order
-            if len(v) == 4:
-                xmin, ymin, xmax, ymax = cast(Tuple[int, int, int, int], v)
-            else:
-                xmin, ymin, min_elev, xmax, ymax, max_elev = cast(
-                    Tuple[int, int, int, int, int, int], v
-                )
-                if max_elev < min_elev:
-                    raise ValueError(
-                        "Maximum elevation must greater than minimum elevation"
-                    )
-            # Validate against WGS84
-            if xmin < -180 or ymin < -90 or xmax > 180 or ymax > 90:
-                raise ValueError("Bounding box must be within (-180, -90, 180, 90)")
-
-            if ymax < ymin:
-                raise ValueError(
-                    "Maximum longitude must be greater than minimum longitude"
-                )
-
-        return v
-
-    @field_validator("datetime", mode="after")
-    @classmethod
-    def validate_datetime(
-        cls, value: Optional[str], info: ValidationInfo
-    ) -> Optional[str]:
-        # Split on "/" and replace no value or ".." with None
-        if value is None:
-            return value
-        values = [v if v and v != ".." else None for v in value.split("/")]
-
-        # If there are more than 2 dates, it's invalid
-        if len(values) > 2:
-            raise ValueError(
-                "Invalid datetime range. Too many values. Must match format: {begin_date}/{end_date}"
-            )
-
-        # If there is only one date, duplicate to use for both start and end dates
-        if len(values) == 1:
-            values = [values[0], values[0]]
-
-        # Cast because pylance gets confused by the type adapter and annotated type
-        dates = cast(
-            List[Optional[dt]],
-            [
-                # Use the type adapter to validate the datetime strings, strict is necessary
-                # due to pydantic issues #8736 and #8762
-                SearchDatetime.validate_strings(v, strict=True) if v else None
-                for v in values
-            ],
-        )
-
-        # If there is a start and end date, check that the start date is before the end date
-        if dates[0] and dates[1] and dates[0] > dates[1]:
-            raise ValueError(
-                "Invalid datetime range. Begin date after end date. "
-                "Must match format: {begin_date}/{end_date}"
-            )
-
-        # Store the parsed dates
-        info.data["_start_date"] = dates[0]
-        info.data["_end_date"] = dates[1]
-
-        # Return the original string value
-        return value
 
     @property
     def spatial_filter(self) -> Optional[Intersection]:

@@ -1,6 +1,12 @@
 
 ## Unreleased
 
+## 3.2.0 (TBD)
+
+- Move `validate_bbox` and `validate_datetime` field validation functions outside the Search class (to enable re-utilization)
+- Remove `Search()._start_date` and ``Search()._end_date` private attributes
+- Add `api.search.str_to_datetime(value: str) -> List[Optional[datetime.datetime]]` function
+
 ## 3.1.5 (2025-02-28)
 
 - Fix `Search` model to make sure `_start_date` and `_end_date` privateAttr are cleared on model initialization (#72, @sbrunato and @vincentsarago)

@@ -146,6 +146,7 @@ def test_search_geometry_bbox():
 @pytest.mark.parametrize(
     "bbox",
     [
+        (100.0, 1.0),  # 1D Coordinates
         (100.0, 1.0, 105.0, 0.0),  # ymin greater than ymax
         (100.0, 0.0, 5.0, 105.0, 1.0, 4.0),  # min elev greater than max elev
         (-200.0, 0.0, 105.0, 1.0),  # xmin is invalid WGS84
@@ -165,3 +166,44 @@ def test_search_invalid_bbox(bbox):
 
 def test_search_none_datetime() -> None:
     Search(datetime=None)
+
+
+@pytest.mark.parametrize(
+    "dt,start,end",
+    [
+        # unique datetime, start/end == datetime
+        ["1985-04-12T23:20:50.52Z", False, False],
+        # start datetime is None
+        ["../1985-04-12T23:20:50.52Z", True, False],
+        ["/1985-04-12T23:20:50.52Z", True, False],
+        # end datetime is None
+        ["1985-04-12T23:20:50.52Z/..", False, True],
+        ["1985-04-12T23:20:50.52Z/", False, True],
+        # Both start/end datetime are available
+        ["1985-04-12T23:20:50.52Z/1986-04-12T23:20:50.52Z", False, False],
+        ["1985-04-12T23:20:50.52+01:00/1986-04-12T23:20:50.52+01:00", False, False],
+        ["1985-04-12T23:20:50.52-01:00/1986-04-12T23:20:50.52-01:00", False, False],
+    ],
+)
+def test_search_datetime(dt, start, end):
+    s = Search(datetime=dt)
+    assert s.datetime is not None
+    assert (s.start_date is None) == start
+    assert (s.end_date is None) == end
+
+
+@pytest.mark.parametrize(
+    "dt",
+    [
+        "/"
+        "../"
+        "/.."
+        "../.."
+        "/1984-04-12T23:20:50.52Z/1985-04-12T23:20:50.52Z",  # extra start /
+        "1984-04-12T23:20:50.52Z/1985-04-12T23:20:50.52Z/",  # extra end /
+        "1986-04-12T23:20:50.52Z/1985-04-12T23:20:50.52Z",  # start > end
+    ],
+)
+def test_search_invalid_datetime(dt):
+    with pytest.raises(ValidationError):
+        Search(datetime=dt)
