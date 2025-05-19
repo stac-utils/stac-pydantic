@@ -3,7 +3,7 @@ from typing import Any, Dict, List, Literal, Optional, Union
 from pydantic import Field
 
 from stac_pydantic.catalog import _Catalog
-from stac_pydantic.shared import Asset, NumType, Provider, StacBaseModel
+from stac_pydantic.shared import Asset, NumType, Provider, StacBaseModel, UtcDatetime
 
 
 class SpatialExtent(StacBaseModel):
@@ -19,7 +19,7 @@ class TimeInterval(StacBaseModel):
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md#temporal-extent-object
     """
 
-    interval: List[List[Union[str, None]]]
+    interval: List[List[Union[UtcDatetime, None]]]
 
 
 class Extent(StacBaseModel):
