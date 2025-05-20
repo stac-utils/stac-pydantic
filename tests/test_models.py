@@ -367,6 +367,11 @@ def test_item_bbox_validation() -> None:
             ["2023-01-01T00:00:00Z", "2024-01-01T00:00:00Z"],
             ["2023-01-31T00:00:00Z", "2024-01-02T00:00:00Z"],
         ],
+        # sub-sequent starttime after sub-sequent endtime
+        [
+            ["2023-01-01T00:00:00Z", "2024-01-01T00:00:00Z"],
+            ["2023-01-31T00:00:00Z", "2023-01-01T00:00:00Z"],
+        ],
     ],
 )
 def test_time_intervals_invalid(interval) -> None:

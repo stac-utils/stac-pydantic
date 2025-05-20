@@ -22,11 +22,16 @@ def validate_time_interval(v: List[TInterval]) -> List[TInterval]:
     # The first time interval always describes the overall temporal extent of the data.
     start, end = next(ivalues)
     if start and end:
-        assert start < end, f"`Start` time {start} older than `End` time {end}"
+        if start > end:
+            raise ValueError(f"`Start` time {start} older than `End` time {end}")
 
     # All subsequent time intervals can be used to provide a more precise
     # description of the extent and identify clusters of data.
     for s, e in ivalues:
+        if s and e:
+            if s > e:
+                raise ValueError(f"`Start` time {s} older than `End` time {e}")
+
         if start and s:
             if start > s:
                 raise ValueError(
