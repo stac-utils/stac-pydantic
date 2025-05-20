@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Literal, Optional, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Literal, Optional, Union
 
 from pydantic import AfterValidator, Field, conlist
 from typing_extensions import Annotated
@@ -13,8 +13,15 @@ from stac_pydantic.shared import (
     UtcDatetime,
 )
 
+if TYPE_CHECKING:
+    StartEndTime = List[Union[UtcDatetime, None]]
+    TInterval = List[StartEndTime]
+else:
+    StartEndTime = conlist(Union[UtcDatetime, None], min_length=2, max_length=2)
+    TInterval = conlist(StartEndTime, min_length=1)
 
-def validate_time_interval(v):  # noqa: C901
+
+def validate_time_interval(v: TInterval) -> TInterval:  # noqa: C901
     ivalues = iter(v)
 
     # The first time interval always describes the overall temporal extent of the data.
@@ -62,13 +69,7 @@ class TimeInterval(StacBaseModel):
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md#temporal-extent-object
     """
 
-    interval: Annotated[  # type: ignore
-        conlist(
-            conlist(Union[UtcDatetime, None], min_length=2, max_length=2),
-            min_length=1,
-        ),
-        AfterValidator(validate_time_interval),
-    ]
+    interval: Annotated[TInterval, AfterValidator(validate_time_interval)]
 
 
 class Extent(StacBaseModel):
