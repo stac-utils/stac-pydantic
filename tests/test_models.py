@@ -353,9 +353,19 @@ def test_item_bbox_validation() -> None:
 @pytest.mark.parametrize(
     "interval",
     [
+        # interval should at least have 1 value
+        [],
+        # interval item should be an array of 2 datetime
+        ["2023-01-01T00:00:00Z", "2024-01-01T00:00:00Z"],
+        # interval item should not be null
+        [[]],
+        # interval item should have 2 values
+        [["2023-01-01T00:00:00Z", "2023-01-02T00:00:00Z", "2024-01-01T00:00:00Z"]],
+        # invalid datetime values
         [[None, "yo"]],
         [["yo", None]],
         [["yo", "yo"]],
+        # wrong datetime order
         [["2024-01-01T00:00:00Z", "2023-01-01T00:00:00Z"]],
         # sub-sequent starttime before overall starttime
         [
@@ -383,6 +393,8 @@ def test_time_intervals_invalid(interval) -> None:
 @pytest.mark.parametrize(
     "interval",
     [
+        # Open date range to both sides is supported but not recommended.
+        [[None, None]],
         [["2024-01-01T00:00:00Z", None]],
         [[None, "2024-01-01T00:00:00Z"]],
         [["2023-01-01T00:00:00Z", "2024-01-01T00:00:00Z"]],
