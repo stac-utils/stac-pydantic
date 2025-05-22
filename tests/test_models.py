@@ -6,7 +6,7 @@ from pydantic import ConfigDict, ValidationError
 from shapely.geometry import shape
 
 from stac_pydantic import Collection, Item, ItemProperties
-from stac_pydantic.collection import TimeInterval
+from stac_pydantic.collection import SpatialExtent, TimeInterval
 from stac_pydantic.extensions import _fetch_and_cache_schema, validate_extensions
 from stac_pydantic.links import Link, Links
 from stac_pydantic.shared import MimeTypes, StacCommonMetadata
@@ -407,3 +407,44 @@ def test_time_intervals_invalid(interval) -> None:
 def test_time_intervals_valid(interval) -> None:
     """Check Time Interval model."""
     assert TimeInterval(interval=interval)
+
+
+@pytest.mark.parametrize(
+    "bboxes",
+    [
+        # invalid Y order
+        [[0, 1, 1, 0]],
+        # sub-sequent crossing Y
+        [[0, 0, 2, 2], [0.5, 0.5, 2.0, 2.5]],
+        # sub-sequent crossing X
+        [[0, 0, 2, 2], [0.5, 0.5, 2.5, 2.0]],
+        # sub-sequent crossing Antimeridian limit
+        [[0, 0, 2, 2], [1, 0, -179, 1]],
+        # both crossing Antimeridian limit but sub-sequent cross west bbox
+        [[2, 0, -178, 2], [1, 0, -176, 1]],
+    ],
+)
+def test_spatial_intervals_invalid(bboxes) -> None:
+    """Check invalid Spatial Interval model."""
+    with pytest.raises(ValidationError):
+        SpatialExtent(bbox=bboxes)
+
+
+@pytest.mark.parametrize(
+    "bboxes",
+    [
+        [[0, 0, 1, 1]],
+        # Same on both side
+        [[0, 0, 2, 2], [0, 0, 2, 2]],
+        [[0, 0, 2, 2], [0.5, 0.5, 1.5, 1.5]],
+        # crossing Antimeridian limit
+        [[2, 0, -178, 2]],
+        # overall crossing Antimeridian, sub-sequent bbox not crossing
+        [[2, 0, -178, 2], [0, 0, 1, 1]],
+        # overall and sub-sequent crossing Antimeridian
+        [[2, 0, -178, 2], [1, 0, -179, 1]],
+    ],
+)
+def test_spatial_intervals_valid(bboxes) -> None:
+    """Check Spatial Interval model."""
+    assert SpatialExtent(bbox=bboxes)

@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Literal, Optional, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Literal, Optional, Tuple, Union
 
 from pydantic import AfterValidator, Field, conlist
 from typing_extensions import Annotated
@@ -11,6 +11,7 @@ from stac_pydantic.shared import (
     Provider,
     StacBaseModel,
     UtcDatetime,
+    validate_bbox,
 )
 
 if TYPE_CHECKING:
@@ -19,6 +20,60 @@ if TYPE_CHECKING:
 else:
     StartEndTime = conlist(Union[UtcDatetime, None], min_length=2, max_length=2)
     TInterval = conlist(StartEndTime, min_length=1)
+
+
+def _normalize_bounds(
+    xmin: NumType, ymin: NumType, xmax: NumType, ymax: NumType
+) -> Tuple[NumType, NumType, NumType, NumType]:
+    """Return BBox in correct minx, miny, maxx, maxy order."""
+    return (
+        min(xmin, xmax),
+        min(ymin, ymax),
+        max(xmin, xmax),
+        max(ymin, ymax),
+    )
+
+
+def validate_bbox_interval(v: List[BBox]) -> List[BBox]:
+    ivalues = iter(v)
+
+    # The first time interval always describes the overall spatial extent of the data.
+    overall_bbox = next(ivalues, None)
+    if not overall_bbox:
+        return v
+
+    assert validate_bbox(overall_bbox)
+
+    if len(overall_bbox) == 4:
+        xmin, ymin, xmax, ymax = overall_bbox
+    else:
+        xmin, ymin, _, xmax, ymax, _ = overall_bbox
+
+    # if bbox is crossing the Antimeridian limit we move xmax to the west
+    if xmin > xmax:
+        xmax = 180 - (xmax % 360)
+
+    xmin, ymin, xmax, ymax = _normalize_bounds(xmin, ymin, xmax, ymax)
+    for bbox in ivalues:
+        _ = validate_bbox(bbox)
+
+        if len(bbox) == 4:
+            xminb, yminb, xmaxb, ymaxb = bbox
+        else:
+            xminb, yminb, _, xmaxb, ymaxb, _ = bbox
+
+        if xminb > xmaxb:
+            xmaxb = 180 - (xmaxb % 360)
+
+        xminb, yminb, xmaxb, ymaxb = _normalize_bounds(xminb, yminb, xmaxb, ymaxb)
+        if not (
+            (xminb >= xmin) and (xmaxb <= xmax) and (yminb >= ymin) and (ymaxb <= ymax)
+        ):
+            raise ValueError(
+                f"`BBOX` {bbox} not fully contained in `Overall BBOX` {overall_bbox}"
+            )
+
+    return v
 
 
 def validate_time_interval(v: TInterval) -> TInterval:  # noqa: C901
@@ -61,7 +116,7 @@ class SpatialExtent(StacBaseModel):
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md#spatial-extent-object
     """
 
-    bbox: List[BBox]
+    bbox: Annotated[List[BBox], AfterValidator(validate_bbox_interval)]
 
 
 class TimeInterval(StacBaseModel):
