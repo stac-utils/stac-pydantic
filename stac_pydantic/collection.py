@@ -11,6 +11,7 @@ from stac_pydantic.shared import (
     Provider,
     StacBaseModel,
     UtcDatetime,
+    validate_bbox,
 )
 
 if TYPE_CHECKING:
@@ -19,6 +20,89 @@ if TYPE_CHECKING:
 else:
     StartEndTime = conlist(Union[UtcDatetime, None], min_length=2, max_length=2)
     TInterval = conlist(StartEndTime, min_length=1)
+
+
+def validate_bbox_interval(v: List[BBox]) -> List[BBox]:
+    ivalues = iter(v)
+
+    # The first time interval always describes the overall spatial extent of the data.
+    overall_bbox = next(ivalues, None)
+    if not overall_bbox:
+        return v
+
+    assert validate_bbox(overall_bbox)
+
+    if len(overall_bbox) == 4:
+        xmin, ymin, xmax, ymax = overall_bbox
+    else:
+        xmin, ymin, _, xmax, ymax, _ = overall_bbox
+
+    crossing_antimeridian = xmin > xmax
+    for bbox in ivalues:
+        _ = validate_bbox(bbox)
+
+        if len(bbox) == 4:
+            xmin_sub, ymin_sub, xmax_sub, ymax_sub = bbox
+        else:
+            xmin_sub, ymin_sub, _, xmax_sub, ymax_sub, _ = bbox
+
+        if not ((ymin_sub >= ymin) and (ymax_sub <= ymax)):
+            raise ValueError(
+                f"`BBOX` {bbox} not fully contained in `Overall BBOX` {overall_bbox}"
+            )
+
+        sub_crossing_antimeridian = xmin_sub > xmax_sub
+        if not crossing_antimeridian and sub_crossing_antimeridian:
+            raise ValueError(
+                f"`BBOX` {bbox} not fully contained in `Overall BBOX` {overall_bbox}"
+            )
+
+        elif crossing_antimeridian:
+            # TODO:
+            # here we need to check for 4 cases
+            # 1. sub-sequent within the right part of the overall bbox
+            # 2. sub-sequent within the left part of the overall bbox
+            # 3. if sub-sequent also cross the antimeridian we need to check both part with both overall part
+            #
+            #                               │
+            #                               │
+            #      [176,1,179,3]            │
+            #           │                   │
+            #           │                   │                               [1,1,3,3]
+            #           │                   │
+            #           │  ┌─────────────────────────────────────────┐        │
+            #           │  │                │                        │        │
+            #           │  │  ┌──────┐      │        ┌─────────┐     │        │
+            #           └──│──►  2   │      │        │    1    │     │        │
+            #              │  │      │      │        │         │◄────│────────┘
+            #              │  └──────┘      │        └─────────┘     │
+            #              │                │                        │
+            #  ────────────│────────────────┼────────────────────────│────────────────
+            #              │                │                        │
+            #              │         ┌──────────────┐                │
+            #              │         │      │       │                │
+            #              │         │      │  3    │                │
+            #              │         │      │       │◄────────┐      │◄──────────── [5,-3,-174,5]
+            #              │         │      │       │         │      │
+            #              │         └──────────────┘         │      │
+            #              │                │                 │      │
+            #              └──────────────────────────────────┼──────┘
+            #                               │                 │
+            #                               │                 │
+            #                               │                 │
+            #                               │                 │
+            #                               │             [1,-2,-179,-1]
+            #                               │
+
+            pass
+
+        else:
+            if not ((xmin_sub >= xmin) and (xmax_sub <= xmax)):
+                raise ValueError(
+                    f"`BBOX` {bbox} not fully contained in `Overall BBOX` {overall_bbox}"
+                )
+
+    return v
 
 
 def validate_time_interval(v: TInterval) -> TInterval:  # noqa: C901
@@ -61,7 +145,7 @@ class SpatialExtent(StacBaseModel):
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md#spatial-extent-object
     """
 
-    bbox: List[BBox]
+    bbox: Annotated[List[BBox], AfterValidator(validate_bbox_interval)]
 
 
 class TimeInterval(StacBaseModel):
