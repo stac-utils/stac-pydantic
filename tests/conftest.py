@@ -48,7 +48,7 @@ def dict_match(d1: dict, d2: dict):
         # to compare the values as datetime objects.
         elif "datetime" in diff[1]:
             dates = [
-                UtcDatetimeAdapter.validate_strings(date)
+                UtcDatetimeAdapter.validate_strings(date, strict=True)
                 if isinstance(date, str)
                 else date
                 for date in diff[2]

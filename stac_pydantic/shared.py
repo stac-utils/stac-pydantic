@@ -1,6 +1,7 @@
+from datetime import datetime as dt
 from datetime import timezone
 from enum import Enum, auto
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union, cast
 from warnings import warn
 
 from pydantic import (
@@ -9,6 +10,7 @@ from pydantic import (
     BaseModel,
     ConfigDict,
     Field,
+    TypeAdapter,
     model_validator,
 )
 from typing_extensions import Annotated, Self
@@ -31,6 +33,8 @@ UtcDatetime = Annotated[
     # Convert the input value to UTC timezone
     AfterValidator(lambda d: d.astimezone(timezone.utc)),
 ]
+
+SearchDatetime = TypeAdapter(Optional[UtcDatetime])
 
 
 class MimeTypes(str, Enum):
@@ -196,3 +200,73 @@ class Asset(StacBaseModel):
     model_config = ConfigDict(
         populate_by_name=True, use_enum_values=True, extra="allow"
     )
+
+
+def str_to_datetimes(value: str) -> List[Optional[dt]]:
+    # Split on "/" and replace no value or ".." with None
+    values = [v if v and v != ".." else None for v in value.split("/")]
+
+    # Cast because pylance gets confused by the type adapter and annotated type
+    dates = cast(
+        List[Optional[dt]],
+        [
+            # Use the type adapter to validate the datetime strings, strict is necessary
+            # due to pydantic issues #8736 and #8762
+            SearchDatetime.validate_strings(v, strict=True) if v else None
+            for v in values
+        ],
+    )
+    return dates
+
+
+def validate_datetime(v: Optional[str]) -> Optional[str]:
+    """Validate Datetime value."""
+    if v is not None:
+        dates = str_to_datetimes(v)
+
+        # If there are more than 2 dates, it's invalid
+        if len(dates) > 2:
+            raise ValueError(
+                "Invalid datetime range. Too many values. Must match format: {begin_date}/{end_date}"
+            )
+
+        # If there is only one date, duplicate to use for both start and end dates
+        if len(dates) == 1:
+            dates = [dates[0], dates[0]]
+
+        # If there is a start and end date, check that the start date is before the end date
+        if dates[0] and dates[1] and dates[0] > dates[1]:
+            raise ValueError(
+                "Invalid datetime range. Begin date after end date. "
+                "Must match format: {begin_date}/{end_date}"
+            )
+
+    return v
+
+
+def validate_bbox(v: Optional[BBox]) -> Optional[BBox]:
+    """Validate BBOX value."""
+    if v:
+        # Validate order
+        if len(v) == 4:
+            xmin, ymin, xmax, ymax = cast(Tuple[int, int, int, int], v)
+
+        elif len(v) == 6:
+            xmin, ymin, min_elev, xmax, ymax, max_elev = cast(
+                Tuple[int, int, int, int, int, int], v
+            )
+            if max_elev < min_elev:
+                raise ValueError(
+                    "Maximum elevation must greater than minimum elevation"
+                )
+        else:
+            raise ValueError("Bounding box must have 4 or 6 coordinates")
+
+        # Validate against WGS84
+        if xmin < -180 or ymin < -90 or xmax > 180 or ymax > 90:
+            raise ValueError("Bounding box must be within (-180, -90, 180, 90)")
+
+        if ymax < ymin:
+            raise ValueError("Maximum latitude must be greater than minimum latitude")
+
+    return v

@@ -6,6 +6,7 @@ from pydantic import ConfigDict, ValidationError
 from shapely.geometry import shape
 
 from stac_pydantic import Collection, Item, ItemProperties
+from stac_pydantic.collection import TimeInterval
 from stac_pydantic.extensions import _fetch_and_cache_schema, validate_extensions
 from stac_pydantic.links import Link, Links
 from stac_pydantic.shared import MimeTypes, StacCommonMetadata
@@ -81,13 +82,13 @@ def test_version_extension_item() -> None:
 
 def test_version_extension_collection() -> None:
     test_coll = request(VERSION_EXTENSION_COLLECTION)
-    valid_coll = Collection(**test_coll).model_dump()
+    valid_coll = Collection(**test_coll).model_dump(mode="json")
     dict_match(test_coll, valid_coll)
 
 
 def test_item_assets_extension() -> None:
     test_coll = request(ITEM_ASSET_EXTENSION)
-    valid_coll = Collection(**test_coll).model_dump()
+    valid_coll = Collection(**test_coll).model_dump(mode="json")
     dict_match(test_coll, valid_coll)
 
 
@@ -139,7 +140,9 @@ def test_extension_validation_schema_cache() -> None:
 def test_to_json(infile, model):
     test_item = request(infile)
     validated = model(**test_item)
-    dict_match(json.loads(validated.model_dump_json()), validated.model_dump())
+    dict_match(
+        json.loads(validated.model_dump_json()), validated.model_dump(mode="json")
+    )
 
 
 def test_item_to_json() -> None:
@@ -345,3 +348,62 @@ def test_item_bbox_validation() -> None:
     test_item["bbox"] = None
     with pytest.raises(ValueError, match="bbox is required if geometry is not null"):
         Item(**test_item)
+
+
+@pytest.mark.parametrize(
+    "interval",
+    [
+        # interval should at least have 1 value
+        [],
+        # interval item should be an array of 2 datetime
+        ["2023-01-01T00:00:00Z", "2024-01-01T00:00:00Z"],
+        # interval item should not be null
+        [[]],
+        # interval item should have 2 values
+        [["2023-01-01T00:00:00Z", "2023-01-02T00:00:00Z", "2024-01-01T00:00:00Z"]],
+        # invalid datetime values
+        [[None, "yo"]],
+        [["yo", None]],
+        [["yo", "yo"]],
+        # wrong datetime order
+        [["2024-01-01T00:00:00Z", "2023-01-01T00:00:00Z"]],
+        # sub-sequent starttime before overall starttime
+        [
+            ["2023-01-01T00:00:00Z", "2024-01-01T00:00:00Z"],
+            ["2022-01-31T00:00:00Z", "2024-01-01T00:00:00Z"],
+        ],
+        # sub-sequent endtime after overall endtime
+        [
+            ["2023-01-01T00:00:00Z", "2024-01-01T00:00:00Z"],
+            ["2023-01-31T00:00:00Z", "2024-01-02T00:00:00Z"],
+        ],
+        # sub-sequent starttime after sub-sequent endtime
+        [
+            ["2023-01-01T00:00:00Z", "2024-01-01T00:00:00Z"],
+            ["2023-01-31T00:00:00Z", "2023-01-01T00:00:00Z"],
+        ],
+    ],
+)
+def test_time_intervals_invalid(interval) -> None:
+    """Check Time Interval model."""
+    with pytest.raises(ValidationError):
+        TimeInterval(interval=interval)
+
+
+@pytest.mark.parametrize(
+    "interval",
+    [
+        # Open date range to both sides is supported but not recommended.
+        [[None, None]],
+        [["2024-01-01T00:00:00Z", None]],
+        [[None, "2024-01-01T00:00:00Z"]],
+        [["2023-01-01T00:00:00Z", "2024-01-01T00:00:00Z"]],
+        [
+            ["2023-01-01T00:00:00Z", "2024-01-01T00:00:00Z"],
+            ["2023-01-31T00:00:00Z", "2024-01-01T00:00:00Z"],
+        ],
+    ],
+)
+def test_time_intervals_valid(interval) -> None:
+    """Check Time Interval model."""
+    assert TimeInterval(interval=interval)
