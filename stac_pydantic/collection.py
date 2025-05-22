@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Literal, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Literal, Optional, Union
 
 from pydantic import AfterValidator, Field, conlist
 from typing_extensions import Annotated
@@ -22,18 +22,6 @@ else:
     TInterval = conlist(StartEndTime, min_length=1)
 
 
-def _normalize_bounds(
-    xmin: NumType, ymin: NumType, xmax: NumType, ymax: NumType
-) -> Tuple[NumType, NumType, NumType, NumType]:
-    """Return BBox in correct minx, miny, maxx, maxy order."""
-    return (
-        min(xmin, xmax),
-        min(ymin, ymax),
-        max(xmin, xmax),
-        max(ymin, ymax),
-    )
-
-
 def validate_bbox_interval(v: List[BBox]) -> List[BBox]:
     ivalues = iter(v)
 
@@ -49,29 +37,70 @@ def validate_bbox_interval(v: List[BBox]) -> List[BBox]:
     else:
         xmin, ymin, _, xmax, ymax, _ = overall_bbox
 
-    # if bbox is crossing the Antimeridian limit we move xmax to the west
-    if xmin > xmax:
-        xmax = 180 - (xmax % 360)
-
-    xmin, ymin, xmax, ymax = _normalize_bounds(xmin, ymin, xmax, ymax)
+    crossing_antimeridian = xmin > xmax
     for bbox in ivalues:
         _ = validate_bbox(bbox)
 
         if len(bbox) == 4:
-            xminb, yminb, xmaxb, ymaxb = bbox
+            xmin_sub, ymin_sub, xmax_sub, ymax_sub = bbox
         else:
-            xminb, yminb, _, xmaxb, ymaxb, _ = bbox
+            xmin_sub, ymin_sub, _, xmax_sub, ymax_sub, _ = bbox
 
-        if xminb > xmaxb:
-            xmaxb = 180 - (xmaxb % 360)
-
-        xminb, yminb, xmaxb, ymaxb = _normalize_bounds(xminb, yminb, xmaxb, ymaxb)
-        if not (
-            (xminb >= xmin) and (xmaxb <= xmax) and (yminb >= ymin) and (ymaxb <= ymax)
-        ):
+        if not ((ymin_sub >= ymin) and (ymax_sub <= ymax)):
             raise ValueError(
                 f"`BBOX` {bbox} not fully contained in `Overall BBOX` {overall_bbox}"
             )
+
+        sub_crossing_antimeridian = xmin_sub > xmax_sub
+        if not crossing_antimeridian and sub_crossing_antimeridian:
+            raise ValueError(
+                f"`BBOX` {bbox} not fully contained in `Overall BBOX` {overall_bbox}"
+            )
+
+        elif crossing_antimeridian:
+            # TODO:
+            # here we need to check for 4 cases
+            # 1. sub-sequent within the right part of the overall bbox
+            # 2. sub-sequent within the left part of the overall bbox
+            # 3. if sub-sequent also cross the antimeridian we need to check both part with both overall part
+            #
+            #                               │
+            #                               │
+            #      [176,1,179,3]            │
+            #           │                   │
+            #           │                   │                               [1,1,3,3]
+            #           │                   │
+            #           │  ┌─────────────────────────────────────────┐        │
+            #           │  │                │                        │        │
+            #           │  │  ┌──────┐      │        ┌─────────┐     │        │
+            #           └──│──►  2   │      │        │    1    │     │        │
+            #              │  │      │      │        │         │◄────│────────┘
+            #              │  └──────┘      │        └─────────┘     │
+            #              │                │                        │
+            #  ────────────│────────────────┼────────────────────────│────────────────
+            #              │                │                        │
+            #              │         ┌──────────────┐                │
+            #              │         │      │       │                │
+            #              │         │      │  3    │                │
+            #              │         │      │       │◄────────┐      │◄──────────── [5,-3,-174,5]
+            #              │         │      │       │         │      │
+            #              │         └──────────────┘         │      │
+            #              │                │                 │      │
+            #              └──────────────────────────────────┼──────┘
+            #                               │                 │
+            #                               │                 │
+            #                               │                 │
+            #                               │                 │
+            #                               │             [1,-2,-179,-1]
+            #                               │
+
+            pass
+
+        else:
+            if not ((xmin_sub >= xmin) and (xmax_sub <= xmax)):
+                raise ValueError(
+                    f"`BBOX` {bbox} not fully contained in `Overall BBOX` {overall_bbox}"
+                )
 
     return v
 

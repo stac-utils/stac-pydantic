@@ -420,8 +420,10 @@ def test_time_intervals_valid(interval) -> None:
         [[0, 0, 2, 2], [0.5, 0.5, 2.5, 2.0]],
         # sub-sequent crossing Antimeridian limit
         [[0, 0, 2, 2], [1, 0, -179, 1]],
-        # both crossing Antimeridian limit but sub-sequent cross west bbox
+        # both crossing Antimeridian limit but sub-sequent cross has min lat -176 > -178
         [[2, 0, -178, 2], [1, 0, -176, 1]],
+        # sub-sequent cross Antimeridian but not the overall
+        [[0, 0, 2, 2], [1, 0, -176, 1]],
     ],
 )
 def test_spatial_intervals_invalid(bboxes) -> None:
@@ -439,8 +441,10 @@ def test_spatial_intervals_invalid(bboxes) -> None:
         [[0, 0, 2, 2], [0.5, 0.5, 1.5, 1.5]],
         # crossing Antimeridian limit
         [[2, 0, -178, 2]],
-        # overall crossing Antimeridian, sub-sequent bbox not crossing
+        # overall crossing Antimeridian, sub-sequent bbox not crossing (but within overall right part)
         [[2, 0, -178, 2], [0, 0, 1, 1]],
+        # overall crossing Antimeridian, sub-sequent bbox not crossing (but within overall left part)
+        [[2, 0, -178, 2], [179, 0, 180, 1]],
         # overall and sub-sequent crossing Antimeridian
         [[2, 0, -178, 2], [1, 0, -179, 1]],
     ],
