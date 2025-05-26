@@ -91,7 +91,7 @@ def validate_bbox_interval(v: List[BBox]) -> List[BBox]:
             #                               │                 │
             #                               │                 │
             #                               │                 │
-            #                               │             [1,-2,-179,-1]
+            #                               │             [179,-2,-179,-1]
             #                               │
 
             pass
