@@ -442,7 +442,7 @@ def test_spatial_intervals_invalid(bboxes) -> None:
         # crossing Antimeridian limit
         [[2, 0, -178, 2]],
         # overall crossing Antimeridian, sub-sequent bbox not crossing (but within overall right part)
-        [[2, 0, -178, 2], [0, 0, 1, 1]],
+        [[2, 0, -178, 2], [-179, -178, 1, 1]],
         # overall crossing Antimeridian, sub-sequent bbox not crossing (but within overall left part)
         [[2, 0, -178, 2], [179, 0, 180, 1]],
         # overall and sub-sequent crossing Antimeridian
