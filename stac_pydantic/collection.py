@@ -22,7 +22,7 @@ else:
     TInterval = conlist(StartEndTime, min_length=1)
 
 
-def validate_bbox_interval(v: List[BBox]) -> List[BBox]:
+def validate_bbox_interval(v: List[BBox]) -> List[BBox]:  # noqa: C901
     ivalues = iter(v)
 
     # The first time interval always describes the overall spatial extent of the data.
@@ -39,6 +39,9 @@ def validate_bbox_interval(v: List[BBox]) -> List[BBox]:
 
     crossing_antimeridian = xmin > xmax
     for bbox in ivalues:
+        error_msg = ValueError(
+            f"`BBOX` {bbox} not fully contained in `Overall BBOX` {overall_bbox}"
+        )
         _ = validate_bbox(bbox)
 
         if len(bbox) == 4:
@@ -47,60 +50,58 @@ def validate_bbox_interval(v: List[BBox]) -> List[BBox]:
             xmin_sub, ymin_sub, _, xmax_sub, ymax_sub, _ = bbox
 
         if not ((ymin_sub >= ymin) and (ymax_sub <= ymax)):
-            raise ValueError(
-                f"`BBOX` {bbox} not fully contained in `Overall BBOX` {overall_bbox}"
-            )
+            raise error_msg
 
         sub_crossing_antimeridian = xmin_sub > xmax_sub
         if not crossing_antimeridian and sub_crossing_antimeridian:
-            raise ValueError(
-                f"`BBOX` {bbox} not fully contained in `Overall BBOX` {overall_bbox}"
-            )
+            raise error_msg
 
         elif crossing_antimeridian:
-            # TODO:
-            # here we need to check for 4 cases
-            # 1. sub-sequent within the right part of the overall bbox
-            # 2. sub-sequent within the left part of the overall bbox
-            # 3. if sub-sequent also cross the antimeridian we need to check both part with both overall part
-            #
-            #                               │
-            #                               │
-            #      [176,1,179,3]            │
-            #           │                   │
-            #           │                   │                               [-178,1,-176,3]
-            #           │                   │
-            #           │  ┌─────────────────────────────────────────┐        │
-            #           │  │                │                        │        │
-            #           │  │  ┌──────┐      │        ┌─────────┐     │        │
-            #           └──│──►  2   │      │        │    1    │     │        │
-            #              │  │      │      │        │         │◄────│────────┘
-            #              │  └──────┘      │        └─────────┘     │
-            #              │                │                        │
-            #  ────────────│────────────────┼────────────────────────│────────────────
-            #              │                │                        │
-            #              │         ┌──────────────┐                │
-            #              │         │      │       │                │
-            #              │         │      │  3    │                │
-            #              │         │      │       │◄────────┐      │◄──────────── [175,-3,-174,5]
-            #              │         │      │       │         │      │
-            #              │         └──────────────┘         │      │
-            #              │                │                 │      │
-            #              └──────────────────────────────────┼──────┘
-            #                               │                 │
-            #                               │                 │
-            #                               │                 │
-            #                               │                 │
-            #                               │             [179,-2,-179,-1]
-            #                               │
+            #                           Antimeridian
+            #                          + 180 │ - 180                        0
+            #       [176,1,179,3]            │                              │
+            #            │                   │                              │
+            #            │                   │                              │
+            #            │                   │                              │     [-178,1,-176,3]
+            #            │  ┌─────────────────────────────────────────┐     │           │
+            #            │  │                │                        │     │           │
+            #            │  │  ┌──────┐      │        ┌─────────┐     │     │           │
+            #            └──│──►  2   │      │        │    1    │     │     │           │
+            #               │  │      │      │        │         │◄────│─────┼───────────┘
+            #               │  └──────┘      │        └─────────┘     │     │
+            #               │                │                        │     │         0
+            #   ────────────│────────────────┼────────────────────────│─────┼──────────
+            #               │                │                        │     │
+            #               │         ┌──────────────┐                │     │
+            #               │         │      │       │                │     │
+            #               │         │      │  3    │                │     │
+            #               │         │      │       │◄────────┐      │◄────┼─────── [175,-3,-174,5]
+            #               │         │      │       │         │      │     │
+            #               │         └──────────────┘         │      │     │
+            #               │                │                 │      │     │
+            #               └──────────────────────────────────┼──────┘     │
+            #                                │                 │            │
+            #                                │                 │            │
+            #                                │                 │            │
+            #                                │                 │            │
+            #                                │          [179,-2,-179,-1]    │
 
-            pass
+            # Case 3
+            if sub_crossing_antimeridian:
+                if not (xmin_sub > xmin and xmax_sub < xmax):
+                    raise error_msg
+
+            # case 1
+            elif xmax_sub <= 0 and xmax_sub > xmax:
+                raise error_msg
+
+            # case 2
+            elif xmin_sub >= 0 and xmin_sub < xmin:
+                raise error_msg
 
         else:
             if not ((xmin_sub >= xmin) and (xmax_sub <= xmax)):
-                raise ValueError(
-                    f"`BBOX` {bbox} not fully contained in `Overall BBOX` {overall_bbox}"
-                )
+                raise error_msg
 
     return v
 

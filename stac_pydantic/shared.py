@@ -266,7 +266,7 @@ def validate_bbox(v: Optional[BBox]) -> Optional[BBox]:
         if xmin < -180 or ymin < -90 or xmax > 180 or ymax > 90:
             raise ValueError("Bounding box must be within (-180, -90, 180, 90)")
 
-        if xmax < xmin and xmax > 0:
+        if xmax < xmin and (xmax > 0 or xmin < 0):
             raise ValueError(
                 f"Maximum longitude ({xmax}) must be greater than minimum ({xmin}) longitude when not crossing the Antimeridian"
             )

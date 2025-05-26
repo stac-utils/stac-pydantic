@@ -414,6 +414,10 @@ def test_time_intervals_valid(interval) -> None:
     [
         # invalid Y order
         [[0, 1, 1, 0]],
+        # invalid X order (if crossing Antimeridian limit, xmin > 0)
+        [[-169, 0, -170, 1]],
+        # invalid X order (if crossing Antimeridian limit, xmax < 0)
+        [[170, 0, 169, 1]],
         # sub-sequent crossing Y
         [[0, 0, 2, 2], [0.5, 0.5, 2.0, 2.5]],
         # sub-sequent crossing X
@@ -424,6 +428,10 @@ def test_time_intervals_valid(interval) -> None:
         [[2, 0, -178, 2], [1, 0, -176, 1]],
         # sub-sequent cross Antimeridian but not the overall
         [[0, 0, 2, 2], [1, 0, -176, 1]],
+        # overall crossing and sub-sequent not within bounds
+        [[2, 0, -178, 2], [-179, 0, -176, 1]],
+        # overall crossing and sub-sequent not within bounds
+        [[2, 0, -178, 2], [1, 0, 3, 1]],
     ],
 )
 def test_spatial_intervals_invalid(bboxes) -> None:
@@ -441,12 +449,12 @@ def test_spatial_intervals_invalid(bboxes) -> None:
         [[0, 0, 2, 2], [0.5, 0.5, 1.5, 1.5]],
         # crossing Antimeridian limit
         [[2, 0, -178, 2]],
-        # overall crossing Antimeridian, sub-sequent bbox not crossing (but within overall right part)
-        [[2, 0, -178, 2], [-179, -178, 1, 1]],
-        # overall crossing Antimeridian, sub-sequent bbox not crossing (but within overall left part)
+        # Case 1: overall crossing Antimeridian, sub-sequent bbox not crossing (but within overall right part)
+        [[2, 0, -178, 2], [-179, 0, -178, 1]],
+        # Case 2: overall crossing Antimeridian, sub-sequent bbox not crossing (but within overall left part)
         [[2, 0, -178, 2], [179, 0, 180, 1]],
-        # overall and sub-sequent crossing Antimeridian
-        [[2, 0, -178, 2], [1, 0, -179, 1]],
+        # Case 3: overall and sub-sequent crossing Antimeridian
+        [[2, 0, -178, 2], [3, 0, -179, 1]],
     ],
 )
 def test_spatial_intervals_valid(bboxes) -> None:
