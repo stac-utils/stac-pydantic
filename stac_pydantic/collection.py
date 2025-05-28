@@ -58,45 +58,49 @@ def validate_bbox_interval(v: List[BBox]) -> List[BBox]:  # noqa: C901
 
         elif crossing_antimeridian:
             #                           Antimeridian
-            #                          + 180 │ - 180                        0
-            #       [176,1,179,3]            │                              │
-            #            │                   │                              │
-            #            │                   │                              │
-            #            │                   │                              │     [-178,1,-176,3]
-            #            │  ┌─────────────────────────────────────────┐     │           │
-            #            │  │                │                        │     │           │
-            #            │  │  ┌──────┐      │        ┌─────────┐     │     │           │
-            #            └──│──►  2   │      │        │    1    │     │     │           │
-            #               │  │      │      │        │         │◄────│─────┼───────────┘
-            #               │  └──────┘      │        └─────────┘     │     │
-            #               │                │                        │     │         0
-            #   ────────────│────────────────┼────────────────────────│─────┼──────────
-            #               │                │                        │     │
-            #               │         ┌──────────────┐                │     │
-            #               │         │      │       │                │     │
-            #               │         │      │  3    │                │     │
-            #               │         │      │       │◄────────┐      │◄────┼─────── [175,-3,-174,5]
-            #               │         │      │       │         │      │     │
-            #               │         └──────────────┘         │      │     │
-            #               │                │                 │      │     │
-            #               └──────────────────────────────────┼──────┘     │
-            #                                │                 │            │
-            #                                │                 │            │
-            #                                │                 │            │
-            #                                │                 │            │
-            #                                │          [179,-2,-179,-1]    │
+            #     0                     + 180 │ - 180                            0
+            #     │  [176,1,179,3]            │                                  │
+            #     │       │                   │                                  │
+            #     │       │                   │                                  │
+            #     │       │                   │                                  │     [-178,1,-176,3]
+            #     │       │  ┌─────────────────────────────────────────┐         │           │
+            #     │       │  │       xmax_sub │               xmax_sub │         │           │
+            #     │       │  │  ┌──────|      │        ┌─────────|     │         │           │
+            #     │       └──│──►  2   │      │        │    3    │     │         │           │
+            #     |          │  │      │      │        │         │◄────│─────────┼───────────┘
+            #     │          │  |──────┘      │        |─────────┘     │         │
+            #     │          │xmin_sub        │    xmin_sub            │         │         0
+            #   ──┼──────────│────────────────┼────────────────────────│─────────┼──────────
+            #     │          │                │    xmax_sub(-179)      │         │
+            #     │          │         ┌──────────────|                │         │
+            #     │          │         │      │       │                │         │
+            #     │          │         │      │  1    │                │         │
+            #     |          │         │      │       │◄────────┐      │◄────────┼─────── [175,-3,-174,5]
+            #     │          │         │      │       │         │      │         │
+            #     │          │         |──────────────┘         │      │         │
+            #     │          │   xmin_sub(179)│                 │      │         │
+            #     │          |──────────────────────────────────┼──────|         │
+            #     │      xmin(174)            │                 │ xmax(-174)     │
+            #     │                           │                 │                │
+            #     │                           │                 │                │
+            #     │                           │                 │                │
+            #     │                           │          [179,-2,-179,-1]        │
 
-            # Case 3
+            # Case 1
             if sub_crossing_antimeridian:
                 if not (xmin_sub > xmin and xmax_sub < xmax):
                     raise error_msg
 
-            # case 1
-            elif xmax_sub <= 0 and xmax_sub > xmax:
+            # Case 2: if sub-sequent has lon > 0 (0 -> 180 side), then we must check if
+            # its min lon is < to the western lon (xmin for bbox crossing antimeridian limit)
+            # of the overall bbox (on 0 -> +180 side)
+            elif xmin_sub >= 0 and xmin_sub < xmin:
                 raise error_msg
 
-            # case 2
-            elif xmin_sub >= 0 and xmin_sub < xmin:
+            # Case 3: if sub-sequent has lon < 0 (-180 -> 0 side), then we must check if
+            # its max lon is > to the eastern lon (xmax for bbox crossing antimeridian limit)
+            #  of the overall bbox (on -180 -> 0 side)
+            elif xmin_sub <= 0 and xmax_sub > xmax:
                 raise error_msg
 
         else:
