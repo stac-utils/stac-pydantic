@@ -1,7 +1,8 @@
 
 ## Unreleased
 
-- Add datetime validation for collection's time intervals (Must follow [`RFC 3339, section 5.6.`](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6))
+- Add validation for collection's spatial intervals
+- Add validation for collection's time intervals
 
 ## 3.2.0 (2025-03-20)
 

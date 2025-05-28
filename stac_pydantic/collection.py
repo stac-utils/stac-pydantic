@@ -11,6 +11,7 @@ from stac_pydantic.shared import (
     Provider,
     StacBaseModel,
     UtcDatetime,
+    validate_bbox,
 )
 
 if TYPE_CHECKING:
@@ -19,6 +20,94 @@ if TYPE_CHECKING:
 else:
     StartEndTime = conlist(Union[UtcDatetime, None], min_length=2, max_length=2)
     TInterval = conlist(StartEndTime, min_length=1)
+
+
+def validate_bbox_interval(v: List[BBox]) -> List[BBox]:  # noqa: C901
+    ivalues = iter(v)
+
+    # The first time interval always describes the overall spatial extent of the data.
+    overall_bbox = next(ivalues, None)
+    if not overall_bbox:
+        return v
+
+    assert validate_bbox(overall_bbox)
+
+    if len(overall_bbox) == 4:
+        xmin, ymin, xmax, ymax = overall_bbox
+    else:
+        xmin, ymin, _, xmax, ymax, _ = overall_bbox
+
+    crossing_antimeridian = xmin > xmax
+    for bbox in ivalues:
+        error_msg = ValueError(
+            f"`BBOX` {bbox} not fully contained in `Overall BBOX` {overall_bbox}"
+        )
+        _ = validate_bbox(bbox)
+
+        if len(bbox) == 4:
+            xmin_sub, ymin_sub, xmax_sub, ymax_sub = bbox
+        else:
+            xmin_sub, ymin_sub, _, xmax_sub, ymax_sub, _ = bbox
+
+        if not ((ymin_sub >= ymin) and (ymax_sub <= ymax)):
+            raise error_msg
+
+        sub_crossing_antimeridian = xmin_sub > xmax_sub
+        if not crossing_antimeridian and sub_crossing_antimeridian:
+            raise error_msg
+
+        elif crossing_antimeridian:
+            #                           Antimeridian
+            #     0                     + 180 │ - 180                            0
+            #     │  [176,1,179,3]            │                                  │
+            #     │       │                   │                                  │
+            #     │       │                   │                                  │
+            #     │       │                   │                                  │     [-178,1,-176,3]
+            #     │       │  ┌─────────────────────────────────────────┐         │           │
+            #     │       │  │       xmax_sub │               xmax_sub │         │           │
+            #     │       │  │  ┌──────|      │        ┌─────────|     │         │           │
+            #     │       └──│──►  2   │      │        │    3    │     │         │           │
+            #     |          │  │      │      │        │         │◄────│─────────┼───────────┘
+            #     │          │  |──────┘      │        |─────────┘     │         │
+            #     │          │xmin_sub        │    xmin_sub            │         │         0
+            #   ──┼──────────│────────────────┼────────────────────────│─────────┼──────────
+            #     │          │                │    xmax_sub(-179)      │         │
+            #     │          │         ┌──────────────|                │         │
+            #     │          │         │      │       │                │         │
+            #     │          │         │      │  1    │                │         │
+            #     |          │         │      │       │◄────────┐      │◄────────┼─────── [175,-3,-174,5]
+            #     │          │         │      │       │         │      │         │
+            #     │          │         |──────────────┘         │      │         │
+            #     │          │   xmin_sub(179)│                 │      │         │
+            #     │          |──────────────────────────────────┼──────|         │
+            #     │      xmin(174)            │                 │ xmax(-174)     │
+            #     │                           │                 │                │
+            #     │                           │                 │                │
+            #     │                           │                 │                │
+            #     │                           │          [179,-2,-179,-1]        │
+
+            # Case 1
+            if sub_crossing_antimeridian:
+                if not (xmin_sub > xmin and xmax_sub < xmax):
+                    raise error_msg
+
+            # Case 2: if sub-sequent has lon > 0 (0 -> 180 side), then we must check if
+            # its min lon is < to the western lon (xmin for bbox crossing antimeridian limit)
+            # of the overall bbox (on 0 -> +180 side)
+            elif xmin_sub >= 0 and xmin_sub < xmin:
+                raise error_msg
+
+            # Case 3: if sub-sequent has lon < 0 (-180 -> 0 side), then we must check if
+            # its max lon is > to the eastern lon (xmax for bbox crossing antimeridian limit)
+            #  of the overall bbox (on -180 -> 0 side)
+            elif xmin_sub <= 0 and xmax_sub > xmax:
+                raise error_msg
+
+        else:
+            if not ((xmin_sub >= xmin) and (xmax_sub <= xmax)):
+                raise error_msg
+
+    return v
 
 
 def validate_time_interval(v: TInterval) -> TInterval:  # noqa: C901
@@ -61,7 +150,7 @@ class SpatialExtent(StacBaseModel):
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md#spatial-extent-object
     """
 
-    bbox: List[BBox]
+    bbox: Annotated[List[BBox], AfterValidator(validate_bbox_interval)]
 
 
 class TimeInterval(StacBaseModel):
