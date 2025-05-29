@@ -1,8 +1,12 @@
 
 ## Unreleased
 
+## 3.3.0 (2025-05-29)
+
 - Add validation for collection's spatial intervals
 - Add validation for collection's time intervals
+- Move `validate_bbox`, `validate_datetime` and `str_to_datetimes` functions from `api.search` to `shared` sub-module
+- Improve `bbox` validation for Antimeridian crossing bbox
 
 ## 3.2.0 (2025-03-20)
 
