@@ -1,6 +1,10 @@
 
 ## Unreleased
 
+## 3.3.1 (2025-06-01)
+
+- Add back `SearchDatetime` in `stac_pydantic.api.search` to avoid breaking change
+
 ## 3.3.0 (2025-05-29)
 
 - Add validation for collection's spatial intervals

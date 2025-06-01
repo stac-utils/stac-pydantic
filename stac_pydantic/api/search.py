@@ -16,6 +16,9 @@ from typing_extensions import Annotated
 from stac_pydantic.api.extensions.fields import FieldsExtension
 from stac_pydantic.api.extensions.query import Operator
 from stac_pydantic.api.extensions.sort import SortExtension
+
+# TODO: remove in 4.0
+from stac_pydantic.shared import SearchDatetime  # noqa
 from stac_pydantic.shared import (
     BBox,
     str_to_datetimes,
