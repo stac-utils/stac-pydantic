@@ -4,7 +4,7 @@ from pydantic import ValidationError
 from stac_pydantic.api import ItemCollection
 from stac_pydantic.api.links import Link, Links, PaginationLink, Relations, SearchLink
 from stac_pydantic.api.version import STAC_API_VERSION
-from stac_pydantic.links import MimeTypes
+from stac_pydantic.shared import MimeTypes
 from stac_pydantic.version import STAC_VERSION
 
 from ..conftest import request
@@ -80,3 +80,8 @@ def test_resolve_pagination_link():
     for link in links.link_iterator():
         if isinstance(link, PaginationLink):
             assert link.href == "http://base_url.com/next/page"
+
+
+def test_link_types():
+    for type_ in (MimeTypes.xml, "some random string", None):
+        Link(href="/hello/world", type=type_, rel="test")

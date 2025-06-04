@@ -4,7 +4,7 @@ from urllib.parse import urljoin
 
 from pydantic import ConfigDict, Field, RootModel
 
-from stac_pydantic.shared import MimeTypes, StacBaseModel
+from stac_pydantic.shared import StacBaseModel
 from stac_pydantic.utils import AutoValueEnum
 
 
@@ -15,7 +15,7 @@ class Link(StacBaseModel):
 
     href: str = Field(..., alias="href", min_length=1)
     rel: str = Field(..., alias="rel", min_length=1)
-    type: Optional[MimeTypes] = None
+    type: Optional[str] = None
     title: Optional[str] = None
 
     # Label extension
