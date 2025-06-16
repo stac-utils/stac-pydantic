@@ -4,7 +4,7 @@ from pydantic import ValidationError
 from stac_pydantic.api import ItemCollection
 from stac_pydantic.api.links import Link, Links, PaginationLink, Relations, SearchLink
 from stac_pydantic.api.version import STAC_API_VERSION
-from stac_pydantic.shared import MimeTypes
+from stac_pydantic.links import MimeTypes
 from stac_pydantic.version import STAC_VERSION
 
 from ..conftest import request
