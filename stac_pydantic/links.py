@@ -1,5 +1,5 @@
 from enum import auto
-from typing import Iterator, List, Optional
+from typing import Iterator, List, Optional, Union
 from urllib.parse import urljoin
 
 from pydantic import ConfigDict, Field, RootModel
@@ -15,7 +15,7 @@ class Link(StacBaseModel):
 
     href: str = Field(..., alias="href", min_length=1)
     rel: str = Field(..., alias="rel", min_length=1)
-    type: Optional[MimeTypes | str] = None
+    type: Optional[Union[MimeTypes, str]] = None
     title: Optional[str] = None
 
     # Label extension
