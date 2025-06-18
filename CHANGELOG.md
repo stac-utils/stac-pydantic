@@ -1,7 +1,9 @@
 
 ## Unreleased
 
-- Remove restriction on valid media types for links.
+## 3.3.2 (2025-06-18)
+
+- Remove restriction on valid media types for links (#182, @mishaschwartz)
 
 ## 3.3.1 (2025-06-01)
 
