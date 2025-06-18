@@ -1,6 +1,8 @@
 
 ## Unreleased
 
+- Remove restriction on valid media types for links.
+
 ## 3.3.1 (2025-06-01)
 
 - Add back `SearchDatetime` in `stac_pydantic.api.search` to avoid breaking change

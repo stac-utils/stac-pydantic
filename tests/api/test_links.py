@@ -80,3 +80,8 @@ def test_resolve_pagination_link():
     for link in links.link_iterator():
         if isinstance(link, PaginationLink):
             assert link.href == "http://base_url.com/next/page"
+
+
+def test_link_types():
+    for type_ in (MimeTypes.xml, "some random string", None):
+        Link(href="/hello/world", type=type_, rel="test")
