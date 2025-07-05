@@ -19,7 +19,7 @@ class Link(StacBaseModel):
     title: Optional[str] = None
 
     # Label extension
-    label: Optional[str] = Field(default=None, alias="label:assets")
+    label: Optional[List[str]] = Field(default=None, alias="label:assets")
     model_config = ConfigDict(use_enum_values=True, extra="allow")
 
     def resolve(self, base_url: str) -> None:

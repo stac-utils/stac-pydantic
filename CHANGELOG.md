@@ -1,6 +1,10 @@
 
 ## Unreleased
 
+- Fix invalid `label:assets` type in `stac_pydantic.links.Link`.
+  A single `str` was specified instead of `List[str]` as expected by the extension field
+  (see [Label Extension - Links](https://github.com/stac-extensions/label?tab=readme-ov-file#links-source-imagery)).
+
 ## 3.3.2 (2025-06-18)
 
 - Remove restriction on valid media types for links (#182, @mishaschwartz)
