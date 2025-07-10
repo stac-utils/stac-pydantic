@@ -156,7 +156,9 @@
         "href": "roads_source.json",
         "rel": "source",
         "title": "The source imagery these road labels were derived from",
-        "label:assets": "road_labels"
+        "label:assets": [
+          "road_labels"
+        ]
       }
     ],
     "assets": {
