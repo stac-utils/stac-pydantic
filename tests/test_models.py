@@ -105,6 +105,15 @@ def test_label_extension() -> None:
     dict_match(test_item, valid_item)
 
 
+def test_label_extension_rel_source() -> None:
+    with pytest.raises(ValidationError):
+        Link(href=LABEL_EXTENSION, rel="random", label_assets=["road_labels"])
+
+    link = Link(href=LABEL_EXTENSION, rel="source", label_assets=["road_labels"])
+    assert link.rel == "source"
+    assert link.label == ["road_labels"]
+
+
 def test_explicit_extension_validation() -> None:
     test_item = request(EO_EXTENSION)
 

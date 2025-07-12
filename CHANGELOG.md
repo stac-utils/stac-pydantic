@@ -3,7 +3,8 @@
 
 - Fix invalid `label:assets` type in `stac_pydantic.links.Link`.
   A single `str` was specified instead of `List[str]` as expected by the extension field
-  (see [Label Extension - Links](https://github.com/stac-extensions/label?tab=readme-ov-file#links-source-imagery)).
+  (see [Label Extension - Links](https://github.com/stac-extensions/label?tab=readme-ov-file#links-source-imagery)) (#183, @fmigneault).
+- Add validation of `Link` ensuring that `rel=source` is employed if `label:assets` is specified (#183, @fmigneault).
 
 ## 3.3.2 (2025-06-18)
 

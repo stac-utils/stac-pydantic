@@ -1,8 +1,8 @@
 from enum import auto
-from typing import Iterator, List, Optional, Union
+from typing import Iterator, List, Optional, Union, Any
 from urllib.parse import urljoin
 
-from pydantic import ConfigDict, Field, RootModel
+from pydantic import AliasChoices, ConfigDict, Field, RootModel, ValidationInfo, field_validator
 
 from stac_pydantic.shared import MimeTypes, StacBaseModel
 from stac_pydantic.utils import AutoValueEnum
@@ -19,12 +19,28 @@ class Link(StacBaseModel):
     title: Optional[str] = None
 
     # Label extension
-    label: Optional[List[str]] = Field(default=None, alias="label:assets")
+    label: Optional[List[str]] = Field(
+        default=None,
+        min_length=1,
+        alias="label:assets",
+        validation_alias=AliasChoices("label:assets", "label_assets", "label"),
+    )
     model_config = ConfigDict(use_enum_values=True, extra="allow")
 
     def resolve(self, base_url: str) -> None:
         """resolve a link to the given base URL"""
         self.href = urljoin(base_url, self.href)
+
+    @field_validator("label", mode="after")
+    @classmethod
+    def validate_label_rel_source(cls, label: Optional[List[str]], info: ValidationInfo) -> Optional[List[str]]:
+        # check requirement: https://github.com/stac-extensions/label#links-source-imagery
+        if label and info.data["rel"] != "source":
+            raise ValueError(
+                "Label extension link with 'label:assets' is only allowed for link with 'rel=source'. "
+                f"Values ('rel': {info.data['rel']}, 'label:assets': {label})"
+            )
+        return label
 
 
 class Links(RootModel[List[Link]]):
