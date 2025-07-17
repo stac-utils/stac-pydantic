@@ -101,6 +101,8 @@ def test_label_extension() -> None:
     coords[0].append(coords[0][0])
     test_item["geometry"]["coordinates"] = coords
 
+    assert validate_extensions(test_item)
+
     valid_item = Item(**test_item).model_dump()
     dict_match(test_item, valid_item)
 

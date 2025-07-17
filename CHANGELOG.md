@@ -1,6 +1,10 @@
 
 ## Unreleased
 
+## 3.4.0 (2025-07-17)
+
+- Remove 'label:assets' (extension) from Link attribute (#184, @fmigneault)
+
 ## 3.3.2 (2025-06-18)
 
 - Remove restriction on valid media types for links (#182, @mishaschwartz)
