@@ -1,6 +1,8 @@
 from stac_pydantic.scripts.cli import app
+import pytest
 
 
+@pytest.mark.network
 def test_valid_stac_item(cli_runner):
     result = cli_runner.invoke(
         app,

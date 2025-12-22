@@ -92,6 +92,7 @@ def test_item_assets_extension() -> None:
     dict_match(test_coll, valid_coll)
 
 
+@pytest.mark.network
 def test_label_extension() -> None:
     test_item = request(LABEL_EXTENSION)
 
@@ -119,6 +120,7 @@ def test_explicit_extension_validation() -> None:
     validate_extensions(test_item)
 
 
+@pytest.mark.network
 def test_extension_validation_schema_cache() -> None:
     # Defines 3 extensions, but one is a non-existing URL
     test_item = request(EO_EXTENSION)
@@ -296,6 +298,7 @@ def test_excludes() -> None:
     assert "eo:bands" not in valid_item["properties"]
 
 
+@pytest.mark.network
 def test_validate_extensions() -> None:
     test_item = request(SAR_EXTENSION)
     assert validate_extensions(test_item)
@@ -310,6 +313,7 @@ def test_validate_extensions_reraise_exception() -> None:
         validate_extensions(test_item, reraise_exception=True)
 
 
+@pytest.mark.network
 def test_validate_extensions_rfc3339_with_partial_seconds() -> None:
     test_item = request(SAR_EXTENSION)
     test_item["properties"]["updated"] = "2018-10-01T01:08:32.033Z"

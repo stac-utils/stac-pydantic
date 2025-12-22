@@ -12,6 +12,7 @@ ITEM_COLLECTION = "itemcollection-sample-full.json"
 PATH = ["tests", "api", "examples", f"v{STAC_API_VERSION}"]
 
 
+@pytest.mark.network
 @pytest.mark.parametrize(
     "example_url",
     [
