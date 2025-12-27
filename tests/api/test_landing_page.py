@@ -57,6 +57,7 @@ def test_landing_page_invalid_features(example_url):
         LandingPage(**example)
 
 
+@pytest.mark.network
 @pytest.mark.parametrize("example_url,schema_url", unique_combinations)
 def test_schema(example_url, schema_url):
     rsp_yaml = requests.get(schema_url).text

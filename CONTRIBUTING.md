@@ -16,6 +16,12 @@ You can then run the tests with the following command:
 python -m pytest --cov stac_pydantic --cov-report term-missing
 ```
 
+To run only tests that do not require access to the internet,
+the following command can be used:
+
+```sh
+$ python3 -m pytest -m "not network"
+```
 
 **pre-commit**
 
