@@ -18,12 +18,6 @@ python -m pip install stac-pydantic
 python -m pip install stac-pydantic["validation"]
 ```
 
-For local development:
-
-```shell
-python -m pip install -e '.[dev,lint]'
-```
-
 | stac-pydantic | STAC Version | STAC API Version | Pydantic Version |
 |--------------|---------------|------------------|-----------------|
 | 1.2.x         | 1.0.0-beta.1 | <1* | ^1.6 |
@@ -33,38 +27,6 @@ python -m pip install -e '.[dev,lint]'
 | 3.1.x         | 1.0.0        | 1.0.0 | ^2.4 |
 
 \* various beta releases, specs not fully implemented
-
-## Development
-
-Install the [pre-commit](https://pre-commit.com/) hooks:
-
-```shell
-pre-commit install
-```
-
-## Testing
-
-Ensure you have all Python versions installed that the tests will be run against. If using pyenv, run:
-
-```shell
-pyenv install 3.8.18
-pyenv install 3.9.18
-pyenv install 3.10.13
-pyenv install 3.11.5
-pyenv local 3.8.18 3.9.18 3.10.13 3.11.5
-```
-
-Run the entire test suite:
-
-```shell
-tox
-```
-
-Run a single test case using the standard pytest convention:
-
-```shell
-python -m pytest -v tests/test_models.py::test_item_extensions
-```
 
 ## Usage
 
@@ -205,3 +167,7 @@ Options:
 Commands:
   validate-item  Validate STAC Item
 ```
+
+## Contribution & Development
+
+See [CONTRIBUTING.md](CONTRIBUTING.md)

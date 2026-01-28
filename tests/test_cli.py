@@ -1,5 +1,6 @@
-from stac_pydantic.scripts.cli import app
 import pytest
+
+from stac_pydantic.scripts.cli import app
 
 
 @pytest.mark.network
