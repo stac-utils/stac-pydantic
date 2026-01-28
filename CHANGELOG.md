@@ -1,6 +1,9 @@
 
 ## Unreleased
 
+- add python 3.14 support
+- use `uv` for project managment
+
 ## 3.4.0 (2025-07-17)
 
 - Remove 'label:assets' (extension) from Link attribute (#184, @fmigneault)
