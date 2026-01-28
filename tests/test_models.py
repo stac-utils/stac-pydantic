@@ -200,7 +200,31 @@ def test_geo_interface() -> None:
     ],
 )
 def test_stac_common_dates(args) -> None:
-    StacCommonMetadata(**args)
+    metadata = StacCommonMetadata(**args)
+    assert "datetime" in metadata.model_dump(mode="json")
+    assert "datetime" in metadata.model_dump(mode="json", exclude_unset=True)
+    assert "datetime" in metadata.model_dump(exclude_none=True)
+    assert "datetime" in metadata.model_dump(mode="json", exclude_none=True)
+
+
+def test_datetime_null() -> None:
+    """Check datetime custom serialization works for sub-model."""
+    test_item = request(SAR_EXTENSION)
+    test_item["properties"]["datetime"] = None
+    itm = Item.model_validate(test_item)
+    assert not itm.properties.datetime
+
+    itm_dict = itm.model_dump(exclude_none=True)
+    assert itm_dict["properties"]["datetime"] is None
+    assert Item.model_validate(itm_dict)
+
+    itm_dict = itm.model_dump(mode="json", exclude_none=True)
+    assert itm_dict["properties"]["datetime"] is None
+    assert Item.model_validate(itm_dict)
+
+    itm_json = itm.model_dump_json(exclude_none=True)
+    assert '"datetime":null' in itm_json
+    assert Item.model_validate_json(itm_json)
 
 
 def test_stac_null_datetime_required() -> None:

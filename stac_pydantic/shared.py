@@ -10,7 +10,10 @@ from pydantic import (
     BaseModel,
     ConfigDict,
     Field,
+    SerializationInfo,
+    SerializerFunctionWrapHandler,
     TypeAdapter,
+    model_serializer,
     model_validator,
 )
 from typing_extensions import Annotated, Self
@@ -184,6 +187,20 @@ class StacCommonMetadata(StacBaseModel):
                 "use of start_datetime or end_datetime requires the use of the other"
             )
         return self
+
+    @model_serializer(when_used="always", mode="wrap")
+    def include_datetime_null(
+        self,
+        serializer: SerializerFunctionWrapHandler,
+        info: SerializationInfo,
+    ):
+        """Custom Model serializer make sure to allways keep datetime."""
+        data = serializer(self)
+        start = data.get("start_datetime")
+        end = data.get("end_datetime")
+        if not data.get("datetime") and (start and end):
+            data["datetime"] = None
+        return data
 
 
 class Asset(StacBaseModel):
