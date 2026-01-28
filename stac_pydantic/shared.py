@@ -34,7 +34,7 @@ UtcDatetime = Annotated[
     AfterValidator(lambda d: d.astimezone(timezone.utc)),
 ]
 
-SearchDatetime = TypeAdapter(Optional[UtcDatetime])
+SearchDatetime: TypeAdapter = TypeAdapter(Optional[UtcDatetime])
 
 
 class MimeTypes(str, Enum):
@@ -112,14 +112,14 @@ class StacBaseModel(BaseModel):
             by_alias=by_alias, exclude_unset=exclude_unset, **kwargs
         )
 
-    def model_dump(
+    def model_dump(  # type: ignore[override]
         self, *, by_alias: bool = True, exclude_unset: bool = True, **kwargs: Any
     ) -> Dict[str, Any]:
         return super().model_dump(
             by_alias=by_alias, exclude_unset=exclude_unset, **kwargs
         )
 
-    def model_dump_json(
+    def model_dump_json(  # type: ignore[override]
         self, *, by_alias: bool = True, exclude_unset: bool = True, **kwargs: Any
     ) -> str:
         return super().model_dump_json(

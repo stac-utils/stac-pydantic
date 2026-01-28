@@ -1,10 +1,7 @@
-[build-system]
-requires = ["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
-
 [project]
 name="stac-pydantic"
 description="Pydantic data models for the STAC spec"
+readme = "README.md"
 classifiers=[
         "Intended Audience :: Developers",
         "Intended Audience :: Information Technology",
@@ -15,18 +12,25 @@ classifiers=[
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
         "Programming Language :: Python :: 3.13",
+        "Programming Language :: Python :: 3.14",
         "License :: OSI Approved :: MIT License",
 ]
 keywords=["stac", "pydantic", "validation"]
-authors=[{ name = "Arturo Engineering", email = "engineering@arturo.ai"}]
-license= { text = "MIT" }
+authors=[
+        { name = "Arturo Engineering", email = "engineering@arturo.ai"},
+]
+maintainers = [
+  { name = "Vincent Sarago", email = "vincent@developmentseed.org" },
+  { name = "Pete Gadomski", email = "pete.gadomski@gmail.com" },
+]
+license = {file = "LICENSE"}
 requires-python=">=3.8"
+dynamic = ["version"]
 dependencies = [
         "click>=8.1.7",
         "pydantic>=2.4.1",
         "geojson-pydantic>=1.0.0",
 ]
-dynamic = ["version", "readme"]
 
 [project.scripts]
 stac-pydantic = "stac_pydantic.scripts.cli:app"
@@ -36,8 +40,12 @@ homepage = "https://github.com/stac-utils/stac-pydantic"
 repository ="https://github.com/stac-utils/stac-pydantic.git"
 
 [project.optional-dependencies]
-validation = ["jsonschema>=4.19.1", "requests>=2.31.0"]
+validation = [
+        "jsonschema>=4.19.1",
+        "requests>=2.31.0",
+]
 
+[dependency-groups]
 dev = [
         "pytest>=7.4.2",
         "pytest-cov>=4.1.0",
@@ -46,32 +54,26 @@ dev = [
         "shapely>=2.0.1",
         "dictdiffer>=0.9.0",
         "jsonschema>=4.19.1",
-        "pyyaml>=6.0.1"
+        "pyyaml>=6.0.1",
+        "pre-commit",
 ]
 
-lint = [
-        "types-requests>=2.31.0.5",
-        "types-jsonschema>=4.19.0.3",
-        "types-PyYAML>=6.0.12.12",
-        "black>=23.9.1",
-        "isort>=5.12.0",
-        "flake8>=6.1.0",
-        "Flake8-pyproject>=1.2.3",
-        "mypy>=1.5.1",
-        "pre-commit>=3.4.0",
-        "tox>=4.11.3"
+deploy = [
+    "hatch",
 ]
 
-[tool.setuptools.dynamic]
-version = { attr = "stac_pydantic.version.__version__" }
-readme = {file = ["README.md"], content-type = "text/markdown"}
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
-[tool.setuptools.package-data]
-stac_pydantic= ["*.typed"]
+[tool.hatch.version]
+path = "stac_pydantic/version.py"
 
-[tool.setuptools.packages.find]
-include = ["stac_pydantic*"]
-exclude = ["tests*"]
+[tool.hatch.build.targets.sdist]
+only-include = ["stac_pydantic/"]
+
+[tool.hatch.build.targets.wheel]
+only-include = ["stac_pydantic/"]
 
 [tool.pytest.ini_options]
 addopts = "-sv --cov stac_pydantic --cov-report xml --cov-report term-missing  --cov-fail-under 95"
