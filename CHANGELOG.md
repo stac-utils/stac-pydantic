@@ -1,9 +1,56 @@
 
 ## Unreleased
 
+## 3.5.0 (2026-01-29)
+
 - add python 3.14 support
 - use `uv` for project managment
-- fix: make sure to return `datetime: null` and `geometry: null` when serializing the Item model
+- fix: make sure to return `properties.datetime: null` and `geometry: null` when serializing the Item model
+
+    ```python
+    from stac_pydantic.api import Item
+
+    stac_item = Item.model_validate(
+        {
+            "id": "12345",
+            "type": "Feature",
+            "stac_extensions": [],
+            "geometry": None,
+            "properties": {
+                "datetime": None,
+                "start_datetime": "2024-01-01T00:00:00Z",
+                "end_datetime": "2024-01-02T00:00:00Z",
+            },
+            "collection": "collection",
+            "links": [
+                {
+                    "rel": "self",
+                    "href": "http://stac.example.com/catalog/collections/CS3-20160503_132130_04/items/CS3-20160503_132130_04.json"
+                },
+                {
+                    "rel": "collection",
+                    "href": "http://stac.example.com/catalog/CS3-20160503_132130_04/catalog.json"
+                },
+                {
+                    "rel": "root",
+                    "href": "http://stac.example.com/catalog"
+                }
+            ],
+            "assets": {},
+        }
+    )
+
+    out = stac_item.model_dump(exclude_none=True)
+    # `geometry` is required
+    assert out["geometry"] is None
+    # `datetime` is a required property
+    assert out["properties"]["datetime"] is None
+
+    # force exclusion of required keys
+    out = stac_item.model_dump(exclude_none=True, exclude={"properties": {"datetime"}, "geometry": True})
+    assert "geometry" not in out
+    assert "datetime" not in out["properties"]
+    ```
 
 ## 3.4.0 (2025-07-17)
 
