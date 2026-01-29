@@ -3,6 +3,7 @@
 
 - add python 3.14 support
 - use `uv` for project managment
+- fix: make sure to return `datetime: null` and `geometry: null` when serializing the Item model
 
 ## 3.4.0 (2025-07-17)
 
