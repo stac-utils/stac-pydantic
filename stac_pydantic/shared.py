@@ -199,7 +199,9 @@ class StacCommonMetadata(StacBaseModel):
         start = data.get("start_datetime")
         end = data.get("end_datetime")
         if not data.get("datetime") and (start and end):
-            data["datetime"] = None
+            if info.exclude_none and "datetime" not in (info.exclude or {}):
+                data["datetime"] = None
+
         return data
 
 

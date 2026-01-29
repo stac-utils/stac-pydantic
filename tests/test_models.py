@@ -205,9 +205,12 @@ def test_stac_common_dates(args) -> None:
     assert "datetime" in metadata.model_dump(mode="json", exclude_unset=True)
     assert "datetime" in metadata.model_dump(exclude_none=True)
     assert "datetime" in metadata.model_dump(mode="json", exclude_none=True)
+    assert "datetime" not in metadata.model_dump(
+        exclude_none=True, exclude={"datetime"}
+    )
 
 
-def test_datetime_null() -> None:
+def test_item_datetime_null() -> None:
     """Check datetime custom serialization works for sub-model."""
     test_item = request(SAR_EXTENSION)
     test_item["properties"]["datetime"] = None
@@ -225,6 +228,9 @@ def test_datetime_null() -> None:
     itm_json = itm.model_dump_json(exclude_none=True)
     assert '"datetime":null' in itm_json
     assert Item.model_validate_json(itm_json)
+
+    itm_dict = itm.model_dump(exclude_none=True, exclude={"properties": {"datetime"}})
+    assert "datetime" not in itm_dict
 
 
 def test_stac_null_datetime_required() -> None:
@@ -369,8 +375,19 @@ def test_resolve_links() -> None:
 
 def test_geometry_null_item() -> None:
     test_item = request(ITEM_GEOMETRY_NULL)
-    valid_item = Item(**test_item).model_dump()
-    dict_match(test_item, valid_item)
+    valid_item = Item.model_validate(test_item)
+    dict_match(test_item, valid_item.model_dump())
+
+    assert not valid_item.geometry
+    item_dict = valid_item.model_dump(exclude_none=True)
+    assert "geometry" in item_dict
+
+    itm_json = valid_item.model_dump_json(exclude_none=True)
+    assert '"geometry":null' in itm_json
+    assert Item.model_validate_json(itm_json)
+
+    itm_dict = valid_item.model_dump(exclude_none=True, exclude={"geometry"})
+    assert "geometry" not in itm_dict
 
 
 def test_item_bbox_validation() -> None:

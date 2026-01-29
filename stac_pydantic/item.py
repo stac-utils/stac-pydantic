@@ -1,7 +1,15 @@
 from typing import Any, Dict, List, Optional
 
 from geojson_pydantic import Feature
-from pydantic import AnyUrl, ConfigDict, Field, model_serializer, model_validator
+from pydantic import (
+    AnyUrl,
+    ConfigDict,
+    Field,
+    SerializationInfo,
+    SerializerFunctionWrapHandler,
+    model_serializer,
+    model_validator,
+)
 
 from stac_pydantic.links import Links
 from stac_pydantic.shared import SEMVER_REGEX, Asset, StacBaseModel, StacCommonMetadata
@@ -38,10 +46,19 @@ class Item(Feature, StacBaseModel):
         return values
 
     # https://github.com/developmentseed/geojson-pydantic/issues/147
-    @model_serializer(mode="wrap")
-    def _serialize(self, handler):
-        data = handler(self)
+    @model_serializer(when_used="always", mode="wrap")
+    def _serialize(
+        self,
+        serializer: SerializerFunctionWrapHandler,
+        info: SerializationInfo,
+    ):
+        data = serializer(self)
         for field in self.__geojson_exclude_if_none__:
             if field in data and data[field] is None:
                 del data[field]
+
+        if "geometry" not in data:
+            if info.exclude_none and "geometry" not in (info.exclude or {}):
+                data["geometry"] = None
+
         return data
