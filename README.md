@@ -99,31 +99,34 @@ It also implements models for defining ItemSeach queries.
 ```python
 from stac_pydantic.api import Item, ItemCollection
 
-stac_item = Item(**{
-    "id": "12345",
-    "type": "Feature",
-    "stac_extensions": [],
-    "geometry": { "type": "Point", "coordinates": [0, 0] },
-    "bbox": [0.0, 0.0, 0.0, 0.0],
-    "properties": {
-        "datetime": "2020-03-09T14:53:23.262208+00:00",
-    },
-    "collection": "CS3",
-    "links": [
-          {
-            "rel": "self",
-            "href": "http://stac.example.com/catalog/collections/CS3-20160503_132130_04/items/CS3-20160503_132130_04.json"
-          },
-          {
-            "rel": "collection",
-            "href": "http://stac.example.com/catalog/CS3-20160503_132130_04/catalog.json"
-          },
-          {
-            "rel": "root",
-            "href": "http://stac.example.com/catalog"
-          }],
-    "assets": {},
-    })
+stac_item = Item.model_validate(
+    {
+        "id": "12345",
+        "type": "Feature",
+        "stac_extensions": [],
+        "geometry": { "type": "Point", "coordinates": [0, 0] },
+        "bbox": [0.0, 0.0, 0.0, 0.0],
+        "properties": {
+            "datetime": "2020-03-09T14:53:23.262208+00:00",
+        },
+        "collection": "CS3",
+        "links": [
+            {
+                "rel": "self",
+                "href": "http://stac.example.com/catalog/collections/CS3-20160503_132130_04/items/CS3-20160503_132130_04.json"
+            },
+            {
+                "rel": "collection",
+                "href": "http://stac.example.com/catalog/CS3-20160503_132130_04/catalog.json"
+            },
+            {
+                "rel": "root",
+                "href": "http://stac.example.com/catalog"
+            }
+        ],
+        "assets": {},
+    }
+)
 
 stac_item_collection = ItemCollection(**{
     "type": "FeatureCollection",
@@ -152,6 +155,55 @@ the model with the `by_alias = True` parameter. Export methods (`model_dump()` a
 ```python
 item_dict = item.model_dump()
 assert item_dict['properties']['landsat:row'] == item.properties.row == 250
+```
+
+#### Required keys
+
+STAC specification requires some keys to be present even if their value is `null`. When exporting a model to dict or json, stac-pydantic will make sure to keep the keys even if `exclude_none` is set to `True`. Users can overwrite this by using `exclude={'key'}`.
+
+```python
+from stac_pydantic.api import Item
+
+stac_item = Item.model_validate(
+    {
+        "id": "12345",
+        "type": "Feature",
+        "stac_extensions": [],
+        "geometry": None,
+        "properties": {
+            "datetime": None,
+            "start_datetime": "2024-01-01T00:00:00Z",
+            "end_datetime": "2024-01-02T00:00:00Z",
+        },
+        "collection": "collection",
+        "links": [
+            {
+                "rel": "self",
+                "href": "http://stac.example.com/catalog/collections/CS3-20160503_132130_04/items/CS3-20160503_132130_04.json"
+            },
+            {
+                "rel": "collection",
+                "href": "http://stac.example.com/catalog/CS3-20160503_132130_04/catalog.json"
+            },
+            {
+                "rel": "root",
+                "href": "http://stac.example.com/catalog"
+            }
+        ],
+        "assets": {},
+    }
+)
+
+out = stac_item.model_dump(exclude_none=True)
+# `geometry` is required
+assert out["geometry"] is None
+# `datetime` is a required property
+assert out["properties"]["datetime"] is None
+
+# force exclusion of required keys
+out = stac_item.model_dump(exclude_none=True, exclude={"properties": {"datetime"}, "geometry": True})
+assert "geometry" not in out
+assert "datetime" not in out["properties"]
 ```
 
 ### CLI
