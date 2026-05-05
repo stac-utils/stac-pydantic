@@ -1,6 +1,10 @@
 
 ## Unreleased
 
+## 3.5.1 (2026-05-05)
+
+- add top level public declaration `__all__`
+
 ## 3.5.0 (2026-01-29)
 
 - add python 3.14 support
