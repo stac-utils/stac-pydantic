@@ -35,15 +35,15 @@ class ItemCollection(BaseItemCollection):
                         Relations.collection,
                     ]
                     for link in required_links:
-                        assert (
-                            link in links_rel
-                        ), f"STAC API FEATURES conform Items pages must include a `{link}` link."
+                        assert link in links_rel, (
+                            f"STAC API FEATURES conform Items pages must include a `{link}` link."
+                        )
 
                 if item_collection_type == "search":
                     required_links = [Relations.root]
                     for link in required_links:
-                        assert (
-                            link in links_rel
-                        ), f"STAC API FEATURES conform Items pages must include a `{link}` link."
+                        assert link in links_rel, (
+                            f"STAC API FEATURES conform Items pages must include a `{link}` link."
+                        )
 
         return self

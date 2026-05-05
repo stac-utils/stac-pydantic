@@ -14,8 +14,8 @@ class Item(BaseItem):
         required_rels = [Relations.root, Relations.self, Relations.collection]
 
         for rel in required_rels:
-            assert (
-                rel in links_rel
-            ), f"STAC API FEATURE conform Item pages must include a `{rel}` link."
+            assert rel in links_rel, (
+                f"STAC API FEATURE conform Item pages must include a `{rel}` link."
+            )
 
         return self
