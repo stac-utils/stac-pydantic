@@ -172,7 +172,8 @@ def test_asset_extras() -> None:
 
     item = Item(**test_item)
     for _, asset in item.assets.items():
-        assert asset.foo == "bar"
+        assert "foo" in asset.model_dump()
+        assert asset.foo == "bar"  # type: ignore [attr-defined]
 
 
 def test_geo_interface() -> None:

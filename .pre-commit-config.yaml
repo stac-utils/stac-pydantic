@@ -35,4 +35,4 @@ repos:
         - types-attrs
         - types-requests
         - types-PyYAML
-        - pydantic~=2.0
+        - pydantic>=2.4,<3.0

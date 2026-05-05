@@ -30,9 +30,9 @@ class LandingPage(Catalog):
         required_core_rels = [Relations.root, Relations.self, Relations.service_desc]
 
         for rel in required_core_rels:
-            assert (
-                rel in links_rel
-            ), f"STAC API conform Landing pages must include a `{rel}` link."
+            assert rel in links_rel, (
+                f"STAC API conform Landing pages must include a `{rel}` link."
+            )
 
         if (
             AnyUrl(f"https://api.stacspec.org/v{STAC_API_VERSION}/collections")
@@ -40,9 +40,9 @@ class LandingPage(Catalog):
         ):
             required_collections_rels = [Relations.data]
             for rel in required_collections_rels:
-                assert (
-                    rel in links_rel
-                ), f"STAC API COLLECTION conform Landing pages must include a `{rel}` link."
+                assert rel in links_rel, (
+                    f"STAC API COLLECTION conform Landing pages must include a `{rel}` link."
+                )
 
         if (
             AnyUrl(f"https://api.stacspec.org/v{STAC_API_VERSION}/item-search")
@@ -50,8 +50,8 @@ class LandingPage(Catalog):
         ):
             required_feature_rels = [Relations.search]
             for rel in required_feature_rels:
-                assert (
-                    rel in links_rel
-                ), f"STAC API ITEM SEARCH conform Landing pages must include a `{rel}` link."
+                assert rel in links_rel, (
+                    f"STAC API ITEM SEARCH conform Landing pages must include a `{rel}` link."
+                )
 
         return self

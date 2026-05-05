@@ -18,8 +18,8 @@ class Collection(BaseCollection):
         required_rels = [Relations.root, Relations.self]
 
         for rel in required_rels:
-            assert (
-                rel in links_rel
-            ), f"STAC API COLLECTIONS conform Collection pages must include a `{rel}` link."
+            assert rel in links_rel, (
+                f"STAC API COLLECTIONS conform Collection pages must include a `{rel}` link."
+            )
 
         return self
