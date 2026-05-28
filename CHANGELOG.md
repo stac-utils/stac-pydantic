@@ -1,6 +1,10 @@
 
 ## Unreleased
 
+## 3.5.2 (2026-05-29)
+
+- fix: remove wrong longitude check for antimeridian crossing bbox validation (#212, @vincentsarago)
+
 ## 3.5.1 (2026-05-05)
 
 - add top level public declaration `__all__`
