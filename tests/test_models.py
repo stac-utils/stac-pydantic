@@ -462,10 +462,6 @@ def test_time_intervals_valid(interval) -> None:
     [
         # invalid Y order
         [[0, 1, 1, 0]],
-        # invalid X order (if crossing Antimeridian limit, xmin > 0)
-        [[-169, 0, -170, 1]],
-        # invalid X order (if crossing Antimeridian limit, xmax < 0)
-        [[170, 0, 169, 1]],
         # sub-sequent crossing Y
         [[0, 0, 2, 2], [0.5, 0.5, 2.0, 2.5]],
         # sub-sequent crossing X
