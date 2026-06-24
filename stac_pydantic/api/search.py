@@ -1,5 +1,5 @@
 from datetime import datetime as dt
-from typing import Any, TypeAlias
+from typing import Annotated, Any, TypeAlias
 
 from geojson_pydantic.geometries import (
     GeometryCollection,
@@ -11,7 +11,6 @@ from geojson_pydantic.geometries import (
     Polygon,
 )
 from pydantic import AfterValidator, BaseModel, Field, model_validator
-from typing_extensions import Annotated
 
 from stac_pydantic.api.extensions.fields import FieldsExtension
 from stac_pydantic.api.extensions.query import Operator

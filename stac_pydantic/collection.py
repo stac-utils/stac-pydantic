@@ -1,7 +1,6 @@
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Annotated, Any, Literal
 
 from pydantic import AfterValidator, Field, conlist
-from typing_extensions import Annotated
 
 from stac_pydantic.catalog import _Catalog
 from stac_pydantic.shared import (

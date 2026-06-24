@@ -1,4 +1,4 @@
-from typing import ClassVar, Tuple
+from typing import ClassVar
 from urllib.parse import urljoin, urlsplit
 
 import pytest
@@ -71,7 +71,7 @@ def test_item_links(base_url) -> None:
 )
 def test_custom_links(base_url, expected_href) -> None:
     class CustomLinks(BaseLinks):
-        _link_members: ClassVar[Tuple[str]] = ("another_link",)
+        _link_members: ClassVar[tuple[str]] = ("another_link",)
 
         def another_link(self) -> Link:
             path = urlsplit(self.base_url).path.rstrip("/")

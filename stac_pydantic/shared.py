@@ -1,7 +1,8 @@
+import sys
 from datetime import datetime as dt
 from datetime import timezone
 from enum import Enum, auto
-from typing import Any, cast
+from typing import Annotated, Any, cast
 from warnings import warn
 
 from pydantic import (
@@ -16,7 +17,11 @@ from pydantic import (
     model_serializer,
     model_validator,
 )
-from typing_extensions import Annotated, Self
+
+if sys.version_info < (3, 11):
+    from typing_extensions import Self
+else:
+    from typing import Self
 
 from stac_pydantic.utils import AutoValueEnum
 

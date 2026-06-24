@@ -1763,6 +1763,7 @@ dependencies = [
     { name = "click" },
     { name = "geojson-pydantic" },
     { name = "pydantic" },
+    { name = "typing-extensions", marker = "python_full_version < '3.11'" },
 ]
 
 [package.optional-dependencies]
@@ -1794,6 +1795,7 @@ requires-dist = [
     { name = "jsonschema", marker = "extra == 'validation'", specifier = ">=4.19.1" },
     { name = "pydantic", specifier = ">=2.4.1" },
     { name = "requests", marker = "extra == 'validation'", specifier = ">=2.31.0" },
+    { name = "typing-extensions", marker = "python_full_version < '3.11'", specifier = ">=4.0.0" },
 ]
 provides-extras = ["validation"]
 

@@ -28,6 +28,7 @@ dependencies = [
         "click>=8.1.7",
         "pydantic>=2.4.1",
         "geojson-pydantic>=1.0.0",
+        "typing-extensions>=4.0.0; python_version < '3.11'",
 ]
 
 [project.scripts]
@@ -97,6 +98,7 @@ select = [
         "F",
         "W",
         "B",
+        "UP",
 ]
 ignore = [
     "E203",  # line too long, handled by black
