@@ -1,6 +1,10 @@
 
 ## Unreleased
 
+## 3.6.0a1 (2026-06-25)
+
+- fix: invalid urljoin usage in Link model `resolve` method
+
 ## 3.6.0a0 (2026-06-24)
 
 - update: type hints for python >=3.10

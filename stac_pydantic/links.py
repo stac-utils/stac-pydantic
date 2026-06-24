@@ -1,6 +1,6 @@
 from collections.abc import Iterator
 from enum import auto
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlsplit
 
 from pydantic import ConfigDict, Field, RootModel
 
@@ -22,7 +22,9 @@ class Link(StacBaseModel):
 
     def resolve(self, base_url: str) -> None:
         """resolve a link to the given base URL"""
-        self.href = urljoin(base_url, self.href)
+        path = urlsplit(base_url).path.rstrip("/")
+        href = self.href.lstrip("/")
+        self.href = urljoin(base_url, f"{path}/{href}")
 
 
 class Links(RootModel[list[Link]]):
