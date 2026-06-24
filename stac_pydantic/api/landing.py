@@ -1,5 +1,3 @@
-from typing import List
-
 from pydantic import AnyUrl, HttpUrl, model_validator
 
 from stac_pydantic.api.links import Links
@@ -15,7 +13,7 @@ class LandingPage(Catalog):
     https://github.com/radiantearth/stac-api-spec/tree/v1.0.0/item-search#link-relations
     """
 
-    conformsTo: List[AnyUrl] = [
+    conformsTo: list[AnyUrl] = [
         HttpUrl("https://api.stacspec.org/v1.0.0/core"),
         HttpUrl("http://www.opengis.net/spec/ogcapi-features-1/1.0/conf/core"),
     ]

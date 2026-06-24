@@ -1,5 +1,5 @@
 from datetime import datetime as dt
-from typing import Any, Dict, List, Optional, Union
+from typing import Annotated, Any, TypeAlias
 
 from geojson_pydantic.geometries import (
     GeometryCollection,
@@ -11,7 +11,6 @@ from geojson_pydantic.geometries import (
     Polygon,
 )
 from pydantic import AfterValidator, BaseModel, Field, model_validator
-from typing_extensions import Annotated
 
 from stac_pydantic.api.extensions.fields import FieldsExtension
 from stac_pydantic.api.extensions.query import Operator
@@ -26,15 +25,15 @@ from stac_pydantic.shared import (
     validate_datetime,
 )
 
-Intersection = Union[
-    Point,
-    MultiPoint,
-    LineString,
-    MultiLineString,
-    Polygon,
-    MultiPolygon,
-    GeometryCollection,
-]
+Intersection: TypeAlias = (
+    Point
+    | MultiPoint
+    | LineString
+    | MultiLineString
+    | Polygon
+    | MultiPolygon
+    | GeometryCollection
+)
 
 
 class Search(BaseModel):
@@ -44,23 +43,23 @@ class Search(BaseModel):
     https://github.com/radiantearth/stac-api-spec/blob/v1.0.0/item-search/README.md#query-parameter-table
     """
 
-    collections: Optional[List[str]] = None
-    ids: Optional[List[str]] = None
-    bbox: Annotated[Optional[BBox], AfterValidator(validate_bbox)] = None
-    intersects: Optional[Intersection] = None
-    datetime: Annotated[Optional[str], AfterValidator(validate_datetime)] = None
-    limit: Optional[int] = 10
+    collections: list[str] | None = None
+    ids: list[str] | None = None
+    bbox: Annotated[BBox | None, AfterValidator(validate_bbox)] = None
+    intersects: Intersection | None = None
+    datetime: Annotated[str | None, AfterValidator(validate_datetime)] = None
+    limit: int | None = 10
 
     @property
-    def start_date(self) -> Optional[dt]:
-        start_date: Optional[dt] = None
+    def start_date(self) -> dt | None:
+        start_date: dt | None = None
         if self.datetime:
             start_date = str_to_datetimes(self.datetime)[0]
         return start_date
 
     @property
-    def end_date(self) -> Optional[dt]:
-        end_date: Optional[dt] = None
+    def end_date(self) -> dt | None:
+        end_date: dt | None = None
         if self.datetime:
             dates = str_to_datetimes(self.datetime)
             end_date = dates[0] if len(dates) == 1 else dates[1]
@@ -68,13 +67,13 @@ class Search(BaseModel):
 
     # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-validators for more information.
     @model_validator(mode="before")
-    def validate_spatial(cls, values: Dict[str, Any]) -> Dict[str, Any]:
+    def validate_spatial(cls, values: dict[str, Any]) -> dict[str, Any]:
         if values.get("intersects") and values.get("bbox") is not None:
             raise ValueError("intersects and bbox parameters are mutually exclusive")
         return values
 
     @property
-    def spatial_filter(self) -> Optional[Intersection]:
+    def spatial_filter(self) -> Intersection | None:
         """Return a geojson-pydantic object representing the spatial filter for the search request.
 
         Check for both because the ``bbox`` and ``intersects`` parameters are mutually exclusive.
@@ -92,6 +91,6 @@ class ExtendedSearch(Search):
     STAC API search with extensions enabled.
     """
 
-    field: Optional[FieldsExtension] = Field(None, alias="fields")
-    query: Optional[Dict[str, Dict[Operator, Any]]] = None
-    sortby: Optional[List[SortExtension]] = None
+    field: FieldsExtension | None = Field(None, alias="fields")
+    query: dict[str, dict[Operator, Any]] | None = None
+    sortby: list[SortExtension] | None = None

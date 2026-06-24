@@ -1,7 +1,6 @@
 import json
 import os
 from copy import deepcopy
-from typing import List, Optional, Type
 
 import dictdiffer
 import pytest
@@ -12,7 +11,7 @@ from pydantic import BaseModel, TypeAdapter
 from stac_pydantic.shared import UtcDatetime
 
 
-def request(url: str, path: Optional[List[str]] = None):
+def request(url: str, path: list[str] | None = None):
     if path is None:
         path = ["tests", "example_stac"]
 
@@ -24,7 +23,7 @@ def request(url: str, path: Optional[List[str]] = None):
         _full_path = deepcopy(path)
         _full_path.append(url)
         full_path = os.path.join(*_full_path)
-        with open(full_path, "r") as local_file:
+        with open(full_path) as local_file:
             lines = local_file.readlines()
         full_file = "".join(lines)
         return json.loads(full_file)
@@ -65,9 +64,9 @@ def dict_match(d1: dict, d2: dict):
 
 def compare_example(
     example_url: str,
-    model: Type[BaseModel],
-    fields: Optional[List[str]] = None,
-    path: Optional[List[str]] = None,
+    model: type[BaseModel],
+    fields: list[str] | None = None,
+    path: list[str] | None = None,
 ) -> None:
     if path is None:
         path = ["tests", "example_stac"]

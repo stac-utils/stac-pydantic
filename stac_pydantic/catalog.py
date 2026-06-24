@@ -1,4 +1,4 @@
-from typing import List, Literal, Optional
+from typing import Literal
 
 from pydantic import AnyUrl, ConfigDict, Field
 
@@ -16,8 +16,8 @@ class _Catalog(StacBaseModel):
     description: str = Field(..., alias="description", min_length=1)
     stac_version: str = Field(STAC_VERSION, pattern=SEMVER_REGEX)
     links: Links
-    stac_extensions: Optional[List[AnyUrl]] = []
-    title: Optional[str] = None
+    stac_extensions: list[AnyUrl] | None = []
+    title: str | None = None
     type: str
     model_config = ConfigDict(use_enum_values=True, extra="allow")
 

@@ -1,7 +1,8 @@
+import sys
 from datetime import datetime as dt
 from datetime import timezone
 from enum import Enum, auto
-from typing import Any, Dict, List, Optional, Tuple, Union, cast
+from typing import Annotated, Any, cast
 from warnings import warn
 
 from pydantic import (
@@ -16,15 +17,19 @@ from pydantic import (
     model_serializer,
     model_validator,
 )
-from typing_extensions import Annotated, Self
+
+if sys.version_info < (3, 11):
+    from typing_extensions import Self
+else:
+    from typing import Self
 
 from stac_pydantic.utils import AutoValueEnum
 
-NumType = Union[float, int]
-BBox = Union[
-    Tuple[NumType, NumType, NumType, NumType],  # 2D bbox
-    Tuple[NumType, NumType, NumType, NumType, NumType, NumType],  # 3D bbox
-]
+NumType = float | int
+BBox = (
+    tuple[NumType, NumType, NumType, NumType]
+    | tuple[NumType, NumType, NumType, NumType, NumType, NumType]
+)
 
 SEMVER_REGEX = r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$"
 
@@ -37,7 +42,7 @@ UtcDatetime = Annotated[
     AfterValidator(lambda d: d.astimezone(timezone.utc)),
 ]
 
-SearchDatetime: TypeAdapter = TypeAdapter(Optional[UtcDatetime])
+SearchDatetime: TypeAdapter = TypeAdapter(UtcDatetime | None)
 
 
 class MimeTypes(str, Enum):
@@ -97,7 +102,7 @@ class ProviderRoles(str, AutoValueEnum):
 class StacBaseModel(BaseModel):
     def to_dict(
         self, by_alias: bool = True, exclude_unset: bool = True, **kwargs: Any
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         warn(
             "`to_dict` method is deprecated. Use `model_dump` instead",
             DeprecationWarning,
@@ -117,7 +122,7 @@ class StacBaseModel(BaseModel):
 
     def model_dump(  # type: ignore[override]
         self, *, by_alias: bool = True, exclude_unset: bool = True, **kwargs: Any
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         return super().model_dump(
             by_alias=by_alias, exclude_unset=exclude_unset, **kwargs
         )
@@ -136,9 +141,9 @@ class Provider(StacBaseModel):
     """
 
     name: str = Field(..., min_length=1)
-    description: Optional[str] = None
-    roles: Optional[List[str]] = None
-    url: Optional[str] = None
+    description: str | None = None
+    roles: list[str] | None = None
+    url: str | None = None
 
 
 class StacCommonMetadata(StacBaseModel):
@@ -147,25 +152,25 @@ class StacCommonMetadata(StacBaseModel):
     """
 
     # Basic
-    title: Optional[str] = None
-    description: Optional[str] = None
+    title: str | None = None
+    description: str | None = None
     # Date and Time
-    datetime: Optional[UtcDatetime] = Field(...)
-    created: Optional[UtcDatetime] = None
-    updated: Optional[UtcDatetime] = None
+    datetime: UtcDatetime | None = Field(...)
+    created: UtcDatetime | None = None
+    updated: UtcDatetime | None = None
     # Date and Time Range
-    start_datetime: Optional[UtcDatetime] = None
-    end_datetime: Optional[UtcDatetime] = None
+    start_datetime: UtcDatetime | None = None
+    end_datetime: UtcDatetime | None = None
     # Licensing
-    license: Optional[str] = None
+    license: str | None = None
     # Provider
-    providers: Optional[List[Provider]] = None
+    providers: list[Provider] | None = None
     # Instrument
-    platform: Optional[str] = None
-    instruments: Optional[List[str]] = None
-    constellation: Optional[str] = None
-    mission: Optional[str] = None
-    gsd: Optional[float] = Field(None, gt=0)
+    platform: str | None = None
+    instruments: list[str] | None = None
+    constellation: str | None = None
+    mission: str | None = None
+    gsd: float | None = Field(None, gt=0)
 
     @model_validator(mode="after")
     def validate_datetime_or_start_end(self) -> Self:
@@ -211,23 +216,23 @@ class Asset(StacBaseModel):
     """
 
     href: str = Field(..., min_length=1)
-    type: Optional[str] = None
-    title: Optional[str] = None
-    description: Optional[str] = None
-    roles: Optional[List[str]] = None
+    type: str | None = None
+    title: str | None = None
+    description: str | None = None
+    roles: list[str] | None = None
 
     model_config = ConfigDict(
         populate_by_name=True, use_enum_values=True, extra="allow"
     )
 
 
-def str_to_datetimes(value: str) -> List[Optional[dt]]:
+def str_to_datetimes(value: str) -> list[dt | None]:
     # Split on "/" and replace no value or ".." with None
     values = [v if v and v != ".." else None for v in value.split("/")]
 
     # Cast because pylance gets confused by the type adapter and annotated type
     dates = cast(
-        List[Optional[dt]],
+        list[dt | None],
         [
             # Use the type adapter to validate the datetime strings, strict is necessary
             # due to pydantic issues #8736 and #8762
@@ -238,7 +243,7 @@ def str_to_datetimes(value: str) -> List[Optional[dt]]:
     return dates
 
 
-def validate_datetime(v: Optional[str]) -> Optional[str]:
+def validate_datetime(v: str | None) -> str | None:
     """Validate Datetime value."""
     if v is not None:
         dates = str_to_datetimes(v)
@@ -263,16 +268,16 @@ def validate_datetime(v: Optional[str]) -> Optional[str]:
     return v
 
 
-def validate_bbox(v: Optional[BBox]) -> Optional[BBox]:
+def validate_bbox(v: BBox | None) -> BBox | None:
     """Validate BBOX value."""
     if v:
         # Validate order
         if len(v) == 4:
-            xmin, ymin, xmax, ymax = cast(Tuple[int, int, int, int], v)
+            xmin, ymin, xmax, ymax = cast(tuple[int, int, int, int], v)
 
         elif len(v) == 6:
             xmin, ymin, min_elev, xmax, ymax, max_elev = cast(
-                Tuple[int, int, int, int, int, int], v
+                tuple[int, int, int, int, int, int], v
             )
             if max_elev < min_elev:
                 raise ValueError(

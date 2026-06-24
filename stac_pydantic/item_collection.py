@@ -1,4 +1,4 @@
-from typing import Optional, Sequence
+from collections.abc import Sequence
 
 from geojson_pydantic import FeatureCollection
 
@@ -16,4 +16,4 @@ class ItemCollection(FeatureCollection, StacBaseModel):
     """
 
     features: Sequence[Item]  # type: ignore
-    links: Optional[Links] = None
+    links: Links | None = None

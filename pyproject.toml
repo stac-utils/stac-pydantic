@@ -6,8 +6,6 @@ classifiers=[
         "Intended Audience :: Developers",
         "Intended Audience :: Information Technology",
         "Intended Audience :: Science/Research",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
@@ -24,12 +22,13 @@ maintainers = [
   { name = "Pete Gadomski", email = "pete.gadomski@gmail.com" },
 ]
 license = {file = "LICENSE"}
-requires-python=">=3.8"
+requires-python=">=3.10"
 dynamic = ["version"]
 dependencies = [
         "click>=8.1.7",
         "pydantic>=2.4.1",
         "geojson-pydantic>=1.0.0",
+        "typing-extensions>=4.0.0; python_version < '3.11'",
 ]
 
 [project.scripts]
@@ -99,6 +98,7 @@ select = [
         "F",
         "W",
         "B",
+        "UP",
 ]
 ignore = [
     "E203",  # line too long, handled by black

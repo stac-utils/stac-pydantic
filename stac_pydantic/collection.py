@@ -1,7 +1,6 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Literal, Optional, Union
+from typing import TYPE_CHECKING, Annotated, Any, Literal
 
 from pydantic import AfterValidator, Field, conlist
-from typing_extensions import Annotated
 
 from stac_pydantic.catalog import _Catalog
 from stac_pydantic.shared import (
@@ -15,14 +14,14 @@ from stac_pydantic.shared import (
 )
 
 if TYPE_CHECKING:
-    StartEndTime = List[Union[UtcDatetime, None]]
-    TInterval = List[StartEndTime]
+    StartEndTime = list[UtcDatetime | None]
+    TInterval = list[StartEndTime]
 else:
-    StartEndTime = conlist(Union[UtcDatetime, None], min_length=2, max_length=2)
+    StartEndTime = conlist(UtcDatetime | None, min_length=2, max_length=2)
     TInterval = conlist(StartEndTime, min_length=1)
 
 
-def validate_bbox_interval(v: List[BBox]) -> List[BBox]:  # noqa: C901
+def validate_bbox_interval(v: list[BBox]) -> list[BBox]:  # noqa: C901
     ivalues = iter(v)
 
     # The first time interval always describes the overall spatial extent of the data.
@@ -150,7 +149,7 @@ class SpatialExtent(StacBaseModel):
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md#spatial-extent-object
     """
 
-    bbox: Annotated[List[BBox], AfterValidator(validate_bbox_interval)]
+    bbox: Annotated[list[BBox], AfterValidator(validate_bbox_interval)]
 
 
 class TimeInterval(StacBaseModel):
@@ -175,8 +174,8 @@ class Range(StacBaseModel):
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md#stats-object
     """
 
-    minimum: Union[NumType, str]
-    maximum: Union[NumType, str]
+    minimum: NumType | str
+    maximum: NumType | str
 
 
 class Collection(_Catalog):
@@ -184,11 +183,11 @@ class Collection(_Catalog):
     https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md
     """
 
-    assets: Optional[Dict[str, Asset]] = None
+    assets: dict[str, Asset] | None = None
     license: str = Field(..., alias="license", min_length=1)
     extent: Extent
-    title: Optional[str] = None
-    keywords: Optional[List[str]] = None
-    providers: Optional[List[Provider]] = None
-    summaries: Optional[Dict[str, Union[Range, List[Any], Dict[str, Any]]]] = None
+    title: str | None = None
+    keywords: list[str] | None = None
+    providers: list[Provider] | None = None
+    summaries: dict[str, Range | list[Any] | dict[str, Any]] | None = None
     type: Literal["Collection"]

@@ -1,5 +1,5 @@
 from functools import lru_cache
-from typing import Any, Dict, Union
+from typing import Any
 
 from stac_pydantic.catalog import Catalog
 from stac_pydantic.collection import Collection
@@ -24,7 +24,7 @@ def _fetch_and_cache_schema(url: str) -> dict:
 
 
 def validate_extensions(
-    stac_obj: Union[Item, Collection, Catalog, Dict[str, Any]],
+    stac_obj: Item | Collection | Catalog | dict[str, Any],
     reraise_exception: bool = False,
 ) -> bool:
     """

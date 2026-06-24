@@ -1,4 +1,4 @@
-from typing import Optional, Sequence
+from collections.abc import Sequence
 from urllib.parse import urlparse
 
 from pydantic import model_validator
@@ -16,9 +16,9 @@ class ItemCollection(BaseItemCollection):
     """
 
     features: Sequence[Item]
-    links: Optional[Links] = None
-    numberMatched: Optional[int] = None
-    numberReturned: Optional[int] = None
+    links: Links | None = None
+    numberMatched: int | None = None
+    numberReturned: int | None = None
 
     @model_validator(mode="after")
     def required_links(self) -> "ItemCollection":
