@@ -1,7 +1,7 @@
 
 ## Unreleased
 
-## 3.6.0 (TBD)
+## 3.6.0a0 (2026-06-24)
 
 - update: type hints for python >=3.10
 - fix: invalid urljoin usage in link factories (#219, @vincentsarago)
