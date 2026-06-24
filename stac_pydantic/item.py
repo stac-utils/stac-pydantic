@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from geojson_pydantic import Feature
 from pydantic import (
@@ -32,14 +32,14 @@ class Item(Feature, StacBaseModel):
     id: str = Field(..., alias="id", min_length=1)
     stac_version: str = Field(STAC_VERSION, pattern=SEMVER_REGEX)
     properties: ItemProperties
-    assets: Dict[str, Asset]
+    assets: dict[str, Asset]
     links: Links
-    stac_extensions: Optional[List[AnyUrl]] = []
-    collection: Optional[str] = None
+    stac_extensions: list[AnyUrl] | None = []
+    collection: str | None = None
 
     @model_validator(mode="before")
     @classmethod
-    def validate_bbox(cls, values: Dict[str, Any]) -> Dict[str, Any]:
+    def validate_bbox(cls, values: dict[str, Any]) -> dict[str, Any]:
         if isinstance(values, dict):
             if values.get("geometry") and values.get("bbox") is None:
                 raise ValueError("bbox is required if geometry is not null")

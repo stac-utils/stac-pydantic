@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import ClassVar, Tuple
+from typing import ClassVar
 from urllib.parse import urljoin, urlsplit
 
 from stac_pydantic.links import Link, Links, Relations
@@ -11,7 +11,7 @@ class BaseLinks:
     """Create inferred links common to collections and items."""
 
     base_url: str
-    _link_members: ClassVar[Tuple[str, ...]] = ("root",)
+    _link_members: ClassVar[tuple[str, ...]] = ("root",)
 
     def root(self) -> Link:
         """Return the catalog root."""
@@ -34,7 +34,7 @@ class CollectionLinks(BaseLinks):
     """Create inferred links specific to collections."""
 
     collection_id: str
-    _link_members: ClassVar[Tuple[str, ...]] = ("root", "self", "parent", "items")
+    _link_members: ClassVar[tuple[str, ...]] = ("root", "self", "parent", "items")
 
     def self(self) -> Link:
         """Create the `self` link."""
@@ -72,7 +72,7 @@ class ItemLinks(BaseLinks):
 
     collection_id: str
     item_id: str
-    _link_members: ClassVar[Tuple[str, ...]] = ("root", "self", "parent", "collection")
+    _link_members: ClassVar[tuple[str, ...]] = ("root", "self", "parent", "collection")
 
     def self(self) -> Link:
         """Create the `self` link."""

@@ -1,9 +1,10 @@
 """Query Extension."""
 
 import warnings
+from collections.abc import Callable
 from enum import auto
 from types import DynamicClassAttribute
-from typing import Any, Callable
+from typing import Any
 
 from stac_pydantic.utils import AutoValueEnum
 

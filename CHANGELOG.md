@@ -1,6 +1,12 @@
 
 ## Unreleased
 
+## 3.6.0 (TBD)
+
+- update: type hints for python >=3.10
+- fix: invalid urljoin usage in link factories (#219, @vincentsarago)
+- remove: python 3.8 and 3.9 support
+
 ## 3.5.2 (2026-05-29)
 
 - fix: remove wrong longitude check for antimeridian crossing bbox validation (#212, @vincentsarago)

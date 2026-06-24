@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Literal, Optional, Union
+from typing import Any, Literal
 
 from pydantic import Field
 
@@ -14,8 +14,8 @@ class _MethodLink(Link):
     """
 
     method: Literal["GET", "POST"] = "GET"
-    headers: Optional[Dict[str, Any]] = None
-    body: Optional[Dict[Any, Any]] = None
+    headers: dict[str, Any] | None = None
+    body: dict[Any, Any] | None = None
     merge: bool = False
 
 
@@ -44,4 +44,4 @@ class ItemsLink(_MethodLink):
 
 
 class Links(BaseLinks):
-    root: List[Union[SearchLink, PaginationLink, ItemsLink, Link]]
+    root: list[SearchLink | PaginationLink | ItemsLink | Link]
