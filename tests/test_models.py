@@ -365,13 +365,20 @@ def test_resolve_link() -> None:
     assert link.href == "http://base_url.com/hello/world"
 
 
-def test_resolve_links() -> None:
+@pytest.mark.parametrize(
+    "base_url,expected_href",
+    [
+        ("http://base_url.com", "http://base_url.com/hello/world"),
+        ("http://base_url.com/v1/stac", "http://base_url.com/v1/stac/hello/world"),
+    ],
+)
+def test_resolve_links(base_url, expected_href) -> None:
     links = Links.model_validate(
         [Link(href="/hello/world", type=MimeTypes.jpeg, rel="test")]
     )
-    links.resolve(base_url="http://base_url.com")
+    links.resolve(base_url=base_url)
     for link in links.link_iterator():
-        assert link.href == "http://base_url.com/hello/world"
+        assert link.href == expected_href
 
 
 def test_geometry_null_item() -> None:
