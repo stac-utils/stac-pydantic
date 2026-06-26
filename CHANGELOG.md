@@ -1,6 +1,10 @@
 
 ## Unreleased
 
+## 3.6.0 (2026-06-26)
+
+- No change since 3.6.0a1
+
 ## 3.6.0a1 (2026-06-25)
 
 - fix: invalid urljoin usage in Link model `resolve` method
