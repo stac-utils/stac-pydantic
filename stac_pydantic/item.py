@@ -18,7 +18,7 @@ from stac_pydantic.version import STAC_VERSION
 
 class ItemProperties(StacCommonMetadata):
     """
-    https://github.com/radiantearth/stac-spec/blob/v1.0.0/item-spec/item-spec.md#properties-object
+    https://github.com/radiantearth/stac-spec/blob/v1.1.0/item-spec/item-spec.md#properties-object
     """
 
     model_config = ConfigDict(extra="allow")
@@ -26,7 +26,7 @@ class ItemProperties(StacCommonMetadata):
 
 class Item(Feature, StacBaseModel):
     """
-    https://github.com/radiantearth/stac-spec/blob/v1.0.0/item-spec/item-spec.md
+    https://github.com/radiantearth/stac-spec/blob/v1.1.0/item-spec/item-spec.md
     """
 
     id: str = Field(..., alias="id", min_length=1)

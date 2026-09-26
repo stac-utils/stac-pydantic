@@ -1,8 +1,10 @@
+from __future__ import annotations
+
 import sys
 from datetime import datetime as dt
 from datetime import timezone
 from enum import Enum, auto
-from typing import Annotated, Any, cast
+from typing import Annotated, Any, Literal, cast
 from warnings import warn
 
 from pydantic import (
@@ -146,31 +148,83 @@ class Provider(StacBaseModel):
     url: str | None = None
 
 
-class StacCommonMetadata(StacBaseModel):
-    """
-    https://github.com/radiantearth/stac-spec/blob/v1.0.0/item-spec/common-metadata.md
-    """
+DataType = Literal[
+    "int8",
+    "int16",
+    "int32",
+    "int64",
+    "uint8",
+    "uint16",
+    "uint32",
+    "uint64",
+    "float16",
+    "float32",
+    "float64",
+    "cint16",
+    "cint32",
+    "cfloat32",
+    "cfloat64",
+    "other",
+]
 
-    # Basic
+
+class Statistics(StacBaseModel):
+    """STAC 1.1 common statistics for data values."""
+
+    minimum: NumType | None = None
+    maximum: NumType | None = None
+    mean: NumType | None = None
+    stddev: NumType | None = None
+    count: int | None = Field(None, ge=0)
+    valid_percent: NumType | None = Field(None, ge=0, le=100)
+
+    model_config = ConfigDict(extra="allow")
+
+
+class StacCommonFields(StacBaseModel):
+    """Common metadata available on STAC 1.1 Items, Assets, Links, and Catalogs."""
+
     title: str | None = None
     description: str | None = None
-    # Date and Time
-    datetime: UtcDatetime | None = Field(...)
+    keywords: list[str] | None = None
+    roles: list[str] | None = None
+    bands: list[Band] | None = None
+    data_type: DataType | None = None
+    nodata: NumType | Literal["nan", "inf", "-inf"] | None = None
+    statistics: Statistics | None = None
+    unit: str | None = None
+    datetime: UtcDatetime | None = None
     created: UtcDatetime | None = None
     updated: UtcDatetime | None = None
-    # Date and Time Range
     start_datetime: UtcDatetime | None = None
     end_datetime: UtcDatetime | None = None
-    # Licensing
     license: str | None = None
-    # Provider
     providers: list[Provider] | None = None
-    # Instrument
     platform: str | None = None
     instruments: list[str] | None = None
     constellation: str | None = None
     mission: str | None = None
     gsd: float | None = Field(None, gt=0)
+
+
+class Band(StacCommonFields):
+    """STAC 1.1 band metadata; band names are optional in the core schema."""
+
+    name: str | None = None
+
+    model_config = ConfigDict(extra="allow")
+
+
+StacCommonFields.model_rebuild()
+Band.model_rebuild()
+
+
+class StacCommonMetadata(StacCommonFields):
+    """
+    https://github.com/radiantearth/stac-spec/blob/v1.1.0/item-spec/common-metadata.md
+    """
+
+    datetime: UtcDatetime | None = Field(...)
 
     @model_validator(mode="after")
     def validate_datetime_or_start_end(self) -> Self:
@@ -210,16 +264,13 @@ class StacCommonMetadata(StacBaseModel):
         return data
 
 
-class Asset(StacBaseModel):
+class Asset(StacCommonFields):
     """
-    https://github.com/radiantearth/stac-spec/blob/v1.0.0/item-spec/item-spec.md#asset-object
+    https://github.com/radiantearth/stac-spec/blob/v1.1.0/item-spec/item-spec.md#asset-object
     """
 
     href: str = Field(..., min_length=1)
     type: str | None = None
-    title: str | None = None
-    description: str | None = None
-    roles: list[str] | None = None
 
     model_config = ConfigDict(
         populate_by_name=True, use_enum_values=True, extra="allow"

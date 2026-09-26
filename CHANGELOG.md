@@ -1,6 +1,9 @@
 
 ## Unreleased
 
+- Model STAC 1.1 common metadata, request-aware links, and Collection item asset definitions.
+- Default new Catalogs, Collections, and Items to STAC 1.1.0 while retaining explicit 1.0.0 input.
+
 ## 3.6.0 (2026-06-26)
 
 - No change since 3.6.0a1
