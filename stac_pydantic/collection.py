@@ -8,7 +8,7 @@ from stac_pydantic.shared import (
     BBox,
     NumType,
     StacBaseModel,
-    StacCommonFields,
+    StacCommonMetadata,
     UtcDatetime,
     validate_bbox,
 )
@@ -178,7 +178,7 @@ class Range(StacBaseModel):
     maximum: NumType | str
 
 
-class ItemAssetDefinition(StacCommonFields):
+class ItemAssetDefinition(StacCommonMetadata):
     """STAC 1.1 Collection asset template, which has no href."""
 
     type: str | None = None

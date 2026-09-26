@@ -3,11 +3,11 @@ from typing import Literal
 from pydantic import AnyUrl, ConfigDict, Field
 
 from stac_pydantic.links import Links
-from stac_pydantic.shared import SEMVER_REGEX, StacCommonFields
+from stac_pydantic.shared import SEMVER_REGEX, StacCommonMetadata
 from stac_pydantic.version import STAC_VERSION
 
 
-class _Catalog(StacCommonFields):
+class _Catalog(StacCommonMetadata):
     """
     https://github.com/radiantearth/stac-spec/blob/v1.1.0/catalog-spec/catalog-spec.md
     """

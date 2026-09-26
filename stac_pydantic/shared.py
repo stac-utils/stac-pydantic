@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import sys
 from datetime import datetime as dt
 from datetime import timezone
 from enum import Enum, auto
@@ -13,17 +12,8 @@ from pydantic import (
     BaseModel,
     ConfigDict,
     Field,
-    SerializationInfo,
-    SerializerFunctionWrapHandler,
     TypeAdapter,
-    model_serializer,
-    model_validator,
 )
-
-if sys.version_info < (3, 11):
-    from typing_extensions import Self
-else:
-    from typing import Self
 
 from stac_pydantic.utils import AutoValueEnum
 
@@ -181,7 +171,7 @@ class Statistics(StacBaseModel):
     model_config = ConfigDict(extra="allow")
 
 
-class StacCommonFields(StacBaseModel):
+class StacCommonMetadata(StacBaseModel):
     """Common metadata available on STAC 1.1 Items, Assets, Links, and Catalogs."""
 
     title: str | None = None
@@ -204,10 +194,10 @@ class StacCommonFields(StacBaseModel):
     instruments: list[str] | None = None
     constellation: str | None = None
     mission: str | None = None
-    gsd: float | None = Field(None, gt=0)
+    gsd: float | None = Field(default=None, gt=0)
 
 
-class Band(StacCommonFields):
+class Band(StacCommonMetadata):
     """STAC 1.1 band metadata; band names are optional in the core schema."""
 
     name: str | None = None
@@ -215,56 +205,11 @@ class Band(StacCommonFields):
     model_config = ConfigDict(extra="allow")
 
 
-StacCommonFields.model_rebuild()
+StacCommonMetadata.model_rebuild()
 Band.model_rebuild()
 
 
-class StacCommonMetadata(StacCommonFields):
-    """
-    https://github.com/radiantearth/stac-spec/blob/v1.1.0/item-spec/common-metadata.md
-    """
-
-    datetime: UtcDatetime | None = Field(...)
-
-    @model_validator(mode="after")
-    def validate_datetime_or_start_end(self) -> Self:
-        # When datetime is null, start_datetime and end_datetime must be specified
-        if not self.datetime and (not self.start_datetime or not self.end_datetime):
-            raise ValueError(
-                "start_datetime and end_datetime must be specified when datetime is null"
-            )
-
-        return self
-
-    @model_validator(mode="after")
-    def validate_start_end(self) -> Self:
-        # Using one of start_datetime or end_datetime requires the use of the other
-        if (self.start_datetime and not self.end_datetime) or (
-            not self.start_datetime and self.end_datetime
-        ):
-            raise ValueError(
-                "use of start_datetime or end_datetime requires the use of the other"
-            )
-        return self
-
-    @model_serializer(when_used="always", mode="wrap")
-    def include_datetime_null(
-        self,
-        serializer: SerializerFunctionWrapHandler,
-        info: SerializationInfo,
-    ):
-        """Custom Model serializer make sure to allways keep datetime."""
-        data = serializer(self)
-        start = data.get("start_datetime")
-        end = data.get("end_datetime")
-        if not data.get("datetime") and (start and end):
-            if info.exclude_none and "datetime" not in (info.exclude or {}):
-                data["datetime"] = None
-
-        return data
-
-
-class Asset(StacCommonFields):
+class Asset(StacCommonMetadata):
     """
     https://github.com/radiantearth/stac-spec/blob/v1.1.0/item-spec/item-spec.md#asset-object
     """

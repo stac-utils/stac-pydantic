@@ -5,11 +5,11 @@ from urllib.parse import urljoin, urlsplit
 
 from pydantic import ConfigDict, Field, RootModel
 
-from stac_pydantic.shared import MimeTypes, StacCommonFields
+from stac_pydantic.shared import MimeTypes, StacCommonMetadata
 from stac_pydantic.utils import AutoValueEnum
 
 
-class Link(StacCommonFields):
+class Link(StacCommonMetadata):
     """
     https://github.com/radiantearth/stac-spec/blob/v1.1.0/collection-spec/collection-spec.md#link-object
     """
@@ -17,7 +17,7 @@ class Link(StacCommonFields):
     href: str = Field(..., alias="href", min_length=1)
     rel: str = Field(..., alias="rel", min_length=1)
     type: MimeTypes | str | None = None
-    method: str | None = Field(None, pattern=r"^[A-Z]+$")
+    method: str | None = Field(default=None, pattern=r"^[A-Z]+$")
     headers: dict[str, str | list[str]] | None = None
     body: Any | None = None
 
