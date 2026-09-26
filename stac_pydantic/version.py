@@ -2,4 +2,4 @@
 
 __version__ = "3.6.0"
 
-STAC_VERSION = "1.0.0"
+STAC_VERSION = "1.1.0"

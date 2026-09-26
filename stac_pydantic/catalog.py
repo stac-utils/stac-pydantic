@@ -3,13 +3,13 @@ from typing import Literal
 from pydantic import AnyUrl, ConfigDict, Field
 
 from stac_pydantic.links import Links
-from stac_pydantic.shared import SEMVER_REGEX, StacBaseModel
+from stac_pydantic.shared import SEMVER_REGEX, StacCommonMetadata
 from stac_pydantic.version import STAC_VERSION
 
 
-class _Catalog(StacBaseModel):
+class _Catalog(StacCommonMetadata):
     """
-    https://github.com/radiantearth/stac-spec/blob/v1.0.0/catalog-spec/catalog-spec.md
+    https://github.com/radiantearth/stac-spec/blob/v1.1.0/catalog-spec/catalog-spec.md
     """
 
     id: str = Field(..., alias="id", min_length=1)
@@ -17,7 +17,6 @@ class _Catalog(StacBaseModel):
     stac_version: str = Field(STAC_VERSION, pattern=SEMVER_REGEX)
     links: Links
     stac_extensions: list[AnyUrl] | None = []
-    title: str | None = None
     type: str
     model_config = ConfigDict(use_enum_values=True, extra="allow")
 

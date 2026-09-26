@@ -1,14 +1,14 @@
 from typing import TYPE_CHECKING, Annotated, Any, Literal
 
-from pydantic import AfterValidator, Field, conlist
+from pydantic import AfterValidator, ConfigDict, Field, conlist, model_validator
 
 from stac_pydantic.catalog import _Catalog
 from stac_pydantic.shared import (
     Asset,
     BBox,
     NumType,
-    Provider,
     StacBaseModel,
+    StacCommonMetadata,
     UtcDatetime,
     validate_bbox,
 )
@@ -178,16 +178,28 @@ class Range(StacBaseModel):
     maximum: NumType | str
 
 
+class ItemAssetDefinition(StacCommonMetadata):
+    """STAC 1.1 Collection asset template, which has no href."""
+
+    type: str | None = None
+    model_config = ConfigDict(extra="allow")
+
+    @model_validator(mode="before")
+    @classmethod
+    def disallow_href(cls, value: Any) -> Any:
+        if isinstance(value, dict) and "href" in value:
+            raise ValueError("Collection item_assets definitions must not contain href")
+        return value
+
+
 class Collection(_Catalog):
     """
-    https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md
+    https://github.com/radiantearth/stac-spec/blob/v1.1.0/collection-spec/collection-spec.md
     """
 
     assets: dict[str, Asset] | None = None
+    item_assets: dict[str, ItemAssetDefinition] | None = None
     license: str = Field(..., alias="license", min_length=1)
     extent: Extent
-    title: str | None = None
-    keywords: list[str] | None = None
-    providers: list[Provider] | None = None
     summaries: dict[str, Range | list[Any] | dict[str, Any]] | None = None
     type: Literal["Collection"]

@@ -1,8 +1,9 @@
-import sys
+from __future__ import annotations
+
 from datetime import datetime as dt
 from datetime import timezone
 from enum import Enum, auto
-from typing import Annotated, Any, cast
+from typing import Annotated, Any, Literal, cast
 from warnings import warn
 
 from pydantic import (
@@ -11,17 +12,8 @@ from pydantic import (
     BaseModel,
     ConfigDict,
     Field,
-    SerializationInfo,
-    SerializerFunctionWrapHandler,
     TypeAdapter,
-    model_serializer,
-    model_validator,
 )
-
-if sys.version_info < (3, 11):
-    from typing_extensions import Self
-else:
-    from typing import Self
 
 from stac_pydantic.utils import AutoValueEnum
 
@@ -146,80 +138,84 @@ class Provider(StacBaseModel):
     url: str | None = None
 
 
-class StacCommonMetadata(StacBaseModel):
-    """
-    https://github.com/radiantearth/stac-spec/blob/v1.0.0/item-spec/common-metadata.md
-    """
+DataType = Literal[
+    "int8",
+    "int16",
+    "int32",
+    "int64",
+    "uint8",
+    "uint16",
+    "uint32",
+    "uint64",
+    "float16",
+    "float32",
+    "float64",
+    "cint16",
+    "cint32",
+    "cfloat32",
+    "cfloat64",
+    "other",
+]
 
-    # Basic
+
+class Statistics(StacBaseModel):
+    """STAC 1.1 common statistics for data values."""
+
+    minimum: NumType | None = None
+    maximum: NumType | None = None
+    mean: NumType | None = None
+    stddev: NumType | None = None
+    count: int | None = Field(None, ge=0)
+    valid_percent: NumType | None = Field(None, ge=0, le=100)
+
+    model_config = ConfigDict(extra="allow")
+
+
+class StacCommonMetadata(StacBaseModel):
+    """Common metadata available on STAC 1.1 Items, Assets, Links, and Catalogs."""
+
     title: str | None = None
     description: str | None = None
-    # Date and Time
-    datetime: UtcDatetime | None = Field(...)
+    keywords: list[str] | None = None
+    roles: list[str] | None = None
+    bands: list[Band] | None = None
+    data_type: DataType | None = None
+    nodata: NumType | Literal["nan", "inf", "-inf"] | None = None
+    statistics: Statistics | None = None
+    unit: str | None = None
+    datetime: UtcDatetime | None = None
     created: UtcDatetime | None = None
     updated: UtcDatetime | None = None
-    # Date and Time Range
     start_datetime: UtcDatetime | None = None
     end_datetime: UtcDatetime | None = None
-    # Licensing
     license: str | None = None
-    # Provider
     providers: list[Provider] | None = None
-    # Instrument
     platform: str | None = None
     instruments: list[str] | None = None
     constellation: str | None = None
     mission: str | None = None
-    gsd: float | None = Field(None, gt=0)
-
-    @model_validator(mode="after")
-    def validate_datetime_or_start_end(self) -> Self:
-        # When datetime is null, start_datetime and end_datetime must be specified
-        if not self.datetime and (not self.start_datetime or not self.end_datetime):
-            raise ValueError(
-                "start_datetime and end_datetime must be specified when datetime is null"
-            )
-
-        return self
-
-    @model_validator(mode="after")
-    def validate_start_end(self) -> Self:
-        # Using one of start_datetime or end_datetime requires the use of the other
-        if (self.start_datetime and not self.end_datetime) or (
-            not self.start_datetime and self.end_datetime
-        ):
-            raise ValueError(
-                "use of start_datetime or end_datetime requires the use of the other"
-            )
-        return self
-
-    @model_serializer(when_used="always", mode="wrap")
-    def include_datetime_null(
-        self,
-        serializer: SerializerFunctionWrapHandler,
-        info: SerializationInfo,
-    ):
-        """Custom Model serializer make sure to allways keep datetime."""
-        data = serializer(self)
-        start = data.get("start_datetime")
-        end = data.get("end_datetime")
-        if not data.get("datetime") and (start and end):
-            if info.exclude_none and "datetime" not in (info.exclude or {}):
-                data["datetime"] = None
-
-        return data
+    gsd: float | None = Field(default=None, gt=0)
 
 
-class Asset(StacBaseModel):
+class Band(StacCommonMetadata):
+    """STAC 1.1 band metadata; band names are optional in the core schema."""
+
+    name: str | None = None
+
+    model_config = ConfigDict(extra="allow")
+
+
+StacCommonMetadata.model_rebuild()
+Band.model_rebuild()
+
+
+class Asset(StacCommonMetadata):
     """
-    https://github.com/radiantearth/stac-spec/blob/v1.0.0/item-spec/item-spec.md#asset-object
+    https://github.com/radiantearth/stac-spec/blob/v1.1.0/item-spec/item-spec.md#asset-object
     """
 
     href: str = Field(..., min_length=1)
     type: str | None = None
-    title: str | None = None
-    description: str | None = None
-    roles: list[str] | None = None
 
     model_config = ConfigDict(
         populate_by_name=True, use_enum_values=True, extra="allow"

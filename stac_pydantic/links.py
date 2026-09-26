@@ -1,22 +1,25 @@
 from collections.abc import Iterator
 from enum import auto
+from typing import Any
 from urllib.parse import urljoin, urlsplit
 
 from pydantic import ConfigDict, Field, RootModel
 
-from stac_pydantic.shared import MimeTypes, StacBaseModel
+from stac_pydantic.shared import MimeTypes, StacCommonMetadata
 from stac_pydantic.utils import AutoValueEnum
 
 
-class Link(StacBaseModel):
+class Link(StacCommonMetadata):
     """
-    https://github.com/radiantearth/stac-spec/blob/v1.0.0/collection-spec/collection-spec.md#link-object
+    https://github.com/radiantearth/stac-spec/blob/v1.1.0/collection-spec/collection-spec.md#link-object
     """
 
     href: str = Field(..., alias="href", min_length=1)
     rel: str = Field(..., alias="rel", min_length=1)
     type: MimeTypes | str | None = None
-    title: str | None = None
+    method: str | None = Field(default=None, pattern=r"^[A-Z]+$")
+    headers: dict[str, str | list[str]] | None = None
+    body: Any | None = None
 
     model_config = ConfigDict(use_enum_values=True, extra="allow")
 

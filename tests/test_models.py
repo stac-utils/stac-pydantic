@@ -200,8 +200,8 @@ def test_geo_interface() -> None:
         },
     ],
 )
-def test_stac_common_dates(args) -> None:
-    metadata = StacCommonMetadata(**args)
+def test_item_properties_dates(args) -> None:
+    metadata = ItemProperties(**args)
     assert "datetime" in metadata.model_dump(mode="json")
     assert "datetime" in metadata.model_dump(mode="json", exclude_unset=True)
     assert "datetime" in metadata.model_dump(exclude_none=True)
@@ -209,6 +209,11 @@ def test_stac_common_dates(args) -> None:
     assert "datetime" not in metadata.model_dump(
         exclude_none=True, exclude={"datetime"}
     )
+
+
+def test_common_metadata_does_not_require_item_dates() -> None:
+    metadata = StacCommonMetadata(title="Example")
+    assert metadata.model_dump(exclude_none=True) == {"title": "Example"}
 
 
 def test_item_datetime_null() -> None:
@@ -236,7 +241,7 @@ def test_item_datetime_null() -> None:
 
 def test_stac_null_datetime_required() -> None:
     with pytest.raises(ValidationError):
-        StacCommonMetadata.model_validate(
+        ItemProperties.model_validate(
             {
                 "start_datetime": "2024-01-01T00:00:00Z",
                 "end_datetime": "2024-01-02T00:00:00Z",
@@ -252,12 +257,12 @@ def test_stac_null_datetime_required() -> None:
         {"datetime": None, "end_datetime": "2024-01-01T00:00:00Z"},
     ],
 )
-def test_stac_common_no_dates(args) -> None:
+def test_item_properties_no_dates(args) -> None:
     with pytest.raises(
         ValueError,
         match="start_datetime and end_datetime must be specified when datetime is null",
     ):
-        StacCommonMetadata(**args)
+        ItemProperties(**args)
 
 
 @pytest.mark.parametrize(
@@ -267,12 +272,12 @@ def test_stac_common_no_dates(args) -> None:
         {"datetime": "2024-01-01T00:00:00Z", "end_datetime": "2024-01-01T00:00:00Z"},
     ],
 )
-def test_stac_common_start_and_end(args) -> None:
+def test_item_properties_start_and_end(args) -> None:
     with pytest.raises(
         ValueError,
         match="use of start_datetime or end_datetime requires the use of the other",
     ):
-        StacCommonMetadata(**args)
+        ItemProperties(**args)
 
 
 def test_declared_model() -> None:
