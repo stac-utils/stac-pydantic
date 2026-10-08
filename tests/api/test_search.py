@@ -195,6 +195,9 @@ def test_search_datetime(dt, start, end):
 @pytest.mark.parametrize(
     "dt",
     [
+        "",  # empty string
+        "../..",  # both start and end are open
+        "/",  # both start and end are None
         "/..//..../../1984-04-12T23:20:50.52Z/1985-04-12T23:20:50.52Z",  # extra start /
         "1984-04-12T23:20:50.52Z/1985-04-12T23:20:50.52Z/",  # extra end /
         "1986-04-12T23:20:50.52Z/1985-04-12T23:20:50.52Z",  # start > end

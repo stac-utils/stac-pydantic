@@ -246,6 +246,9 @@ def str_to_datetimes(value: str) -> list[dt | None]:
 def validate_datetime(v: str | None) -> str | None:
     """Validate Datetime value."""
     if v is not None:
+        if v == "":
+            raise ValueError("Datetime value cannot be an empty string")
+
         dates = str_to_datetimes(v)
 
         # If there are more than 2 dates, it's invalid
@@ -257,6 +260,11 @@ def validate_datetime(v: str | None) -> str | None:
         # If there is only one date, duplicate to use for both start and end dates
         if len(dates) == 1:
             dates = [dates[0], dates[0]]
+
+        if not any(dates):
+            raise ValueError(
+                "Invalid datetime range. At least one of the start or end dates must be provided. "
+            )
 
         # If there is a start and end date, check that the start date is before the end date
         if dates[0] and dates[1] and dates[0] > dates[1]:
