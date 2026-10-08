@@ -248,6 +248,8 @@ def validate_datetime(v: str | None) -> str | None:
     if v is not None:
         if v == "":
             raise ValueError("Datetime value cannot be an empty string")
+        if v == "..":
+            raise ValueError("Datetime value cannot be '..'")
 
         dates = str_to_datetimes(v)
 
