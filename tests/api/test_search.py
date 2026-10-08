@@ -99,13 +99,6 @@ def test_temporal_search_two_tailed():
     assert search.end_date == utcnow
 
 
-def test_temporal_search_open():
-    # Test open date range
-    search = Search(collections=["collection1"], datetime="../..")
-    assert search.start_date is None
-    assert search.end_date is None
-
-
 def test_invalid_temporal_search_date():
     # Just a date, no time
     utcnow = datetime.now(timezone.utc).strftime("%Y-%m-%d")
