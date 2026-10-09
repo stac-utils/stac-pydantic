@@ -246,11 +246,6 @@ def str_to_datetimes(value: str) -> list[dt | None]:
 def validate_datetime(v: str | None) -> str | None:
     """Validate Datetime value."""
     if v is not None:
-        if v == "":
-            raise ValueError("Datetime value cannot be an empty string")
-        if v == "..":
-            raise ValueError("Datetime value cannot be '..'")
-
         dates = str_to_datetimes(v)
 
         # If there are more than 2 dates, it's invalid
