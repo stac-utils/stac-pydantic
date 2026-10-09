@@ -258,6 +258,11 @@ def validate_datetime(v: str | None) -> str | None:
         if len(dates) == 1:
             dates = [dates[0], dates[0]]
 
+        if not any(dates):
+            raise ValueError(
+                "Invalid datetime range. At least one of the start or end dates must be provided. "
+            )
+
         # If there is a start and end date, check that the start date is before the end date
         if dates[0] and dates[1] and dates[0] > dates[1]:
             raise ValueError(

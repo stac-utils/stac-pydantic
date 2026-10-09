@@ -99,13 +99,6 @@ def test_temporal_search_two_tailed():
     assert search.end_date == utcnow
 
 
-def test_temporal_search_open():
-    # Test open date range
-    search = Search(collections=["collection1"], datetime="../..")
-    assert search.start_date is None
-    assert search.end_date is None
-
-
 def test_invalid_temporal_search_date():
     # Just a date, no time
     utcnow = datetime.now(timezone.utc).strftime("%Y-%m-%d")
@@ -195,6 +188,12 @@ def test_search_datetime(dt, start, end):
 @pytest.mark.parametrize(
     "dt",
     [
+        "",  # empty string
+        "..",  # open without /
+        "../..",  # both start and end are open
+        "/",  # both start and end are None
+        "../",  # both start and end are open
+        "/..",  # both start and end are open
         "/..//..../../1984-04-12T23:20:50.52Z/1985-04-12T23:20:50.52Z",  # extra start /
         "1984-04-12T23:20:50.52Z/1985-04-12T23:20:50.52Z/",  # extra end /
         "1986-04-12T23:20:50.52Z/1985-04-12T23:20:50.52Z",  # start > end
