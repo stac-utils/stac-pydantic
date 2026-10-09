@@ -1,6 +1,9 @@
 
 ## Unreleased
 
+
+## 3.7.0 (2026-10-09)
+
 - fix: raise error for invalid empty date range (`..`, `""`, `/`, `../`, `/..`)
 - update: `../..` to be considered an invalid empty date range
 
