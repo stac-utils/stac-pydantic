@@ -1,6 +1,8 @@
 
 ## Unreleased
 
+## 3.7.1 (2026-10-20)
+
 - fix: allow extra fields in the Provider model, so extension fields such as `processing:lineage` survive validation and serialization
 
 ## 3.7.0 (2026-10-09)
