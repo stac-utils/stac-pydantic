@@ -145,6 +145,8 @@ class Provider(StacBaseModel):
     roles: list[str] | None = None
     url: str | None = None
 
+    model_config = ConfigDict(extra="allow")
+
 
 class StacCommonMetadata(StacBaseModel):
     """

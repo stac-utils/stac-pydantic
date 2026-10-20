@@ -176,6 +176,19 @@ def test_asset_extras() -> None:
         assert asset.foo == "bar"  # type: ignore [attr-defined]
 
 
+def test_provider_extras() -> None:
+    test_collection = request(COLLECTION)
+    for provider in test_collection["providers"]:
+        provider["processing:lineage"] = "Generated from source scenes"
+
+    collection = Collection(**test_collection)
+    assert collection.providers
+    for provider in collection.providers:
+        assert provider.model_dump()["processing:lineage"] == (
+            "Generated from source scenes"
+        )
+
+
 def test_geo_interface() -> None:
     test_item = request(EO_EXTENSION)
     item = Item(**test_item)
