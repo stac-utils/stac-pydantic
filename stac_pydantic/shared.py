@@ -33,13 +33,23 @@ BBox = (
 
 SEMVER_REGEX = r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$"
 
+
+def _to_utc(value: dt) -> dt:
+    try:
+        return value.astimezone(timezone.utc)
+    except OverflowError as e:
+        raise ValueError(
+            f"{value.isoformat()} is outside the range that can be represented in UTC"
+        ) from e
+
+
 # Allows for some additional flexibility in the input datetime format. As long as
 # the input value has timezone information, it will be converted to UTC timezone.
 UtcDatetime = Annotated[
     # Input value must be in a format which has timezone information
     AwareDatetime,
     # Convert the input value to UTC timezone
-    AfterValidator(lambda d: d.astimezone(timezone.utc)),
+    AfterValidator(_to_utc),
 ]
 
 SearchDatetime: TypeAdapter = TypeAdapter(UtcDatetime | None)

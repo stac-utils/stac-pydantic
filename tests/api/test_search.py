@@ -106,6 +106,15 @@ def test_invalid_temporal_search_date():
         Search(collections=["collection1"], datetime=utcnow)
 
 
+@pytest.mark.parametrize(
+    "value", ["0001-01-01T00:00:00+01:00", "9999-12-31T23:59:59-01:00"]
+)
+@pytest.mark.parametrize("shape", ["{v}", "{v}/..", "../{v}"])
+def test_invalid_temporal_search_outside_utc_range(value, shape):
+    with pytest.raises(ValidationError, match="outside the range"):
+        Search(collections=["collection1"], datetime=shape.format(v=value))
+
+
 def test_invalid_temporal_search_too_many():
     # Too many dates
     t1 = datetime.now(timezone.utc)
