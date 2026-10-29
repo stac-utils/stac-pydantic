@@ -1,6 +1,8 @@
 
 ## Unreleased
 
+- fix: raise a `ValidationError` instead of `OverflowError` for datetimes that can't be represented in UTC (#249)
+
 ## 3.7.1 (2026-10-20)
 
 - fix: allow extra fields in the Provider model, so extension fields such as `processing:lineage` survive validation and serialization
