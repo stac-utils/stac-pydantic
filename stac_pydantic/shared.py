@@ -203,6 +203,14 @@ class StacCommonMetadata(StacBaseModel):
             raise ValueError(
                 "use of start_datetime or end_datetime requires the use of the other"
             )
+        if (
+            self.start_datetime
+            and self.end_datetime
+            and self.start_datetime > self.end_datetime
+        ):
+            raise ValueError(
+                "start_datetime must be less than or equal to end_datetime"
+            )
         return self
 
     @model_serializer(when_used="always", mode="wrap")

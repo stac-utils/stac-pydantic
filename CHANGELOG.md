@@ -1,6 +1,7 @@
 
 ## Unreleased
 
+- fix: raise a `ValidationError` when `start_datetime` is after `end_datetime`
 - fix: raise a `ValidationError` instead of `OverflowError` for datetimes that can't be represented in UTC (#249)
 
 ## 3.7.1 (2026-10-20)
