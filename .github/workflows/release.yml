@@ -7,8 +7,8 @@ on:
       - created
 
 jobs:
-  release:
-    name: release
+  build:
+    name: Build dist
     runs-on: ubuntu-latest
     if: ${{ github.repository }} == 'stac-utils/stac-pydantic'
     steps:
@@ -36,11 +36,37 @@ jobs:
         run: |
           echo "version=$(uv run hatch --quiet version)" >> $GITHUB_OUTPUT
 
-      - name: Build and publish
-        if: ${{ steps.tag.outputs.version }} == ${{ steps.module.outputs.version}}
-        env:
-          HATCH_INDEX_USER: ${{ secrets.PYPI_STACUTILS_USERNAME }}
-          HATCH_INDEX_AUTH: ${{ secrets.PYPI_STACUTILS_PASSWORD }}
+      - name: Check version match
+        run: |
+          if [ "${{ steps.tag.outputs.version }}" != "${{ steps.module.outputs.version }}" ]; then
+            echo "Tag version (${{ steps.tag.outputs.version }}) does not match module version (${{ steps.module.outputs.version }})"
+            exit 1
+          fi
+
+      - name: Build
         run: |
           uv run hatch build
-          uv run hatch publish
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          path: ./dist/
+
+  upload_pypi:
+    name: Upload release to PyPI
+    needs: [build]
+    runs-on: ubuntu-latest
+    environment:
+      # Note: this environment must be configured in the repo settings
+      name: pypi-release
+      url: https://pypi.org/p/stac-pydantic
+    permissions:
+      id-token: write # IMPORTANT: this permission is mandatory for trusted publishing
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          name: artifact
+          path: dist
+          merge-multiple: true
+
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086 # release/v1
