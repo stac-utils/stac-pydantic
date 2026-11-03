@@ -288,6 +288,20 @@ def test_stac_common_start_and_end(args) -> None:
         StacCommonMetadata(**args)
 
 
+def test_stac_common_start_after_end() -> None:
+    with pytest.raises(
+        ValueError,
+        match="start_datetime must be less than or equal to end_datetime",
+    ):
+        StacCommonMetadata.model_validate(
+            {
+                "datetime": "2024-05-15T00:00:00Z",
+                "start_datetime": "2024-05-15T00:00:00Z",
+                "end_datetime": "2024-05-01T00:00:00Z",
+            }
+        )
+
+
 def test_declared_model() -> None:
     class TestProperties(ItemProperties):
         foo: str
