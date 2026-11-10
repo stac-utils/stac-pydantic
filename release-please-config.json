@@ -2,7 +2,6 @@
   "packages": {
     ".": {
       "release-type": "python",
-      "skip-changelog": true,
       "package-name": "stac-pydantic",
       "include-v-in-tag": false,
       "include-v-in-release-name": false,
