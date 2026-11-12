@@ -1,0 +1,21 @@
+name: PR title
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+permissions: {}
+
+jobs:
+  pr-title:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - name: Check the PR title is a Conventional Commit
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          re='^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\([^()]+\))?!?: [^[:space:]]'
+          if [[ "$TITLE" =~ $re ]]; then exit 0; fi
+          echo "::error title=PR title is not a Conventional Commit::Use <type>[(scope)][!]: <summary>, e.g. 'fix(mosaic): handle empty assets' or 'feat!: drop Python 3.10'. Types: build chore ci docs feat fix perf refactor revert style test."
+          exit 1
