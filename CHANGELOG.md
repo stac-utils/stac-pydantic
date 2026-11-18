@@ -1,5 +1,4 @@
-
-## Unreleased
+# Changelog
 
 ## 3.7.2 (2026-11-03)
 
